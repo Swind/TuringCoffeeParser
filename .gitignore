@@ -1,0 +1,10 @@
+.ropeproject
+*.pyc
+*.csv
+*.*.sw*
+bower_components
+node_modules
+.tmpjs
+cookbooks/**/*.md
+tags
+.bin

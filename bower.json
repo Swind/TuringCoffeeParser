@@ -1,0 +1,7 @@
+{
+  "name": "Turing-Coffee-Parser",
+  "version": "0.0.1",
+  "dependencies": {
+    "markdown": ""
+  }
+}
