@@ -24,32 +24,33 @@ handler.points = (params) ->
         x = now_radius * Math.cos(total_theta)
         y = now_radius * Math.sin(total_theta)
 
+
         p = Point x, y
 
         point_list[*] = p
+
+    #Handle z
+    point_list = handler.point_z(params, point_list)
+
+    return point_list
 
 handler.point_z = (params, points) ->
 
     z_start = params.high.start
     z_end = params.high.end
 
-    z_per_point = (z_end - z_start) / len(points)
+    z_per_point = (z_end - z_start) / points.length
 
-    for index in [1 to points.length] for point in points
+    index = 0
+    for point in points
         point.z = z_start + (z_per_point * index)
+        index++
 
     # Quick move to the z start point
     quick_move = Point(z=z_start, f=1000)
-    points.insert(0, quick_move)
+    points.unshift(quick_move)
 
     return points
-
-def __point_f(self, points):
-    f = self.feedrate
-    for point in points:
-        point.f = f
-    return points
-
 
 module.exports = {
     handler: handler
