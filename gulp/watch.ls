@@ -6,4 +6,4 @@ require! {
 root_path = "./src"
 
 gulp.task 'watch' ->
-    gulp.watch "#root_path/*.ls", ['build-livescript']
+    gulp.watch "#root_path/**/*.ls", ['build-livescript']

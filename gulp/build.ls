@@ -16,7 +16,7 @@ handleError = (err) ->
 gulp.task 'build', ['build-livescript'] ->
 
 gulp.task 'build-livescript' ->
-    return gulp.src "#root_path/*.ls"
+    return gulp.src "#root_path/**/*.ls"
            .pipe livescript bare: true
            .on 'error', handleError
            .pipe gulp.dest "#root_path"
