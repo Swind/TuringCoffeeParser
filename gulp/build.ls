@@ -6,7 +6,7 @@ require! {
     'gulp-browserify': browserify
 }
 
-root_path = './src'
+root_path = '.'
 
 handleError = (err) ->
     console.error err.toString!
