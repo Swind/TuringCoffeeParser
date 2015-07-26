@@ -51,10 +51,18 @@ handler.points = (params) ->
         # Create the point object to save the information
         point_list[*] = Point x, y
 
-    #Handle z
+    # Handler f and z
+    point_list = f_handler params, point_list
     point_list = Process.z_axial_handler(params, point_list)
 
     return point_list
+
+f_handler = (params, points) ->
+
+    for point in points
+        point.f = params.feedrate
+
+    return points
 
 module.exports = {
     handler: handler

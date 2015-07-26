@@ -4,10 +4,12 @@ require! {
     'gulp-flatten': flatten
     'gulp-livescript': livescript
     'gulp-browserify': browserify
+    'gulp-mocha': mocha
 }
 
 src_path = './src'
 test_path = './test'
+dist_path = './dist'
 
 handleError = (err) ->
     console.error err.toString!
@@ -21,14 +23,18 @@ compile_livescript = (path) ->
 
 
 #gulp.task 'build', ['build-livescript', 'browserify'] ->
-gulp.task 'build', ['build-livescript'] ->
+gulp.task 'build', ['build-livescript', 'mocha', 'browserify'] ->
 
 gulp.task 'build-livescript' ->
     compile_livescript src_path
     compile_livescript test_path
 
 gulp.task 'browserify', ['build-livescript'] ->
-    return gulp.src '.tmpjs/parser.js', {base: '.tmpjs'}
-    .pipe browserify {insertGlobals: true, paths: ['./node_modules', './.tmpjs']}
+    return gulp.src "#src_path/parser.js", {base: src_path}
+    .pipe browserify {insertGlobals: true, paths: [src_path]}
     .on 'error', handleError
-    .pipe gulp.dest "#root_path"
+    .pipe gulp.dest "#dist_path"
+
+gulp.task 'mocha' ->
+    return gulp.src "#test_path/**/*.js", {read: false}
+        .pipe mocha {reporter: 'spec'}

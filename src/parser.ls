@@ -1,6 +1,8 @@
-fs = require("fs")
-testdata = require("./testdata.js")
-spiral = require("./processes/spiral.js")
+require! {
+    "./processes/spiral.js": spiral 
+    "./processes/spiral_total_water.js": spiral_total_water
+    "./processes/circle.js": circle 
+}
 
 const CONTAINER = "container"
 const PROCESS = "process"
@@ -15,5 +17,3 @@ handle_processes = (data) ->
         else if item.type == PROCESS
             # Find the process handler
             spiral.handler.points(item)
-
-handle_processes testdata.data

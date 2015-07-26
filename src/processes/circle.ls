@@ -10,16 +10,15 @@ Parameters Example:
 
 {
     type: \process
-    name: \spiral
+    name: \circle
     radius: {
         start: 10 #mm
-        end: 20 #mm
     }
     high: {
         start: 170 #mm
         end: 165 #mm
     }
-    cylinder: 5
+    total_water: 40 #ml
     point_interval: 0.1 #mm
     feedrate: 80 #mm/min
     extrudate: 0.2 #ml/mm
@@ -30,29 +29,24 @@ handler = {}
 
 handler.points = (params) ->
 
-    max_theta = radians(params.cylinder * 360)
-    # a is acceleration
-    a = (params.radius.end - params.radius.start) / max_theta
+    total_length = params.total_water / params.extrudate
+    point_number = total_length / params.point_interval
 
-    total_theta = 0
+    circumference = 2 * Math.pi * params.radius.start
+    total_length = params.total_water / params.extrudate
+
+    cylinder = total_length / circumference
+
+    av = (2 * Math.Pi * cylinder) / point_number
+
+    # Generate x, y 
     point_list = []
+    for index from 0 to points.length
+        x = params.radius * Math.cos(av * index + start_angle)
+        y = params.radius * Math.sin(av * index + start_angle)
 
-    while total_theta <= max_theta
-
-        # point interval / (2 * pi * r) = theta for one step
-        now_radius = a * total_theta + params.radius.start
-        now_theta = radians((params.point_interval / (2 * Math.PI * now_radius)) * 360)
-
-        total_theta = total_theta + now_theta
-
-        x = now_radius * Math.cos(total_theta)
-        y = now_radius * Math.sin(total_theta)
-
-        # Create the point object to save the information
         point_list[*] = Point x, y
 
-    #Handle z
-    point_list = Process.z_axial_handler(params, point_list)
 
     return point_list
 

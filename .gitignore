@@ -9,3 +9,4 @@ cookbooks/**/*.md
 tags
 .bin
 src/**/*.js
+dist
