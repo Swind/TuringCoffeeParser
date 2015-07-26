@@ -3,7 +3,8 @@ require! {
     'gulp-livereload': livereload
 }
 
-root_path = "./src"
+src_path = "./src"
+test_path = "./test"
 
 gulp.task 'watch' ->
-    gulp.watch "#root_path/**/*.ls", ['build-livescript']
+    gulp.watch ["#src_path/**/*.ls", "#test_path/**/*.ls"], ['build-livescript']
