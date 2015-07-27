@@ -1,6 +1,5 @@
 require! {
     gulp
-    'gulp-livereload': livereload
 }
 
 src_path = "./src"

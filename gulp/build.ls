@@ -21,9 +21,7 @@ compile_livescript = (path) ->
         .on 'error', handleError
         .pipe gulp.dest "#path"
 
-
-#gulp.task 'build', ['build-livescript', 'browserify'] ->
-gulp.task 'build', ['build-livescript', 'mocha', 'browserify'] ->
+gulp.task 'build', ['build-livescript', 'browserify'] ->
 
 gulp.task 'build-livescript' ->
     compile_livescript src_path
@@ -35,6 +33,6 @@ gulp.task 'browserify', ['build-livescript'] ->
     .on 'error', handleError
     .pipe gulp.dest "#dist_path"
 
-gulp.task 'mocha' ->
+gulp.task 'mocha', ['build-livescript'] ->
     return gulp.src "#test_path/**/*.js", {read: false}
         .pipe mocha {reporter: 'spec'}

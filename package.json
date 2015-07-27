@@ -10,20 +10,16 @@
       "url": ""
     }
   ],
-  "dependencies": {
-      "markdown": "",
-      "simple-markdown": ""
-  },
   "devDependencies": {
     "gulp": "^3.7.0",
     "gulp-filter": "",
-    "gulp-livereload": "^3.5.0",
     "gulp-livescript": "",
     "main-bower-files": "^2.0.0",
     "gulp-flatten": "",
     "require-dir": "^0.1.0",
     "gulp-browserify": "",
     "mocha": "",
-    "gulp-mocha": ""
+    "gulp-mocha": "",
+    "LiveScript": ""
   }
 }

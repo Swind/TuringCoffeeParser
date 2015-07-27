@@ -2,8 +2,8 @@ require! {
     "../src/processes/spiral.js": spiral
     "../src/processes/spiral_total_water.js": spiral_total_water
     "../src/processes/circle.js": circle 
-    "assert": assert
     "./testdata.js": testdata
+    "assert": assert
 }
 
 test = it
