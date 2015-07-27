@@ -41,14 +41,24 @@ handler.points = (params) ->
 
     # Generate x, y 
     point_list = []
-    for index from 0 to points.length
-        x = params.radius * Math.cos(av * index + start_angle)
-        y = params.radius * Math.sin(av * index + start_angle)
+    for index from 0 to point_number 
+        x = params.radius * Math.cos(av * index)
+        y = params.radius * Math.sin(av * index)
 
         point_list[*] = Point x, y
 
+    # Handler f and z
+    point_list = f_handler params, point_list
+    point_list = Process.z_axial_handler(params, point_list)
 
     return point_list
+
+f_handler = (params, points) ->
+
+    for point in points
+        point.f = params.feedrate
+
+    return points
 
 module.exports = {
     handler: handler

@@ -10,3 +10,4 @@ tags
 .bin
 src/**/*.js
 dist
+test/**/*.js
