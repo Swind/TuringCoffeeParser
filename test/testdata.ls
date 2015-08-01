@@ -50,8 +50,25 @@ circle = {
     extrudate: 0.2 #ml/mm
 }
 
+fixed_point = {
+    type: \process
+    name: \fixed_point
+    coordinates: {
+        x: 0 #mm
+        y: 0 #mm
+    }
+    high: {
+        start: 170 #mm
+        end: 165 #mm
+    }
+    total_water: 40 #ml
+    feedrate: 80 #mm/min
+    extrudate: 0.2 #ml/mm
+}
+
 module.exports = {
     spiral: spiral 
     spiral_total_water: spiral_total_water
     circle: circle
+    fixed_point: fixed_point
 }

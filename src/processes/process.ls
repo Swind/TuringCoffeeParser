@@ -5,7 +5,7 @@ radians = (degrees) ->
 # Point class to save the point information
 # Just a data object
 class Point
-    (@x=0, @y=0, @z=0) ~>
+    (@x=null, @y=null, @z=null, @f=null) ~>
 
 z_axial_handler = (params, points) ->
 

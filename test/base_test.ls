@@ -2,6 +2,7 @@ require! {
     "../src/processes/spiral.js": spiral
     "../src/processes/spiral_total_water.js": spiral_total_water
     "../src/processes/circle.js": circle 
+    "../src/processes/fixed_point.js": fixed_point 
     "./testdata.js": testdata
     "assert": assert
 }
@@ -25,4 +26,10 @@ do
     <- describe 'Circle generate points'
     <- test "The circle.points() should return a points list"
     points = circle.handler.points(testdata.circle)
+    assert.notEqual points.length, 0
+
+do
+    <- describe 'Fixed point generate points'
+    <- test "The fixed_point.points() should return a points list"
+    points = fixed_point.handler.points(testdata.fixed_point)
     assert.notEqual points.length, 0
