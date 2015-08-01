@@ -20,6 +20,8 @@
     "gulp-browserify": "",
     "mocha": "",
     "gulp-mocha": "",
-    "LiveScript": ""
+    "livescript": "",
+    "LiveScript": "",
+    "restify": ""
   }
 }
