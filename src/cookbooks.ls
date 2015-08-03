@@ -33,15 +33,14 @@ class CookbookMgr
         cookbook.description = data.description
         cookbook.content = data.content
 
-        @cookbooks.update(cookbook)
+        return @cookbooks.update(cookbook)
 
     read_cookbook: (id) ->
         cookbook = @cookbooks.get id
         return cookbook
 
     delete_cookbook: (id) ->
-        cookbook = @cookbooks.get id
-        @cookbooks.remove cookbook
+        @cookbooks.remove id 
 
 module.exports = {
     CookbookMgr: CookbookMgr 
