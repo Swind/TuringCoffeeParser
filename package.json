@@ -14,14 +14,18 @@
     "gulp": "^3.7.0",
     "gulp-filter": "",
     "gulp-livescript": "",
-    "main-bower-files": "^2.0.0",
-    "gulp-flatten": "",
-    "require-dir": "^0.1.0",
     "gulp-browserify": "",
-    "mocha": "",
     "gulp-mocha": "",
+    "gulp-flatten": "",
     "livescript": "",
     "LiveScript": "",
-    "restify": ""
+    "main-bower-files": "^2.0.0",
+    "mocha": "",
+    "require-dir": "^0.1.0"
+  },
+  "dependencies": {
+    "restify": "",
+    "nanomsg": "",
+    "lokijs": ""
   }
 }

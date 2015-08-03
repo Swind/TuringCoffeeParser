@@ -11,3 +11,5 @@ tags
 src/**/*.js
 dist
 test/**/*.js
+test_cookbooks.json
+src/statics
