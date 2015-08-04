@@ -9,7 +9,5 @@ cache:
 
 script:
 - gulp --require LiveScript build 
-- pwd
-- ls src/processes
 - gulp mocha
 

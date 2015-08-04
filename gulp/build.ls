@@ -33,6 +33,6 @@ gulp.task 'browserify', ['build-livescript'] ->
     .on 'error', handleError
     .pipe gulp.dest "#dist_path"
 
-gulp.task 'mocha', ['build-livescript'] ->
+gulp.task 'mocha' ->
     return gulp.src "#test_path/**/*.js", {read: false}
         .pipe mocha {reporter: 'spec'}
