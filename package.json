@@ -20,8 +20,11 @@
     "livescript": "",
     "LiveScript": "",
     "main-bower-files": "^2.0.0",
+    "require-dir": "^0.1.0",
     "mocha": "",
-    "require-dir": "^0.1.0"
+    "chai": "",
+    "supertest": "",
+    "body-parser": ""
   },
   "dependencies": {
     "restify": "",

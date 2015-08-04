@@ -13,3 +13,4 @@ dist
 test/**/*.js
 test_cookbooks.json
 src/statics
+cookbooks.json

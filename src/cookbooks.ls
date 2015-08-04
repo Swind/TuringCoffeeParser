@@ -20,7 +20,7 @@ class CookbookMgr
             @cookbooks = db.addCollection \cookbooks, {indices: [\name]}
             db.saveDatabase!
 
-    list_cookbooks:  !->
+    list_cookbooks: !->
         return @cookbooks.find!
 
     update_cookbook: (id, data) !->
@@ -45,5 +45,3 @@ class CookbookMgr
 module.exports = {
     CookbookMgr: CookbookMgr 
 }
-
-
