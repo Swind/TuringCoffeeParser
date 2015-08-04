@@ -13,12 +13,12 @@ class CookbookMgr
     */
 
     (dbname)->
-        db = new loki dbname 
+        @db = new loki dbname 
 
-        @cookbooks = db.getCollection \cookbooks
+        @cookbooks = @db.getCollection \cookbooks
         if @cookbooks == null
-            @cookbooks = db.addCollection \cookbooks, {indices: [\name]}
-            db.saveDatabase!
+            @cookbooks = @db.addCollection \cookbooks, {indices: [\name]}
+            @db.saveDatabase!
 
     list_cookbooks: !->
         return @cookbooks.find!
@@ -28,19 +28,21 @@ class CookbookMgr
             cookbook = @cookbooks.insert data
         else
             cookbook = @cookbooks.get id
+            cookbook.name = data.name
+            cookbook.description = data.description
+            cookbook.content = data.content
+            @cookbooks.update(cookbook)
 
-        cookbook.name = data.name
-        cookbook.description = data.description
-        cookbook.content = data.content
-
-        return @cookbooks.update(cookbook)
+        @db.saveDatabase!
+        return cookbook
 
     read_cookbook: (id) ->
         cookbook = @cookbooks.get id
         return cookbook
 
     delete_cookbook: (id) ->
-        @cookbooks.remove id 
+        @cookbooks.remove id
+        @db.saveDatabase!
 
 module.exports = {
     CookbookMgr: CookbookMgr 

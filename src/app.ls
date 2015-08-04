@@ -12,6 +12,7 @@ create_server = (port=3000) ->
     ###############################################################
 
     server = restify.createServer();
+    server.use restify.bodyParser { mapParams: false }
     cbsmgr = new cookbooks.CookbookMgr \cookbooks.json
 
     ###############################################################
@@ -34,6 +35,7 @@ create_server = (port=3000) ->
         cookbook = cbsmgr.read_cookbook res.params.id
 
         if cookbook == null
+            console.log "Create new cookbook"
             next(new restify.NotFoundError!)
         else
             res.contentType = \json
@@ -43,16 +45,16 @@ create_server = (port=3000) ->
     server.put '/cookbooks/:id', (req, res, next) ->
         # Create
         if req.params.id == \new
-            cookbook = cbsmgr.update_cookbook null, req.params.data
+           cookbook = cbsmgr.update_cookbook null, req.body
         # Update
         else
-            cookbook = cbsmgr.update_cookbook req.params.id, req.params.data
+            cookbook = cbsmgr.update_cookbook req.params.id, req.body
 
         res.send 201, cookbook
         next!
 
     server.del '/cookbooks/:id', (req, res, next) ->
-        cbsmgr.delete_cookbook req.params.id
+        cbsmgr.delete_cookbook parseInt req.params.id
         res.send 204
 
 
@@ -82,7 +84,7 @@ create_server = (port=3000) ->
       default: 'index.html'
     })
 
-    server.listen port
+    #server.listen port
 
     return server
 
