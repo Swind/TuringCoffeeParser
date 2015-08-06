@@ -58,11 +58,27 @@ create_server = (port=3000) ->
         res.send 204
 
 
-    /*
     #Barista
-    server.get '/barista', get_barista_status
-    server.put '/barista/brew', brew_coffee
+    /*
+    {
+        "State": "Brewing",
+        "Now steps": "Step title",
+        "Now steps index": 3,
+        "Now process": "Process title",
+        "Now process index": 1,
+        "Now cookbook name": "Test",
+        "Temperature": 90,
+        "Is water full": true,
+        "Total commands": 1000,
+        "Progress": 834
+    }
+    */
+    server.get '/barista', (req, res, next) ->
 
+    server.put '/barista/brew', (req, res, next) ->
+
+
+    /*
     #Heater
     server.get '/heater', get_heater_status
     server.put '/heater', set_heater_temperature
