@@ -1,30 +1,53 @@
 require!{
-    "./monitor.js": monitor
+    "./channel.js": channel 
 }
 
-HEATER_ADDRESS = 'ipc:///tmp/heater_pub_channel'
+HEATER_PUB_ADDRESS = 'ipc:///tmp/heater_pub_channel'
+REFILL_PUB_ADDRESS = 'ipc:///tmp/refill_pub_channel'
 
-###############################################################
-#
-#    Global Variables 
-#
-###############################################################
+HEATER_CMD_ADDRESS = 'ipc:///tmp/heater_cmd_channel'
+REFILL_CMD_ADDRESS = 'ipc:///tmp/refill_cmd_channel'
 
-heater_status = {}
+class Barista
 
-###############################################################
-#
-#    Register monitor and message handler 
-#
-###############################################################
+    !->
+        @monitor = new channel.Monitor
+        @monitor.subscribe HEATER_PUB_ADDRESS, \heater
+        @monitor.subscribe REFILL_PUB_ADDRESS, \refill
 
-# Heater
-update_heater_status = (msg)->
-    #{"set_point": 0, "cycle_time": 5, "duty_cycle": 0, "temperature": 19.993750000000002}
-    heater_status = JSON.parse msg
+        @heater_cmd = new channel.CmdChannel HEATER_CMD_ADDRESS
+        @refill_cmd = new channel.CmdChannel REFILL_CMD_ADDRESS
 
-monitor.subscribe HEATER_ADDRESS, update_heater_status
+    get_heater_status: !->
+        return @monitor.get_data \heater
+
+    set_heater_tempearture: (temperature)->
+        @heater_cmd.send {
+            temperature: temperature
+        }
+
+    get_refill_status: !->
+        return @monitor.get_data \refill
+
+    /*
+    refill command example
+    {
+        "active": true,
+    }
+    */
+    start_refill: !->
+        cmd = {
+            "active": true
+        }
+        @refill_cmd.send cmd
+
+    stop_refill: !->
+        cmd = {
+            "active": false 
+        }
+        @refill_cmd.send cmd
+
 
 module.exports = {
-    heater_status: heater_status
+    Barista: Barista
 }

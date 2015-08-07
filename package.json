@@ -29,6 +29,7 @@
   "dependencies": {
     "restify": "",
     "nanomsg": "",
-    "lokijs": ""
+    "lokijs": "",
+    "ws": ""
   }
 }

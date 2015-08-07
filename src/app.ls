@@ -1,6 +1,7 @@
 require! {
     "restify": restify
     "./cookbooks.js": cookbooks
+    "./barista.js": barista
 }
 
 create_server = (port=3000) ->
@@ -11,8 +12,13 @@ create_server = (port=3000) ->
     #
     ###############################################################
 
+    # HTTP server
     server = restify.createServer();
     server.use restify.bodyParser { mapParams: false }
+
+    # Websockets server
+
+    # Data manager
     cbsmgr = new cookbooks.CookbookMgr \cookbooks.json
 
     ###############################################################
@@ -74,9 +80,20 @@ create_server = (port=3000) ->
     }
     */
     server.get '/barista', (req, res, next) ->
+        data = {
+                         
+        }
 
-    server.put '/barista/brew', (req, res, next) ->
+    server.get '/barista/heater', (req, res, next) ->
+    server.get '/barista/heater/start', (req, res, next) ->
+    server.get '/barista/heater/stop', (req, res, next) ->
 
+    server.get '/barista/refill', (req, res, next) ->
+    server.post '/barista/refill/start', (req, res, next) ->
+    server.post '/barista/refill/stop', (req, res, next) ->
+
+    server.post '/barista/brew/start', (req, res, next) ->
+    server.post '/barista/brew/stop', (req, res, next) ->
 
     /*
     #Heater

@@ -36,3 +36,12 @@ gulp.task 'browserify', ['build-livescript'] ->
 gulp.task 'mocha' ->
     return gulp.src "#test_path/**/*.js", {read: false}
         .pipe mocha {reporter: 'spec'}
+
+gulp.task 'copy-js' ->
+    return gulp.src bowerfiles ['**/*.js'], {base: './vendor'}
+           .pipe gulp.dest "#root_path/static/js"
+
+gulp.task 'copy-css' ->
+    return gulp.src bowerfiles ['**/*.css'], {base: './vendor'}
+           .pipe gulp.dest "#root_path/static/css"
+
