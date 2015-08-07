@@ -23,7 +23,7 @@ class Monitor
 
         sock = nanomsg.socket \sub
         sock.connect address
-        sock.on \data, record_msg name
+        sock.on \data, @record_msg name
 
         sub = {}
         sub.socket = sock
@@ -59,7 +59,7 @@ class CmdChannel
 
         @callback = callback
 
-    replay_handler: (msg) ->
+    reply_handler: (msg) ->
         if @callback != null
             callback JSON.parse msg
 

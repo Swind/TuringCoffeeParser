@@ -17,6 +17,8 @@
     "gulp-browserify": "",
     "gulp-mocha": "",
     "gulp-flatten": "",
+    "gulp-sass": "",
+    "gulp-less": "",
     "livescript": "",
     "LiveScript": "",
     "main-bower-files": "^2.0.0",

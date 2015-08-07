@@ -1,5 +1,5 @@
 require! {
-    "../src/app.js": app 
+    "../src/server.js": api_server 
     "./testdata.js": testdata
     "chai": chai
     "assert": assert
@@ -18,7 +18,7 @@ var api
 
 do
     <- before
-    server := app 3000
+    server := api_server 3000
     api := supertest server
 
 do
