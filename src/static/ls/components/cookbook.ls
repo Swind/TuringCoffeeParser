@@ -6,9 +6,10 @@ cookbook = {}
 #
 # ================================================================================
 class CookbookItem
-    (name, data) ->
-        @name = name
-        @description = data["description"]
+    (item) ->
+        @name = item.name
+        @description = item.description
+        @content = item.content
 
 cookbook.vm = do ->
     vm = {}
@@ -25,35 +26,76 @@ cookbook.vm = do ->
             }
         )
         .then((raw_data) ->
-            cookbooks = for name, data of raw_data
-                new CookbookItem(name, data)
+            cookbooks = for item of raw_data 
+                new CookbookItem(item)
 
             vm.cookbooks(cookbooks)
         )
 
     vm
-
 # ================================================================================
 #
 #   View 
 #
 # ================================================================================
+
 cookbook.view = (ctrl) ->
+
+    generate_buttons = (cookbook) ->
+        m "div.buttons" {config: ctrl.button_config} [
+            (m "div.button.button-edit" {
+                onclick: ctrl.edit_onclick.bind cookbook
+            } "Edit")
+            (m "div.button.button-brew" {
+                onclick: ctrl.brew_onclick.bind cookbook
+            } "Brew")
+        ]
+
     generate_card = (cookbook) ->
-        m "div.ui.card", [
-            (m "div.content", [
-                (m "i.right.floated.delete.icon")
-                (m "a.header[href='/editor/#{cookbook.name}']", {config: m.route}, cookbook.name)
+        m "div.col-xs-12.col-sm-4.col-md-3.col-lg-2", [
+            (m "div.card[href='/editor/#{cookbook.name}']",
+            {
+                config: m.route
+                onclick: ctrl.card_onclick
+            },
+            [
+                (m "div.header", cookbook.name)
+                (m "div.divider")
                 (m "div.description" cookbook.description)
+                (generate_buttons cookbook)
             ])
         ]
 
+    new_cookbook = !->
+        return m "div.col-xs-12.col-sm-4.col-md-3.col-lg-2", [
+            (m "div.card[href='/editor/new']",
+            {
+                config: m.route
+                onclick: ctrl.card_onclick
+            },
+            [
+                (m "div.header", "New")
+                (m "div.divider")
+                (m "div.description" "Create")
+            ])
+        ]
+
+
     cards = (cookbooks) ->
-        m "div.ui.three.cards", for cookbook in cookbooks
+        cookbook_cards = for cookbook in cookbooks
             generate_card(cookbook)
 
+        if cookbook_cards == null
+            cookbook_cards = []
+
+        cookbook_cards[*] = new_cookbook!
+
+        console.log cookbook_cards
+        m "div", cookbook_cards
+
+
     [
-        (m "div.column", [cards(cookbook.vm.cookbooks!)])
+        (m "div.row.card-container", [cards(cookbook.vm.cookbooks!)])
     ]
 
 # ================================================================================
@@ -61,8 +103,31 @@ cookbook.view = (ctrl) ->
 #   Controller 
 #
 # ================================================================================
-cookbook.controller = ! ->
+cookbook.controller = ->
     cookbook.vm.init!
     cookbook.vm.list!
+
+    ctrl = {}
+    ctrl.card_onclick = (e) !->
+        btns = document.getElementsByClassName 'buttons'
+
+        for btn in btns
+            btn.style.display = 'none'
+
+        for child in this.children
+            if child.className is 'buttons'
+                child.style.display = 'flex'
+
+    ctrl.button_config = (element, isInit) !->
+        if isInit is false
+            element.style.display = 'none'
+
+    ctrl.brew_onclick = ->
+        m.route "/brew/#{this.name}"
+
+    ctrl.edit_onclick = ->
+        m.route "/editor/#{this.name}"
+
+    ctrl
 
 module.exports = cookbook

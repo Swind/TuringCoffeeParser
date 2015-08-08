@@ -107,11 +107,10 @@ create_server = (port=3000) ->
     #    Statics API 
     #
     ###############################################################
-
-    server.get /.*/, restify.serveStatic({
-      directory: './static'
+    server.get /^\/((.*)(\.)(.+))*$/, restify.serveStatic {
+      directory: 'static'
       default: 'index.html'
-    })
+    }
 
     server.listen port
 

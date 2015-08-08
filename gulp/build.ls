@@ -24,7 +24,7 @@ compile_livescript = (path) ->
         .on 'error', handleError
         .pipe gulp.dest "#path"
 
-gulp.task 'build', ['build-livescript', 'browserify', 'build-sass', 'copy-js', 'copy-css'] ->
+gulp.task 'build', ['build-livescript', 'browserify', 'build-sass', 'copy-js', 'copy-css', 'copy-fonts'] ->
 
 gulp.task 'build-livescript' ->
     compile_livescript src_path
@@ -62,5 +62,18 @@ gulp.task 'copy-css' ->
                         }
         }
     }
-    return gulp.src bowerfiles ['**/*.css'], config
+    return gulp.src bowerfiles ['**/*.css'] config
            .pipe gulp.dest "#src_path/static/css"
+
+gulp.task 'copy-fonts' ->
+    config = {
+        overrides: {
+                        bootstrap: {
+                            main: [
+                                './dist/fonts/*.*'
+                            ]
+                        }
+        }
+    }
+    return gulp.src bowerfiles ['**/fonts/*.*'] config
+           .pipe gulp.dest "#src_path/static/fonts"
