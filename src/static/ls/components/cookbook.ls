@@ -66,17 +66,15 @@ cookbook.view = (ctrl) ->
             ])
         ]
 
-    new_cookbook = !->
+    new_card = ! ->
         return m "div.col-xs-12.col-sm-4.col-md-3.col-lg-2", [
-            (m "div.card[href='/editor/new']",
+            (m "div.card[href='/barista/new']",
             {
-                config: m.route
-                onclick: ctrl.card_onclick
+                onclick: ctrl.new_cookbook_onclick
             },
             [
                 (m "div.header", "New")
-                (m "div.divider")
-                (m "div.description" "Create")
+                (m "div.glyphicon.glyphicon-plus")
             ])
         ]
 
@@ -88,9 +86,8 @@ cookbook.view = (ctrl) ->
         if cookbook_cards == null
             cookbook_cards = []
 
-        cookbook_cards[*] = new_cookbook!
+        cookbook_cards[*] = new_card!
 
-        console.log cookbook_cards
         m "div", cookbook_cards
 
 
@@ -122,8 +119,11 @@ cookbook.controller = ->
         if isInit is false
             element.style.display = 'none'
 
+    ctrl.new_cookbook_onclick = ->
+        m.route "/barista/new"
+
     ctrl.brew_onclick = ->
-        m.route "/brew/#{this.name}"
+        m.route "/barista/#{this.name}"
 
     ctrl.edit_onclick = ->
         m.route "/editor/#{this.name}"

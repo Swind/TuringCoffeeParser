@@ -1,6 +1,4 @@
 require! {
-    "components/heater.js": heater 
-    "components/printer.js": printer 
 }
 
 barista = {}
@@ -16,21 +14,24 @@ barista = {}
 #   View 
 #
 # ================================================================================
+/*
+    <div class="page-header">
+        <h2>Turing Coffee <small>一杯量的咖啡</small></h2>
+    </div>
+*/
 barista.view = (ctrl) ->
     [
-        (m "div.column", [ctrl.heater_chart!])
-        (m "div.column", [ctrl.printer!])
+        (m \div.page-header, [
+            (m \h2, "Cookbook Title", [
+                (m \p, (m \small, "Cookbook Description"))
+            ])
+        ])
     ]
 # ================================================================================
 #
 #   Controller 
 #
 # ================================================================================
-submodule = (module, args) ->
-    return module.view.bind(this, new module.controller(args))
-
 barista.controller = ! ->
-    @heater_chart = submodule(heater, {})
-    @printer = submodule(printer, {})
 
 module.exports = barista
