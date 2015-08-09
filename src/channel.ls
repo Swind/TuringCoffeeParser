@@ -16,10 +16,10 @@ class Monitor
         sub = @subscribers[name]
         sub.data = JSON.parse msg
 
-        if sub.action != null
-            sub.action msg
+        if sub.callback != null
+            sub.callback msg
 
-    subscribe: (address, name, action=null) ->
+    subscribe: (address, name, callback=null) ->
 
         sock = nanomsg.socket \sub
         sock.connect address
@@ -28,7 +28,7 @@ class Monitor
         sub = {}
         sub.socket = sock
         sub.name = name
-        sub.action = action
+        sub.callback = callback
         sub.data = {}
 
         @subscribers[name] = sub
