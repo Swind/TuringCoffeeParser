@@ -21,8 +21,6 @@ Parameters Example:
     }
     cylinder: 5
     point_interval: 0.1 #mm
-    feedrate: 80 #mm/min
-    extrudate: 0.2 #ml/mm
     total_water: 60 #ml
     total_time: 30 #sec
     temperature: 60 #degress C
