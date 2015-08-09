@@ -20,12 +20,13 @@ Point = Process.Point
     total_water: 40 #ml
     feedrate: 80 #mm/min
     extrudate: 0.2 #ml/mm
+    temperature: 60 #degress C
 }
 */
 
 handler = {}
 
-handler.points = (params) ->
+handler.points = (params, current_data) ->
 
     point_number = params.total_water / params.extrudate
 
@@ -45,6 +46,9 @@ handler.points = (params) ->
         point_list = Process.z_axial_handler(params, point_list)
     else:
         point_list.unshift Point(z=params.high.start, f=2000)
+
+    # Handle e
+    point_list = Process.e_axial_handler(params, point_list, current_data)
 
     return point_list 
 

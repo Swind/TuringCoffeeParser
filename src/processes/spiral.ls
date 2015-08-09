@@ -23,12 +23,13 @@ Parameters Example:
     point_interval: 0.1 #mm
     feedrate: 80 #mm/min
     extrudate: 0.2 #ml/mm
+    temperature: 60 #degress C
 }
 */
 
 handler = {}
 
-handler.points = (params) ->
+handler.points = (params, current_data) ->
 
     max_theta = radians(params.cylinder * 360)
     # a is acceleration
@@ -51,9 +52,10 @@ handler.points = (params) ->
         # Create the point object to save the information
         point_list[*] = Point x, y
 
-    # Handler f and z
+    # Handler e, f and z
     point_list = f_handler params, point_list
-    point_list = Process.z_axial_handler(params, point_list)
+    point_list = Process.z_axial_handler params, point_list
+    point_list = Process.e_axial_handler params, point_list, current_data
 
     return point_list
 

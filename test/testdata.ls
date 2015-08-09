@@ -13,6 +13,7 @@ spiral = {
     point_interval: 0.1 #mm
     feedrate: 80 #mm/min
     extrudate: 0.2 #ml/mm
+    temperature: 60 # degress C
 }
 
 spiral_total_water = {
@@ -32,6 +33,7 @@ spiral_total_water = {
     extrudate: 0.2 #ml/mm
     total_water: 60 #ml
     total_time: 30 #sec
+    temperature: 60 # degress C
 }
 
 circle = {
@@ -48,6 +50,7 @@ circle = {
     point_interval: 0.1 #mm
     feedrate: 80 #mm/min
     extrudate: 0.2 #ml/mm
+    temperature: 60 # degress C
 }
 
 fixed_point = {
@@ -64,6 +67,7 @@ fixed_point = {
     total_water: 40 #ml
     feedrate: 80 #mm/min
     extrudate: 0.2 #ml/mm
+    temperature: 60 # degress C
 }
 
 module.exports = {
