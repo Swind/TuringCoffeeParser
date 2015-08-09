@@ -4,6 +4,7 @@
   "dependencies": {
     "bootstrap": "",
     "mithril": "",
-    "holderjs": ""
+    "holderjs": "",
+    "material-design-lite": ""
   }
 }

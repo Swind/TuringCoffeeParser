@@ -25,10 +25,10 @@
     }
 
     .line {
-        ::before { top: -4px; }
-        ::after { bottom: -4px; }
-        ::before,
-        ::after {
+        &:before { top: -4px; }
+        &:after { bottom: -4px; }
+        &:before,
+        &:after {
             content: '';
             position: absolute;
             left: -4px;
