@@ -1,5 +1,5 @@
 require!{
-    "./channel.js": channel 
+    "./channel": channel 
 }
 
 HEATER_PUB_ADDRESS = 'ipc:///tmp/heater_pub_channel'

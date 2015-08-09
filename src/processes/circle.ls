@@ -1,5 +1,5 @@
 require! {
-    "./process.js": Process 
+    "./process": Process 
 }
 
 radians = Process.radians

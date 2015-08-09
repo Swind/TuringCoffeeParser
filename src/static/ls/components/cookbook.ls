@@ -26,7 +26,8 @@ cookbook.vm = do ->
             }
         )
         .then((raw_data) ->
-            cookbooks = for item of raw_data 
+            cookbooks = for index, item of raw_data 
+                console.log index, item
                 new CookbookItem(item)
 
             vm.cookbooks(cookbooks)

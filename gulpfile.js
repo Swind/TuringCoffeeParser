@@ -1,3 +1,3 @@
-require('LiveScript');
+require('livescript');
 require('require-dir')('./gulp')
 

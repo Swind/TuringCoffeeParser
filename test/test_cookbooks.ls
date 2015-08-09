@@ -9,9 +9,17 @@ test = it
 <- describe 'Test Cookbooks Manager'
 do
     <- describe 'Test CRUD'
+
+    var cbmgr
+
+    before (done)->
+        cbmgr := new cbs.CookbookMgr './cookbooks.json', done
+
+    after (done)->
+        cbmgr.cookbooks.removeDataOnly!
+        done!
+
     <- test 'Add two cookbooks and list all cookbooks, the result should be two'
-    cbmgr = new cbs.CookbookMgr './test_cookbooks.json'
-    cbmgr.cookbooks.removeDataOnly!
 
     # Create
     data = {

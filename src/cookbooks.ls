@@ -12,13 +12,19 @@ class CookbookMgr
     }
     */
 
-    (dbname)->
+    (dbname, callback=null)->
         @db = new loki dbname 
 
-        @cookbooks = @db.getCollection \cookbooks
-        if @cookbooks == null
-            @cookbooks = @db.addCollection \cookbooks, {indices: [\name]}
-            @db.saveDatabase!
+        @db.loadDatabase {}, !~>
+            @cookbooks = @db.getCollection \cookbooks
+
+            if @cookbooks == null
+                @cookbooks = @db.addCollection \cookbooks, {indices: [\name]}
+                @db.saveDatabase!
+
+            if callback != null
+                callback!
+
 
     list_cookbooks: !->
         return @cookbooks.find!

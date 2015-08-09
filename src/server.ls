@@ -1,9 +1,9 @@
 require! {
     "restify": restify
-    "./cookbooks.js": cookbooks
+    "./cookbooks": cookbooks
 }
 
-Barista = require("./barista.js").Barista
+Barista = require("./barista").Barista
 
 create_server = (port=3000) ->
 
@@ -43,7 +43,6 @@ create_server = (port=3000) ->
         cookbook = cbsmgr.read_cookbook res.params.id
 
         if cookbook == null
-            console.log "Create new cookbook"
             next(new restify.NotFoundError!)
         else
             res.contentType = \json
@@ -108,7 +107,7 @@ create_server = (port=3000) ->
     #
     ###############################################################
     server.get /^\/((.*)(\.)(.+))*$/, restify.serveStatic {
-      directory: 'static'
+      directory: __dirname + '/static'
       default: 'index.html'
     }
 

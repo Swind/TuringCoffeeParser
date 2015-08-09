@@ -6,37 +6,23 @@
 body {
     height: 100%;
     font-family: 'Open Sans', sans-serif;
-    margin-bottom: 60px;
 
     //For navbar-fixed-top
-    padding-top: 70px;
+
+    div#main-layout {
+        height: 100%;
+    }
+
+    div#wrapper {
+        height: 100%;
+    }
 
     div.ui.grid {
         height: 100%;
     }
 
-    div.coffee_sidebar {
+    div#barista-timeline {
         height: 100%;
-        overflow: auto;
-    }
-
-    div.cookbook_list {
-        height: 100%;
-        overflow: auto;
-    }
-
-    div.cookbook_content {
-        height: 100%;
-        overflow: auto;
-    }
-
-    .CodeMirror {
-        height: 100%;
-    }
-
-    div.editor {
-        height: 100%;
-        overflow: auto;
     }
 
     div.setting.sidebar.menu {
