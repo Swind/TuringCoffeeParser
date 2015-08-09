@@ -8,7 +8,7 @@ cache:
     - node_modules
 
 script:
-- bower install
+- ./node_modules/.bin/bower install
 - gulp --require LiveScript build 
 - gulp mocha
 

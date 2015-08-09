@@ -26,7 +26,8 @@
     "mocha": "",
     "chai": "",
     "supertest": "",
-    "body-parser": ""
+    "body-parser": "",
+    "bower": ""
   },
   "dependencies": {
     "restify": "",
