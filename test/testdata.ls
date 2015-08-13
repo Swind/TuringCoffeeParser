@@ -1,6 +1,7 @@
 spiral = {
     type: \process
     name: \spiral
+    description: "spiral test process"
     radius: {
         start: 10 #mm
         end: 20 #mm
@@ -13,11 +14,13 @@ spiral = {
     point_interval: 0.1 #mm
     feedrate: 80 #mm/min
     extrudate: 0.2 #ml/mm
+    temperature: 80
 }
 
 spiral_total_water = {
     type: \process
     name: "spiral total water"
+    description: "spiral total water test process"
     radius: {
         start: 10 #mm
         end: 20 #mm
@@ -32,11 +35,13 @@ spiral_total_water = {
     extrudate: 0.2 #ml/mm
     total_water: 60 #ml
     total_time: 30 #sec
+    temperature: 50
 }
 
 circle = {
     type: \process
     name: \circle
+    description: "circle test process"
     radius: {
         start: 10 #mm
     }
@@ -48,11 +53,13 @@ circle = {
     point_interval: 0.1 #mm
     feedrate: 80 #mm/min
     extrudate: 0.2 #ml/mm
+    temperature: 65 
 }
 
 fixed_point = {
     type: \process
     name: \fixed_point
+    description: "fixed point test process"
     coordinates: {
         x: 0 #mm
         y: 0 #mm
@@ -64,6 +71,7 @@ fixed_point = {
     total_water: 40 #ml
     feedrate: 80 #mm/min
     extrudate: 0.2 #ml/mm
+    temperature: 65 
 }
 
 module.exports = {

@@ -22,8 +22,8 @@ do
     api := supertest server
 
 do
-    <- describe 'Test CRUD'
-    done <- test '/cookbooks/new'
+    <- describe 'Test cookbooks CRUD API'
+    done <- test 'Test /cookbooks/new'
 
     data = {
         name: "test1"

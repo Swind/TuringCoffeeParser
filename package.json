@@ -19,8 +19,10 @@
     "gulp-flatten": "",
     "gulp-sass": "",
     "gulp-less": "",
+    "gulp-webpack": "",
+    "webpack": "",
+    "livescript-loader": "",
     "livescript": "",
-    "LiveScript": "",
     "main-bower-files": "^2.0.0",
     "require-dir": "^0.1.0",
     "mocha": "",
@@ -33,6 +35,7 @@
     "restify": "",
     "nanomsg": "",
     "lokijs": "",
-    "ws": ""
+    "ws": "",
+    "deep-merge":""
   }
 }

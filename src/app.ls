@@ -1,3 +1,2 @@
-server = require("./server.js")
+server = require("./server")
 server 3000
-
