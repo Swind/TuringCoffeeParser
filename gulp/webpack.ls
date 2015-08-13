@@ -25,6 +25,13 @@ fs.readdirSync \node_modules
 *    Frontend and backend webpack config
 *
 ============================================================*/
+addVendor = (type, name, path, config) ->
+    config.resolve.alias[name] = path
+    config.module.noParse.push new RegExp '^' + name + '$'
+
+    if type == \js
+        config.entry.vendors.push name
+
 defaultConfig = {
     module:{
         loaders:
@@ -33,10 +40,6 @@ defaultConfig = {
             exclude: /node_modules/
           * test: /\.(png|jpg|gif)$/
             loader: "url-loader?limit=8192"
-    },
-    resolve:{
-        root: ["bower_components"]
-        extensions: ["", ".js", ".ls"]
     }
 }
 
@@ -47,11 +50,22 @@ if process.env.NODE_ENV !== \production
 config = (overrides) ->
     return deepmerge defaultConfig, overrides || {}
 
+bower_dir = __dirname + "/../bower_components"
+
 frontendConfig = config {
-    entry: "./src/static/ls/coffee.ls"
+    entry: {
+        bundle: "./src/static/ls/coffee.ls"
+        vendors: []
+    }
+    module:{
+        noParse: []
+    }
+    resolve:{
+        alias:{
+        }
+    }
     output: {
         path: "build/static/js"
-        filename: \frontend.js
     }
 }
 
@@ -91,9 +105,16 @@ onBuild = (done)->
             done!
 
 gulp.task \frontend-build, (done)->
+    addVendor \js, \jquery, bower_dir + "/jquery/dist/jquery.min.js", frontendConfig
+    addVendor \js, \mithril, bower_dir + "/mithril/mithril.min.js", frontendConfig
+    addVendor \js, \materialize, bower_dir + "/materialize/dist/js/materialize.min.js", frontendConfig
+    addVendor \js, \holderjs, bower_dir + "/holderjs/holder.min.js", frontendConfig
+
+    console.log frontendConfig
+
     webpack(frontendConfig).run onBuild done
 
 gulp.task \backend-build, (done)->
     webpack(backendConfig).run onBuild done
 
-gulp.task \webpack, [\backend-build, \frontend-build]
+gulp.task \webpack, [\frontend-build]

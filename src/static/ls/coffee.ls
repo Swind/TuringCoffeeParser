@@ -1,3 +1,8 @@
+#Vendor 
+require! {
+    "mithril": mithril
+}
+
 require! {
     "./components/cookbook": cookbook
     "./components/barista": barista

@@ -19,7 +19,6 @@
     "gulp-flatten": "",
     "gulp-sass": "",
     "gulp-less": "",
-    "gulp-webpack": "",
     "webpack": "",
     "livescript-loader": "",
     "livescript": "",
