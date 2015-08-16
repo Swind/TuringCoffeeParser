@@ -1,6 +1,7 @@
 #Vendor 
 require! {
     "mithril": mithril
+    "materialize-css": materialize 
 }
 
 require! {

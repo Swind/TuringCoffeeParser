@@ -28,13 +28,17 @@
     "chai": "",
     "supertest": "",
     "body-parser": "",
-    "bower": ""
+    "bower": "",
+    "style-loader": "",
+    "sass-loader": "",
+    "css-loader": ""
   },
   "dependencies": {
     "restify": "",
     "nanomsg": "",
     "lokijs": "",
     "ws": "",
-    "deep-merge":""
+    "deep-merge":"",
+    "hammerjs":""
   }
 }

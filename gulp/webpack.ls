@@ -6,6 +6,50 @@ require! {
     "fs": fs
 }
 
+/*==========================================================
+*
+*    Global variables 
+*
+============================================================*/
+
+bower_dir = __dirname + "/../bower_components"
+
+defaultConfig = {
+    module:{
+        loaders:
+          * test: /\.ls$/
+            loader: "livescript-loader"
+            exclude: /node_modules/
+
+          * test: /\.(png|jpg|gif)$/
+            loader: "url-loader?limit=8192"
+
+          * test: /\.css$/
+            loader: 'style-loader!css-loader'
+
+          * test: /\.scss$/
+            loader: 'style!css!sass'
+            
+            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&mimetype=application/font-woff" },
+            { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&mimetype=application/font-woff2" },
+            { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&mimetype=application/octet-stream" },
+            { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: "file" },
+            { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&mimetype=image/svg+xml" }
+    }
+    resolve: {
+        extensions: ['', '.ls', '.js']
+    }
+}
+
+if process.env.NODE_ENV !== \production
+    defaultConfig.devtool = \source-map
+    defaultConfig.debug = true
+
+/*==========================================================
+*
+*    Utils 
+*
+============================================================*/
 deepmerge = DeepMerge (target, source, key)->
     if target instanceof Array
        return [].concat target, source
@@ -20,11 +64,6 @@ fs.readdirSync \node_modules
   .forEach (mod)->
       nodeModules[mod] = "commonjs " + mod
 
-/*==========================================================
-*
-*    Frontend and backend webpack config
-*
-============================================================*/
 addVendor = (type, name, path, config) ->
     config.resolve.alias[name] = path
     config.module.noParse.push new RegExp '^' + name + '$'
@@ -32,25 +71,24 @@ addVendor = (type, name, path, config) ->
     if type == \js
         config.entry.vendors.push name
 
-defaultConfig = {
-    module:{
-        loaders:
-          * test: /\.ls$/
-            loader: "livescript-loader"
-            exclude: /node_modules/
-          * test: /\.(png|jpg|gif)$/
-            loader: "url-loader?limit=8192"
-    }
-}
-
-if process.env.NODE_ENV !== \production
-    defaultConfig.devtool = \source-map
-    defaultConfig.debug = true
-
 config = (overrides) ->
     return deepmerge defaultConfig, overrides || {}
 
-bower_dir = __dirname + "/../bower_components"
+onBuild = (done)->
+    return (err, stats) ->
+        if err
+            console.log \Error, err
+        else
+            console.log stats.toString!
+
+        if done
+            done!
+
+/*==========================================================
+*
+*    Frontend 
+*
+============================================================*/
 
 frontendConfig = config {
     entry: {
@@ -66,14 +104,35 @@ frontendConfig = config {
     }
     output: {
         path: "build/static/js"
+        filename: \frontend.js
     }
+    plugins: [
+     new webpack.optimize.CommonsChunkPlugin "vendors", "vendors.js"
+    ]
 }
 
+gulp.task \frontend-build, (done)->
+    # JavaScript
+    addVendor \js, \jquery, bower_dir + "/jquery/dist/jquery.min.js", frontendConfig
+    addVendor \js, \mithril, bower_dir + "/mithril/mithril.min.js", frontendConfig
+    addVendor \js, \materialize, bower_dir + "/materialize/dist/js/materialize.min.js", frontendConfig
+    addVendor \js, \holderjs, bower_dir + "/holderjs/holder.min.js", frontendConfig
+
+    #CSS
+    addVendor \css, \materialize-css, bower_dir + "/materialize/dist/css/materialize.min.css", frontendConfig
+
+    webpack(frontendConfig).run onBuild done
+
+/*==========================================================
+*
+*    Backend 
+*
+============================================================*/
 backendConfig = config {
-  entry: "./src/app.ls"
+  entry: "./src/server/app.ls"
   target: \node
   output:{
-    path: \build 
+    path: \build
     filename: \backend.js
   }
 
@@ -89,32 +148,13 @@ backendConfig = config {
   externals: nodeModules
 }
 
-/*==========================================================
-*
-*    Webpack task 
-*
-============================================================*/
-onBuild = (done)->
-    return (err, stats) ->
-        if err
-            console.log \Error, err
-        else
-            console.log stats.toString!
-
-        if done
-            done!
-
-gulp.task \frontend-build, (done)->
-    addVendor \js, \jquery, bower_dir + "/jquery/dist/jquery.min.js", frontendConfig
-    addVendor \js, \mithril, bower_dir + "/mithril/mithril.min.js", frontendConfig
-    addVendor \js, \materialize, bower_dir + "/materialize/dist/js/materialize.min.js", frontendConfig
-    addVendor \js, \holderjs, bower_dir + "/holderjs/holder.min.js", frontendConfig
-
-    console.log frontendConfig
-
-    webpack(frontendConfig).run onBuild done
 
 gulp.task \backend-build, (done)->
     webpack(backendConfig).run onBuild done
 
-gulp.task \webpack, [\frontend-build]
+/*==========================================================
+*
+*    Gulp webpack task 
+*
+============================================================*/
+gulp.task \webpack, [\backend-build, \frontend-build]
