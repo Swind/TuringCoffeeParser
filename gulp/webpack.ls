@@ -29,7 +29,8 @@ defaultConfig = {
 
           * test: /\.scss$/
             loader: 'style!css!sass'
-            
+
+            # Package fonts 
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&mimetype=application/font-woff" },
             { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&mimetype=application/font-woff2" },
             { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&mimetype=application/octet-stream" },
@@ -92,7 +93,7 @@ onBuild = (done)->
 
 frontendConfig = config {
     entry: {
-        bundle: "./src/static/ls/coffee.ls"
+        bundle: "./src/static/coffee.ls"
         vendors: []
     }
     module:{
