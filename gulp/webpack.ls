@@ -1,9 +1,12 @@
 require! {
     gulp
+    "gulp-util": gutil
     "deep-merge": DeepMerge
     "path": path
     "webpack": webpack
     "fs": fs
+    "webpack-dev-server": WebpackDevServer 
+    "html-webpack-plugin": HtmlWebpackPlugin
 }
 
 /*==========================================================
@@ -15,6 +18,7 @@ require! {
 bower_dir = __dirname + "/../bower_components"
 
 defaultConfig = {
+    cache: true
     module:{
         loaders:
           * test: /\.ls$/
@@ -43,7 +47,7 @@ defaultConfig = {
 }
 
 if process.env.NODE_ENV !== \production
-    defaultConfig.devtool = \source-map
+    defaultConfig.devtool = '#eval-source-map'
     defaultConfig.debug = true
 
 /*==========================================================
@@ -104,25 +108,38 @@ frontendConfig = config {
         }
     }
     output: {
-        path: "build/static/js"
-        filename: \frontend.js
+        path: "build/static"
+        filename: "js/frontend.js"
     }
     plugins: [
-     new webpack.optimize.CommonsChunkPlugin "vendors", "vendors.js"
+     new webpack.optimize.CommonsChunkPlugin "vendors", "js/vendors.js"
+     new webpack.ProvidePlugin {
+         $: "jquery"
+         jQuery: "jquery"
+         "window.jQuery": "jquery"
+         m: "mithril"
+     }
+     new HtmlWebpackPlugin {
+        title: "Turing Coffee"
+        filename: "index.html"
+     } 
     ]
 }
 
+# JavaScript
+addVendor \js, \jquery, bower_dir + "/jquery/dist/jquery.min.js", frontendConfig
+addVendor \js, \mithril, bower_dir + "/mithril/mithril.min.js", frontendConfig
+addVendor \js, \materialize, bower_dir + "/materialize/dist/js/materialize.min.js", frontendConfig
+addVendor \js, \holderjs, bower_dir + "/holderjs/holder.min.js", frontendConfig
+
+#CSS
+addVendor \css, \materialize-css, bower_dir + "/materialize/dist/css/materialize.min.css", frontendConfig
+
 gulp.task \frontend-build, (done)->
-    # JavaScript
-    addVendor \js, \jquery, bower_dir + "/jquery/dist/jquery.min.js", frontendConfig
-    addVendor \js, \mithril, bower_dir + "/mithril/mithril.min.js", frontendConfig
-    addVendor \js, \materialize, bower_dir + "/materialize/dist/js/materialize.min.js", frontendConfig
-    addVendor \js, \holderjs, bower_dir + "/holderjs/holder.min.js", frontendConfig
-
-    #CSS
-    addVendor \css, \materialize-css, bower_dir + "/materialize/dist/css/materialize.min.css", frontendConfig
-
     webpack(frontendConfig).run onBuild done
+
+gulp.task \frontend-watch, (done)->
+    webpack(frontendConfig).watch 100, onBuild!
 
 /*==========================================================
 *
@@ -133,7 +150,8 @@ backendConfig = config {
   entry: "./src/server/app.ls"
   target: \node
   output:{
-    path: \build
+    path: "./build"
+    public:Path: "build/"
     filename: \backend.js
   }
 
@@ -153,9 +171,13 @@ backendConfig = config {
 gulp.task \backend-build, (done)->
     webpack(backendConfig).run onBuild done
 
+gulp.task \backend-watch, (done)->
+    webpack(backendConfig).watch 100, onBuild!
+
 /*==========================================================
 *
 *    Gulp webpack task 
 *
 ============================================================*/
-gulp.task \webpack, [\backend-build, \frontend-build]
+gulp.task \webpack:build, [\backend-build, \frontend-build]
+gulp.task \webpack:watch, [\backend-watch, \frontend-watch]

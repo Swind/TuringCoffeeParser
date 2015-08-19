@@ -107,7 +107,7 @@ create_server = (port=3000) ->
     #
     ###############################################################
     server.get /^\/((.*)(\.)(.+))*$/, restify.serveStatic {
-      directory: __dirname + '/static'
+      directory: 'static'
       default: 'index.html'
     }
 

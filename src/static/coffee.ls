@@ -1,7 +1,9 @@
 #Vendor 
 require! {
-    "mithril": mithril
+    "jquery": jquery
     "materialize-css": materialize 
+    "holderjs": holderjs
+    "mithril": mithril
 }
 
 # JS modules
