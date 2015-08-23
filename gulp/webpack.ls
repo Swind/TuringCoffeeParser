@@ -7,6 +7,7 @@ require! {
     "fs": fs
     "webpack-dev-server": WebpackDevServer 
     "html-webpack-plugin": HtmlWebpackPlugin
+    "appcache-webpack-plugin": AppCachePlugin
 }
 
 /*==========================================================
@@ -34,12 +35,9 @@ defaultConfig = {
           * test: /\.scss$/
             loader: 'style!css!sass'
 
-            # Package fonts 
-            { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&mimetype=application/font-woff" },
-            { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&mimetype=application/font-woff2" },
-            { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&mimetype=application/octet-stream" },
-            { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: "file" },
-            { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&mimetype=image/svg+xml" }
+          * test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$|\.woff2|\.eot/
+            loader: "file" 
+
     }
     resolve: {
         extensions: ['', '.ls', '.js']
@@ -71,6 +69,7 @@ fs.readdirSync \node_modules
 
 addVendor = (type, name, path, config) ->
     config.resolve.alias[name] = path
+
     config.module.noParse.push new RegExp '^' + name + '$'
 
     if type == \js
@@ -112,7 +111,7 @@ frontendConfig = config {
         filename: "js/frontend.js"
     }
     plugins: [
-     new webpack.optimize.CommonsChunkPlugin "vendors", "js/vendors.js"
+     new webpack.optimize.CommonsChunkPlugin "vendors", "js/vendors.js", Infinity
      new webpack.ProvidePlugin {
          $: "jquery"
          jQuery: "jquery"
@@ -123,6 +122,7 @@ frontendConfig = config {
         title: "Turing Coffee"
         filename: "index.html"
      } 
+     new AppCachePlugin!
     ]
 }
 
@@ -179,5 +179,5 @@ gulp.task \backend-watch, (done)->
 *    Gulp webpack task 
 *
 ============================================================*/
-gulp.task \webpack:build, [\backend-build, \frontend-build]
-gulp.task \webpack:watch, [\backend-watch, \frontend-watch]
+gulp.task \build, [\backend-build, \frontend-build]
+gulp.task \watch, [\backend-watch, \frontend-watch]
