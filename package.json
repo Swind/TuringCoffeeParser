@@ -10,6 +10,9 @@
       "url": ""
     }
   ],
+  "scripts":{
+      "dev": "echo 'Hello World'"
+  },
   "devDependencies": {
     "gulp": "^3.7.0",
     "gulp-util": "",
