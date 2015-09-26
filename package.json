@@ -1,8 +1,8 @@
 {
-  "name": "turning-coffee-parser",
+  "name": "turing-coffee-parser",
   "version": "0.0.1",
   "author": "Swind <swind@code-life.info>",
-  "description": "Turning Coffee Cookbook Parser",
+  "description": "Turning Coffee",
   "homepage": "",
   "license": [
     {
@@ -11,35 +11,29 @@
     }
   ],
   "scripts":{
-      "dev": "echo 'Hello World'"
+      "start": "node server'"
   },
   "devDependencies": {
-    "gulp": "^3.7.0",
-    "gulp-util": "",
-    "webpack": "",
-    "webpack-dev-server":"",
-    "livescript-loader": "",
     "livescript": "",
-    "require-dir": "^0.1.0",
-    "mocha": "",
-    "supertest": "",
-    "body-parser": "",
     "bower": "",
+
+    "livescript-loader": "",
     "style-loader": "",
     "sass-loader": "",
     "css-loader": "",
     "url-loader": "",
-    "nodemon": "",
+    "file-loader": "",
+
+    "node-sass": "",
+
     "source-map-support": "",
-    "html-webpack-plugin": "",
-    "appcache-webpack-plugin": ""
+    "html-webpack-plugin": ""
   },
   "dependencies": {
-    "restify": "",
+    "react": "",
+    "redux": "",
     "nanomsg": "",
-    "lokijs": "",
-    "ws": "",
-    "deep-merge":"",
-    "hammerjs":""
+    "nedb": "",
+    "express": ""
   }
 }
