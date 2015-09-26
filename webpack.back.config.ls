@@ -60,5 +60,5 @@ module.exports = {
   ]
   externals: nodeModules
   devtool: devtool
-  debug: debug 
+  debug: debug
 }

@@ -11,7 +11,7 @@
     }
   ],
   "scripts":{
-      "start": "node server'"
+      "start": "lsc server.ls --nodejs"
   },
   "devDependencies": {
     "livescript": "",
@@ -32,8 +32,10 @@
   "dependencies": {
     "react": "",
     "redux": "",
+    "react-redux": "",
     "nanomsg": "",
     "nedb": "",
-    "express": ""
+    "express": "",
+    "http-proxy": ""
   }
 }
