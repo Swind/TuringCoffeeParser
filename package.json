@@ -11,7 +11,7 @@
     }
   ],
   "scripts":{
-      "start": "lsc server.ls --nodejs"
+      "start": "node-dev server.ls"
   },
   "devDependencies": {
     "livescript": "",
@@ -23,6 +23,7 @@
     "css-loader": "",
     "url-loader": "",
     "file-loader": "",
+    "react-hot-loader": "",
 
     "node-sass": "",
 
