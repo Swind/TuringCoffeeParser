@@ -16,13 +16,13 @@ module.exports = ! ->
 
   # We give notice in the terminal when it starts bundling and set the time it started
   compiler.plugin "compile", ! ->
-    console.log "Bundling..."
-    bundleStart = Date.now!
+    logger.debug "Bundling..."
+    bundleStart := Date.now!
 
   # We also give notice when it is done compiling, including the time it took.
   # Nice to have
   compiler.plugin "done", ! ->
-    console.log "Bundled in " + (Date.now! - bundleStart) + "ms!"
+    logger.debug "Bundled in " + (Date.now! - bundleStart) + "ms!"
 
   bundler = new webpackDevServer compiler, {
     # We need to tell webpack to serve our bundled application
@@ -42,4 +42,4 @@ module.exports = ! ->
   }
 
   bundler.listen 8080, "localhost", ! ->
-    console.log "Bundling project, please wait..."
+    logger.debug "Bundling project, please wait..."

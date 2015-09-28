@@ -1,6 +1,6 @@
 #Vendor 
 require! {
-    "react": React 
+    "react": React
     "react": {Component, PropTypes}
     "redux": {createStore}
     "react-redux": {Provider, connect}

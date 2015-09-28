@@ -2,7 +2,11 @@ require! {
     "express": express
     "path": path
     "http-proxy": httpProxy
+
+    "./utils/logger": logger
 }
+
+GLOBAL.logger = logger
 
 proxy = httpProxy.createProxyServer!
 
@@ -18,13 +22,13 @@ if not isProduction
   # We require the bundler inside the if block because
   # it is only needed in a development environment.
   # Later you will see why this is a good idea
-  console.log "[dev] Start webpack dev server..."
+  logger.debug "Start webpack dev server..."
   bundle = require "./server/bundle.ls"
   bundle!
 
   # Any requests to localhost:3000/build is proxied
   # to webpack-dev-server
-  console.log "[dev] Any requests to 'localhost:3000/build/*' is proxied to 'localhost:8080/build/'"
+  logger.debug "Any requests to 'localhost:3000/build/*' is proxied to 'localhost:8080/build/'"
   app.all "/build/*", (req, res) ->
     proxy.web req, res, {
       target: "http://localhost:8080"
@@ -34,7 +38,7 @@ if not isProduction
 # server will crash. An example of this is connecting to the server
 # when webpack is bundling
 proxy.on "error", (e) ->
-  console.log "Could not connect to proxy, please try again..."
+  logger.error "Could not connect to proxy, please try again..."
 
 app.listen port, ! ->
-  console.log 'Server running on port ' + port
+  logger.info 'Server running on port ' + port

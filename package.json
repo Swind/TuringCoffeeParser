@@ -37,6 +37,7 @@
     "nanomsg": "",
     "nedb": "",
     "express": "",
-    "http-proxy": ""
+    "http-proxy": "",
+    "winston": ""
   }
 }
