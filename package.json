@@ -11,7 +11,8 @@
     }
   ],
   "scripts":{
-      "start": "node-dev server.ls"
+      "start": "node-dev server.ls",
+      "build": "webpack --config webpack.front.config.ls"
   },
   "devDependencies": {
     "livescript": "",

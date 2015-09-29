@@ -72,8 +72,8 @@ module.exports = {
     }
     plugins: [
         new HtmlWebpackPlugin {
-          #template: index_tmp 
-          #inject: true
+          template: index_tmp
+          inject: true
         }
         new webpack.optimize.CommonsChunkPlugin "vendors", "vendors.js"
         new webpack.HotModuleReplacementPlugin!
