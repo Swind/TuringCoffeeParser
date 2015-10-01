@@ -35,6 +35,7 @@
     "react": "",
     "redux": "",
     "react-redux": "",
+    "immutable": "",
     "nanomsg": "",
     "nedb": "",
     "express": "",
