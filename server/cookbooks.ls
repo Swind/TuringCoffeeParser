@@ -1,5 +1,6 @@
 require! {
-    "lokijs": loki
+    "nedb": nedb 
+    "../utils/logger": logger
 }
 
 class CookbookMgr
@@ -12,44 +13,34 @@ class CookbookMgr
     }
     */
 
-    (dbname, callback=null)->
-        @db = new loki dbname 
+    (dbname, inMemoryOnly=false)->
+      @db = new nedb {filename: dbname , autoload: true, inMemoryOnly: inMemoryOnly}
 
-        @db.loadDatabase {}, !~>
-            @cookbooks = @db.getCollection \cookbooks
+    list_cookbooks: (callback) ->
+      return @db.find {}, (err, docs) ->
+        callback err, docs
 
-            if @cookbooks == null
-                @cookbooks = @db.addCollection \cookbooks, {indices: [\name]}
-                @db.saveDatabase!
+    update_cookbook: (data, callback) ->
+      @db.update {_id: data._id}, data, {upsert: true}, (err, numReplaced) ->
+        if err
+          logger.error "Update cookbook %s failed", data.name, err, data 
 
-            if callback != null
-                callback!
+        callback err, numReplaced
 
+    read_cookbook: (id, callback) ->
+      @db.findOne {_id: id}, (err, doc) ->
+        if err
+          logger.error "Read cookbook %s failed", name, err
 
-    list_cookbooks: !->
-        return @cookbooks.find!
+        callback err, doc
 
-    update_cookbook: (id, data) !->
-        if id == null
-            cookbook = @cookbooks.insert data
-        else
-            cookbook = @cookbooks.get id
-            cookbook.name = data.name
-            cookbook.description = data.description
-            cookbook.content = data.content
-            @cookbooks.update(cookbook)
+    delete_cookbook: (id, callback) ->
+      @db.remove {_id: id}, (err, numRemoved) ->
+        if err
+          logger.error "Delete cookbook %s failed", name, err
 
-        @db.saveDatabase!
-        return cookbook
-
-    read_cookbook: (id) ->
-        cookbook = @cookbooks.get id
-        return cookbook
-
-    delete_cookbook: (id) ->
-        @cookbooks.remove id
-        @db.saveDatabase!
+        callback err, numRemoved
 
 module.exports = {
-    CookbookMgr: CookbookMgr 
+    CookbookMgr: CookbookMgr
 }

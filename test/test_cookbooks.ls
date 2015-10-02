@@ -1,64 +1,59 @@
 require! {
-    "../src/cookbooks.js": cbs
-    "./testdata.js": testdata
+    "../server/cookbooks": cbs
+    "./testdata": testdata
     "assert": assert
+    "../utils/logger": logger
 }
 
 test = it
 
 <- describe 'Test Cookbooks Manager'
-do
-    <- describe 'Test CRUD'
 
-    var cbmgr
+<- describe 'Test Create, Read, Update and Delete'
 
-    before (done)->
-        cbmgr := new cbs.CookbookMgr './cookbooks.json', done
+done <- test 'Add two cookbooks and list all cookbooks, the result should be two'
+var data
 
-    after (done)->
-        cbmgr.cookbooks.removeDataOnly!
-        done!
+# In memory mode for testing
+cbmgr = new cbs.CookbookMgr 'cookbooks.json', true
 
-    <- test 'Add two cookbooks and list all cookbooks, the result should be two'
+# Create
+data := {
+    name: "test1"
+    description: "description content"
+    content: testdata.spiral
+}
+err, numReplaced <- cbmgr.update_cookbook data
 
-    # Create
-    data = {
-        name: "test1"
-        description: "description content"
-        content: testdata.spiral
-    }
-    cbmgr.update_cookbook(null, data)
+data := {
+    name: "test2"
+    description: "description content"
+    content: testdata.circle
+}
+err, numReplaced <- cbmgr.update_cookbook data
 
-    data = {
-        name: "test2"
-        description: "description content"
-        content: testdata.circle
-    }
-    cbmgr.update_cookbook(null, data)
+err, docs <- cbmgr.list_cookbooks
+assert.equal docs.length, 2
 
-    result = cbmgr.list_cookbooks!
-    assert.equal result.length, 2
+#Update
+# The last created cookbooks's id
+data.name = \test3
+data.content = testdata.fixed_point
 
-    #Update
-    # The last created cookbooks's id
-    id = data.$loki
-    data = {
-        name: "test3"
-        description: "description content"
-        content: testdata.fixed_point
-    }
+err, numReplaced <- cbmgr.update_cookbook data
 
-    cbmgr.update_cookbook(id, data)
-    new_data = cbmgr.read_cookbook(id)
-    assert.equal new_data.name, data.name
-    assert.equal new_data.content, data.content
+err, doc <- cbmgr.read_cookbook data._id
+assert.equal doc.name, data.name
+assert.deepEqual doc.content, data.content
 
-    #Delete
-    cbmgr.delete_cookbook(id)
+#Delete
+<- cbmgr.delete_cookbook data._id
 
-    result = cbmgr.list_cookbooks!
-    assert.equal result.length, 1
+err, docs <- cbmgr.list_cookbooks
+assert.equal docs.length, 1
 
-    for cookbook in result
-        assert.notEqual cookbook.$loki, id
+for cookbook in docs
+    assert.notEqual cookbook._id, data._id
+
+done!
 

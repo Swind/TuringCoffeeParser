@@ -1,9 +1,9 @@
 require! {
-    "../src/processes/spiral.js": spiral
-    "../src/processes/spiral_total_water.js": spiral_total_water
-    "../src/processes/circle.js": circle 
-    "../src/processes/fixed_point.js": fixed_point 
-    "./testdata.js": testdata
+    "../libs/processes/spiral": spiral
+    "../libs/processes/spiral_total_water": spiral_total_water
+    "../libs/processes/circle": circle 
+    "../libs/processes/fixed_point": fixed_point 
+    "./testdata": testdata
     "assert": assert
 }
 

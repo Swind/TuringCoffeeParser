@@ -39,6 +39,7 @@
     "nanomsg": "",
     "nedb": "",
     "express": "",
+    "hapi": "",
     "http-proxy": "",
     "winston": ""
   }
