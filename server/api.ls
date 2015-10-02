@@ -1,5 +1,5 @@
 require! {
-    "restify": restify
+    "hapi": hapi
     "./cookbooks": cookbooks
 }
 
@@ -15,10 +15,8 @@ create_server = (port=3000) ->
     barista = new Barista
 
     # HTTP server
-    server = restify.createServer();
-    server.use restify.bodyParser { mapParams: false }
-
-    # Websockets server
+    server = new Hapi.Server()
+    server.connection {port: port}
 
     # Data manager
     cbsmgr = new cookbooks.CookbookMgr \cookbooks.json
@@ -30,14 +28,17 @@ create_server = (port=3000) ->
     ###############################################################
 
     #Cookbooks CRUD
-    server.get '/cookbooks', (req, res, next) ->
-
+    server.route {
+      method: \GET
+      path: '/cookbooks'
+      handler: (request, reply) ->
         list = cbsmgr.list_cookbooks!
 
         res.contentType = \json
         res.send list
+    }
+    '/cookbooks', (req, res, next) ->
 
-        next!
 
     server.get '/cookbooks/:id', (req, res, next) ->
         cookbook = cbsmgr.read_cookbook res.params.id

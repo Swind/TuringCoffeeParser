@@ -35,11 +35,18 @@
     "react": "",
     "redux": "",
     "react-redux": "",
+
+    "hapi": "",
+    "hapi-swagger": "",
+    "inert": "",
+    "vision": "",
+    "joi": "",
+    "good-console": "",
+
     "immutable": "",
     "nanomsg": "",
     "nedb": "",
     "express": "",
-    "hapi": "",
     "http-proxy": "",
     "winston": ""
   }
