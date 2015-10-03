@@ -5,6 +5,8 @@ require! {
     "react-redux": {Provider, connect}
     "prelude-ls": {Obj}
 
+    "./component": Component
+    "./components/cookbook": CookbookList
     "./reducers/Reducer": Reducer
 }
 
@@ -19,18 +21,7 @@ require! {
     "./scss/coffee.scss": coffee-css
 }
 
-/*==================================================================================
-*
-*   React wrapper 
-*
-*=================================================================================*/
-class Component extends React.Component implements React.DOM
-  @element = ->
-    React.create-factory(@) ...
-
 class Body extends Component
-  componentWillMount: !->
-
   render: !->
     const {cookbooks, editor, barista} = @props
 
@@ -47,7 +38,8 @@ class Body extends Component
                @nav {className: "mdl-navigation", id:"sidebar"}
 
              # Main content
-             @main {className:"mdl-layout__content" id:"main"}
+             @main {className:"mdl-layout__content" id:"main"},
+               CookbookList.elem {cookbooks: cookbooks}
 
 body-elem = React.createFactory connect((state)->state)(Body)
 /*==================================================================================

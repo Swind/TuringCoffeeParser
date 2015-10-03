@@ -1,5 +1,6 @@
 require! {
     "html-webpack-plugin": HtmlWebpackPlugin
+    "debug": debug
     "webpack": webpack
     "path": path
     "fs": fs

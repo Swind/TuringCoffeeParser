@@ -15,6 +15,8 @@
       "build": "webpack --config webpack.front.config.ls"
   },
   "devDependencies": {
+    "webpack":"",
+    "webpack-dev-server":"",
     "livescript": "",
     "bower": "",
 
@@ -25,6 +27,7 @@
     "url-loader": "",
     "file-loader": "",
     "react-hot-loader": "",
+    "json-loader": "",
 
     "node-sass": "",
 
@@ -35,6 +38,7 @@
     "react": "",
     "redux": "",
     "react-redux": "",
+    "good": "",
 
     "hapi": "",
     "hapi-swagger": "",
