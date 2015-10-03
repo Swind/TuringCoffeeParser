@@ -1,4 +1,5 @@
 require! {
+  "joi": joi
   "../models/cookbooks": cookbooks
 }
 
@@ -12,14 +13,21 @@ list_cookbooks = (request, reply) ->
         message: err
       }
     else
+      # Remove the _id field and convert the list format 
+      data = {}
+
+      for cookbook in cookbooks
+        data[cookbook._id] = cookbook
+        delete cookbook._id 
+
       reply {
         statusCode: 200
         message: "List all cookbooks successfully"
-        data: cookbooks
+        data: data 
       }
 
-update_cookbook = (request, reply) ->
-  cbmgr.update request.payload, (err, upsert) ->
+create_cookbook = (request, reply) ->
+  cbmgr.create request.payload, (err, doc) ->
     if err
       reply {
         statusCode: 503
@@ -28,8 +36,27 @@ update_cookbook = (request, reply) ->
     else
       reply {
         statusCode: 201
+        message: "Create the cookbook successfully"
+        data: doc
+      }
+
+update_cookbook = (request, reply) ->
+  id = request.params.id
+  cbmgr.update id, request.payload, (err, numReplaced) ->
+    if err
+      reply {
+        statusCode: 503
+        message: err
+      }
+    else if numReplaced == 0
+      reply {
+        statusCode: 404
+        message: "Can't find the cookbook with id #{id}"
+      }
+    else
+      reply {
+        statusCode: 204
         message: "Update cookbook successfully"
-        data: upsert
       }
 
 read_cookbook = (request, reply) ->
@@ -39,7 +66,13 @@ read_cookbook = (request, reply) ->
         statusCode: 503
         message: err
       }
+    else if not cookbook
+      reply {
+        statusCode: 404
+        message: "Can't find cookbook with id #{request.params.id}"
+      }
     else
+      delete cookbook._id
       reply {
         statusCode: 200
         message: "Read cookbook successfully"
@@ -53,9 +86,14 @@ delete_cookbook = (request, reply) ->
         statusCode: 503
         message: err
       }
+    else if numRemoved == 0
+      reply {
+        statusCode: 404
+        message: "Can't delete cookbook with id #{request.params.id}"
+      }
     else
       reply {
-        statusCode: 200
+        statusCode: 204
         message: "Delete cookbook successfully"
       }
 
@@ -75,8 +113,35 @@ module.exports = [
     path: '/api/cookbooks'
     config: {
       tags: [\api]
-      description: "Create or update the cookbook"
-      notes: "If the data which contains '_id' field is update otherwise create"
+      description: "Create a new cookbook"
+      notes: "Create a new cookbook"
+      validate: {
+        payload: {
+          name: joi.string!.required!
+          description: joi.string!
+          content: joi.object!
+        }
+      }
+    }
+    handler: create_cookbook
+  }
+  {
+    method: \PUT
+    path: '/api/cookbooks/{id}'
+    config: {
+      tags: [\api]
+      description: "Update the cookbook"
+      notes: "Update the cookbook"
+      validate: {
+        params: {
+          id: joi.string!.required!
+        }
+        payload: {
+          name: joi.string!.required!
+          description: joi.string!
+          content: joi.object!
+        }
+      }
     }
     handler: update_cookbook
   }
@@ -87,6 +152,11 @@ module.exports = [
       tags: [\api]
       description: "Read the cookbook"
       notes: "Read the cookbook"
+      validate: {
+        params: {
+          id: joi.string!.required!
+        }
+      }
     }
     handler: read_cookbook
   }
@@ -97,6 +167,11 @@ module.exports = [
       tags: [\api]
       description: "Delete the cookbook"
       notes: "Delete the cookbook"
+      validate: {
+        params: {
+          id: joi.string!.required!
+        }
+      }
     }
     handler: delete_cookbook
   }

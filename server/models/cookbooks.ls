@@ -16,12 +16,16 @@ class CookbookMgr
       @db = new nedb {filename: dbname , autoload: true, inMemoryOnly: inMemoryOnly}
 
     list: (callback) ->
-      return @db.find {}, (err, docs) ->
+      @db.find {}, (err, docs) ->
         callback err, docs
 
-    update: (data, callback) ->
-      @db.update {_id: data._id}, data, {upsert: true}, (err, numReplaced, upsert) ->
-        callback err, upsert
+    create: (data, callback) ->
+      @db.insert data, (err, doc) ->
+        callback err, doc
+
+    update: (id, data, callback) ->
+      @db.update {_id: id}, data, (err, numReplaced) ->
+        callback err, numReplaced
 
     read: (id, callback) ->
       @db.findOne {_id: id}, (err, doc) ->
