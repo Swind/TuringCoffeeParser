@@ -26,10 +26,6 @@ html, body {
 }
 
 .turing {
-    .mdl-layout__header-row {
-        padding-left: 40px;
-    }
-
     .mdl-layout:not(.is-small-screen) {
         .mdl-layout__tab-bar, 
         .mdl-layout__tab-bar-container {
@@ -38,10 +34,6 @@ html, body {
     }
 
     .mdl-layout__tab-bar-button {
-        display: none;
-    }
-
-    .mdl-layout.is-small-screen .mdl-layout__tab-bar .mdl-button {
         display: none;
     }
 
@@ -69,6 +61,7 @@ html, body {
     }
 
     main > .mdl-layout__tab-panel {
+        position: relative;
         padding: 8px;
         padding-top: 48px;
     }
@@ -202,7 +195,7 @@ html, body {
         z-index: 99;
     }
 
-    #add {
+    #add-cb-btn {
         position: absolute;
         right: 40px;
         top: 36px;
