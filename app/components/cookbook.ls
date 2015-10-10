@@ -14,8 +14,15 @@ class CookbookCard extends Component
 
         @div {className: "mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone"},
           @div {className: "mdl-card__supporting-text"},
-            @h4 {}, \Description,
-              "Test Description"
+            @h4 {}, "Test Description"
+            @div {className: "cb-desc"},
+              "Description"
+            @div {className: "cb-time"},
+              @i {className: "material-icons"}, \timer
+            @div {className: "cb-water"},
+              @i {className: "material-icons"}, \local_drink
+
+
           @div {className: "mdl-card__actions"},
             @a {href: '#' className:"mdl-button"}, "Read our features"
 
