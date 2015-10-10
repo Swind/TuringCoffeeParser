@@ -2,27 +2,34 @@ require! {
   "../component": Component
 }
 
-class NewCard extends Component
+class CookbookCard extends Component
   render: ! ->
+    cookbook = @props.cookbook
+
     return do
-      @div {className: "mdl-card mdl-cell mdl-cell--8-col mdl-cell--4-col-desktop mdl-shadow--2dp"},
-        @div {className: "mdl-card__title"},
-          @h2 {className: "mdl-card__title-text"}, "Create new cookbook"
+      @section {className: "section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp"},
 
-        @div {className: "mdl-card__media"},
-          @i {className: "material-icons"}, \note_add
+        @header {className: "section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white"},
+          @i {className: "material-icons"}, \play_circle_filled
 
-        @div {className: "mdl-card__supporting-text"}, "Description"
+        @div {className: "mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone"},
+          @div {className: "mdl-card__supporting-text"},
+            @h4 {}, \Description,
+              "Test Description"
+          @div {className: "mdl-card__actions"},
+            @a {href: '#' className:"mdl-button"}, "Read our features"
 
-        @div {className: "mdl-card__actions mdl-card--border"},
-          @a {className: "mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"}, \Create
-
+        @button {className: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id: "cookbook-btn"},
+          @i {className: "material-icons"}, \more_vert
+        @ul {className: "mdl-menu mdl-js-menu mdl-menu--bottom-right" htmlFor:"cookbook-btn"},
+          @li {className: "mdl-menu__item"}, \Copy
+          @li {className: "mdl-menu__item"}, \Delete
 
 class List extends Component
   render: ! ->
     const {dispatch, cookbooks} = @props
 
-    return @div {className: "cookbook-list mdl-grid"},
-             NewCard.elem!
+    return @div {className: "mdl-layout__tab-panel is-active" id:"cookbooks"},
+             CookbookCard.elem!
 
 module.exports = List

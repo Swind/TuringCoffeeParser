@@ -7,6 +7,9 @@ require! {
 
     "./component": Component
     "./components/cookbook": CookbookList
+    "./components/barista": Barista 
+
+
     "./reducers/Reducer": Reducer
 }
 
@@ -25,21 +28,28 @@ class Body extends Component
   render: !->
     const {cookbooks, editor, barista} = @props
 
-    return @div {className: "mdl-layout mdl-js-layout"},
+    return do
+      @div {className: "mdl-layout mdl-js-layout mdl-layout--fixed-header"},
 
-             # Header
-             @header {className: "mdl-layout__header"},
-                @div {className: "mdl-layout__header-row"}
+        # Header
+        @header {className: "mdl-layout__header mdl-layout__header--scroll mdl-color--primary"},
+           # Title
+           @div {className: "mdl-layout--large-screen-only mdl-layout__header-row"}
+           @div {className: "mdl-layout--large-screen-only mdl-layout__header-row"},
+             @h3 {},
+               "Turing Coffee"
+           @div {className: "mdl-layout--large-screen-only mdl-layout__header-row"}
 
-             # Sidebar
-             @div {className: "mdl-layout__drawer"},
-               @span {className: "mdl-layout-title"},
-                 "Turing Coffee"
-               @nav {className: "mdl-navigation", id:"sidebar"}
+           # Tab bar
+           @div {className: "mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark"},
+             @a {href: '#cookbooks' className: "mdl-layout__tab"}, "COOKBOOK"
+             @a {href: '#barista' className: "mdl-layout__tab"}, "BARISTA"
 
-             # Main content
-             @main {className:"mdl-layout__content" id:"main"},
-               CookbookList.elem {cookbooks: cookbooks}
+        # Main content
+        @main {className:"mdl-layout__content" id:"main"},
+          CookbookList.elem {cookbooks: cookbooks}
+          Barista.elem {barista: barista}
+
 
 body-elem = React.createFactory connect((state)->state)(Body)
 /*==================================================================================
