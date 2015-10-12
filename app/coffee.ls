@@ -8,8 +8,6 @@ require! {
     "./component": Component
     "./components/cookbook": CookbookList
     "./components/barista": Barista 
-
-
     "./reducers/Reducer": Reducer
 }
 

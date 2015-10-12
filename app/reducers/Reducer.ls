@@ -1,7 +1,12 @@
 require! {
   "redux": {combineReducers} 
   "../actions/CookbookActions": Actions
+  "./testdata": Testdata
 }
+
+default_cookbooks = do ->
+  list = [1 to 10].map ! -> return Testdata.dummy_cb!
+
 
 /*============================================================================
 *
@@ -9,7 +14,7 @@ require! {
 *
 *============================================================================*/
 
-cookbooks = (state = [], action) ->
+cookbooks = (state = default_cookbooks, action) ->
   return state
 
 editor = (state = {}, action) ->

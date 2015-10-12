@@ -153,7 +153,7 @@ html, body {
         }
 
         .mdl-card__supporting-text {
-            margin: 40px;
+            margin: 32px;
             flex-grow: 1;
             padding: 0;
             color: inherit;
@@ -176,7 +176,7 @@ html, body {
 
     .mdl-card__actions {
         margin: 0;
-        padding: 4px 40px;
+        padding: 4px 32px;
         color: inherit;
 
         a {
@@ -200,5 +200,21 @@ html, body {
         top: 36px;
         z-index: 999;
     }
+
+    .cb-card {
+        .cb-info {
+            margin-top: 8px;
+            display: flex;
+
+            i, h5 {
+                margin: 8px 8px 0 0;
+            }
+
+            .material-icons {
+                font-size: 24px;
+            }
+        }
+    }
+
 
 }

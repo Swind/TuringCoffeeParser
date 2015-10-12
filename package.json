@@ -32,7 +32,9 @@
     "node-sass": "",
 
     "source-map-support": "",
-    "html-webpack-plugin": ""
+    "html-webpack-plugin": "",
+
+    "lorem-ipsum": ""
   },
   "dependencies": {
     "react": "",
