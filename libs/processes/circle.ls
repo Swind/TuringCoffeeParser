@@ -1,9 +1,7 @@
 require! {
-    "./process": Process 
+  "immutable": {Seq}
+  "./base": {Point, Process, Param} 
 }
-
-radians = Process.radians
-Point = Process.Point
 
 /*
 Parameters Example:
@@ -18,6 +16,7 @@ Parameters Example:
         start: 170 #mm
         end: 165 #mm
     }
+
     total_water: 40 #ml
     point_interval: 0.1 #mm
     feedrate: 80 #mm/min
@@ -25,41 +24,45 @@ Parameters Example:
 }
 */
 
-handler = {}
+class Circle extends Process
+  (@params) ->
+    @length = @params.total_water / @params.extrudate
+    @point-number = @length / @params.point_interval
 
-handler.points = (params) ->
+  fields: {
+    basic:{
+      radius:{
+        start: new Param!.mm!.required!
+      }
+      total_water: new Param!.ml!.required!
+      high: {
+        start: new Param!.mm!
+        end: new Param!.mm!
+      }
+    }
 
-    total_length = params.total_water / params.extrudate
-    point_number = total_length / params.point_interval
+    advanced: {
+      point_interval: new Param!.mm!
+      feedrate: new Param!.mm-min!
+      extrudate: new Param!.ml-min!
+    }
+  }
 
-    circumference = 2 * Math.pi * params.radius.start
-    total_length = params.total_water / params.extrudate
 
-    cylinder = total_length / circumference
+  get-points: ! ->
+    circumference = 2 * Math.pi * @params.radius.start
+    cylinder = @length / circumference
+    av = (2 * Math.Pi * cylinder) / @point-number
 
-    av = (2 * Math.Pi * cylinder) / point_number
+    points = []
+    for index from 0 to @point-number
+        x = @params.radius * Math.cos(av * index)
+        y = @params.radius * Math.sin(av * index)
+        z = @z-axial @point-number, index
+        f = @params.feedrate
 
-    # Generate x, y 
-    point_list = []
-    for index from 0 to point_number 
-        x = params.radius * Math.cos(av * index)
-        y = params.radius * Math.sin(av * index)
-
-        point_list[*] = Point x, y
-
-    # Handler f and z
-    point_list = f_handler params, point_list
-    point_list = Process.z_axial_handler(params, point_list)
-
-    return point_list
-
-f_handler = (params, points) ->
-
-    for point in points
-        point.f = params.feedrate
+        points[*] = Point x, y, z, f
 
     return points
 
-module.exports = {
-    handler: handler
-}
+module.exports = Circle

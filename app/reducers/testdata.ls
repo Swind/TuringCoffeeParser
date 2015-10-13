@@ -100,6 +100,7 @@ content = ! ->
 
 create_dummy_cookbook = ! ->
   cookbook = {
+    id: Math.random().toString(36).substr(2)
     name: name!
     description: desc!
     content: content!

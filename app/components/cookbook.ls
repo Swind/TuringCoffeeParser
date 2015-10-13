@@ -36,9 +36,9 @@ class CookbookCard extends Component
             @a {href: '#' className:"mdl-button"}, "Detail"
 
         # Cookbook card menu
-        @button {className: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id: "#{cookbook.name}-btn"},
+        @button {className: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id: "#{cookbook.id}-btn"},
           @i {className: "material-icons"}, \more_vert
-        @ul {className: "mdl-menu mdl-js-menu mdl-menu--bottom-right" htmlFor:"#{cookbook.name}-btn"},
+        @ul {className: "mdl-menu mdl-js-menu mdl-menu--bottom-right" htmlFor:"#{cookbook.id}-btn"},
           @li {className: "mdl-menu__item"}, \Copy
           @li {className: "mdl-menu__item"}, \Delete
 
