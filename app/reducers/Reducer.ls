@@ -1,5 +1,5 @@
 require! {
-  "redux": {combineReducers} 
+  "redux": {combineReducers, createStore} 
   "../actions/CookbookActions": Actions
   "./testdata": Testdata
 }
@@ -29,4 +29,4 @@ const TuringCoffeeStore = combineReducers {
   barista
 }
 
-module.exports = TuringCoffeeStore
+module.exports = createStore TuringCoffeeStore

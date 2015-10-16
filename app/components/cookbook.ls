@@ -1,12 +1,10 @@
 require! {
-  "../component": Component
+  "../react-wrapper": {Component}
 }
 
 class CookbookCard extends Component
   render: ! ->
     cookbook = @props.cookbook
-
-    console.log cookbook
 
     return do
       @section {className: "cb-card section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp"},
@@ -50,4 +48,7 @@ class List extends Component
              for cookbook in cookbooks
                CookbookCard.elem {cookbook: cookbook}
 
-module.exports = List
+map-state-to-props = (state) ->
+  {cookbooks: state.cookbooks}
+
+module.exports = List.connect map-state-to-props

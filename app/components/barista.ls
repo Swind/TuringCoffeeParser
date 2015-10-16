@@ -1,5 +1,5 @@
 require! {
-  "../component": Component
+  "../react-wrapper": {Component}
 }
 
 class Barista extends Component

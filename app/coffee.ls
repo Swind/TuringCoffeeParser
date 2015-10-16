@@ -1,20 +1,11 @@
 #Vendor 
 require! {
     "react": React
-    "redux": {createStore}
-    "react-redux": {Provider, connect}
-    "prelude-ls": {Obj}
 
-    "./component": Component
+    "./react-wrapper": {Component, apply-provider}
     "./components/cookbook": CookbookList
-    "./components/barista": Barista 
+    "./components/barista": Barista
     "./reducers/Reducer": Reducer
-}
-
-# JS modules
-require! {
-    "./components/cookbook": cookbook
-    "./components/barista": barista
 }
 
 # CSS
@@ -31,8 +22,6 @@ class FloatActionButton extends Component
 
 class Body extends Component
   render: !->
-    const {cookbooks, editor, barista} = @props
-
     return do
       @div {className: "mdl-layout mdl-js-layout mdl-layout--fixed-header"},
 
@@ -48,19 +37,16 @@ class Body extends Component
 
         # Main content
         @main {className:"mdl-layout__content" id:"main"},
-          CookbookList.elem {cookbooks: cookbooks}
-          Barista.elem {barista: barista}
+          @props.children
 
+class RouterClass extends Component
+  render: ! ->
+    return do
+      @Router null,
+        @Route {path: "/" component: Body},
+          @IndexRoute {component: CookbookList}
+          @Route {path: "cookbooks" component: CookbookList}
+          @Route {path: "barista" component: Barista}
 
-body-elem = React.createFactory connect((state)->state)(Body)
-/*==================================================================================
-*
-*   Root component with Provider
-*
-*=================================================================================*/
-store = createStore Reducer
-root-elem = document.getElementById "body"
-
-provider-elem = React.createElement Provider, {store: store}, body-elem
-React.render (React.DOM.div {}, [provider-elem]), root-elem
-
+render-target = document.getElementById "body"
+React.render (React.create-element (apply-provider RouterClass, Reducer), null), render-target
