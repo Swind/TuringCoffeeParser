@@ -1,16 +1,22 @@
 #Vendor 
 require! {
-    "react": React
+  "react": React
 
-    "./react-wrapper": {Component, apply-provider}
-    "./components/cookbook": CookbookList
-    "./components/barista": Barista
-    "./reducers/Reducer": Reducer
+  "./react-wrapper": {Component, apply-provider}
+  "./components/cookbook": CookbookList
+  "./components/barista": Barista
+  "./reducers/Reducer": Reducer
 }
 
 # CSS
 require! {
-    "./scss/coffee.scss": coffee-css
+  "./libs/css/material.min.css": material-css
+  "./scss/coffee.scss": coffee-css
+}
+
+# JS
+require! {
+  "./libs/js/material.min.js": material-js
 }
 
 class FloatActionButton extends Component
@@ -29,9 +35,9 @@ class Body extends Component
         @header {className: "mdl-layout__header mdl-layout__header--scroll mdl-color--primary"},
 
            # Tab bar
-           @div {className: "mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark"},
-             @a {href: '#cookbooks' className: "mdl-layout__tab is-active"}, "COOKBOOK"
-             @a {href: '#barista' className: "mdl-layout__tab"}, "BARISTA"
+           @div {className: "mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark is-real-link"},
+             @Link {to: '/cookbooks' className: "mdl-layout__tab is-active"}, "COOKBOOK"
+             @Link {to: '/barista' className: "mdl-layout__tab"}, "BARISTA"
 
            FloatActionButton.elem!
 

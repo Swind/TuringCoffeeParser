@@ -2,12 +2,5 @@
   "name": "Turing-Coffee",
   "version": "0.0.1",
   "dependencies": {
-    "jquery": "",
-    "mithril": "",
-    "holderjs": "",
-    "materialize": "",
-    "jquery":"",
-    "material-design-lite": "",
-    "bootstrap":"4.0"
   }
 }
