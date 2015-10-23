@@ -96,7 +96,11 @@ content = ! ->
 
   process_num = randomInt(5, 10)
 
-  [0 to process_num].map (v) -> process_list[randomInt % process_list.length]
+  result = []
+  for i from 0 to process_num
+    result[*] = process_list[randomInt 0, process_list.length]
+
+  return result
 
 create_dummy_cookbook = ! ->
   cookbook = {

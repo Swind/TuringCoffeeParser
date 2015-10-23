@@ -1,5 +1,6 @@
 require! {
   "../react-wrapper": {Component}
+  "../actions/CookbookActions": Actions
 }
 
 class CookbookCard extends Component
@@ -31,7 +32,7 @@ class CookbookCard extends Component
 
         # Cookbook actions
           @div {className: "mdl-card__actions"},
-            @a {href: '#' className:"mdl-button"}, "Detail"
+            @Link {to: "/editor" className:"mdl-button" onClick: ~> @props.select-cookbook cookbook}, "Edit"
 
         # Cookbook card menu
         @button {className: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id: "#{cookbook.id}-btn"},
@@ -45,10 +46,20 @@ class List extends Component
     const {dispatch, cookbooks} = @props
 
     return @div {className: "mdl-layout__tab-panel is-active" id:"cookbooks"},
-             for cookbook in cookbooks
-               CookbookCard.elem {cookbook: cookbook}
+             for id, cookbook of cookbooks
+               CookbookCard.elem {cookbook: cookbook, select-cookbook:@props.select-cookbook}
 
+##################################################################################
+#
+#   Bind redux 
+#
+##################################################################################
 map-state-to-props = (state) ->
   {cookbooks: state.cookbooks}
 
-module.exports = List.connect map-state-to-props
+map-dispatch-to-props = (dispatch) ->
+  return {
+    select-cookbook: (cookbook) -> dispatch Actions.select-cookbook cookbook 
+  }
+
+module.exports = List.connect map-state-to-props, map-dispatch-to-props

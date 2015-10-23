@@ -1,86 +1,23 @@
-cookbook_content = {}
-# ================================================================================
-#
-#   View 
-#
-# ================================================================================
-cookbook_content.view = (ctrl) -> [
-    (m "div.column", {id: "editor"}, [
-        (m "div.ui.buttons", [
-            (m "div.ui.icon.button" {onclick: ctrl.save_onclick}, [(m "i.save.icon"), "Save"]),
-            (m "div.ui.icon.button" {onclick: ctrl.brew_onclick}, [(m "i.print.icon"), "Brew"])
-        ]),
-        (m "div.ui.buttons", [
-            (m "div.ui.icon.button", (m "i.header.icon")),
-            (m "div.ui.icon.button", (m "i.code.icon")),
-            (m "div.ui.icon.button", (m "i.list.icon")),
-            (m "div.ui.icon.button", (m "i.ordered.list.icon")),
-        ]),
-        (m 'div#cookbook-content' {config: ctrl.config_editor})
-    ])
-]
+require! {
+  "../react-wrapper": {Component}
+}
 
-# ================================================================================
-#
-#   Controller and View Model 
-#
-# ================================================================================
-cookbook_content.vm = do ->
-    vm = {}
+class CookbookEditor extends Component
+  render: ! ->
+    cookbook = @props.cookbook
 
-    # Create the cookbook name and content properties
-    # These will be used by codemirror editor and toolbar
-    vm.init = ! ->
-        vm.name = m.prop ""
-        vm.content = m.prop ""
+    return do
+      @div {className: "mdl-grid"},
+        @div {className: "mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col"},
+          @div {className: "mdl-card__media mdl-color-text--grey-50"},
+            @h3 {}, cookbook.name
+          @div {className: "mdl-color-text--grey-700 mdl-card__support-text meta"},
+            cookbook.description
+          @div {className: "mdl-color-text--grey-700 mdl-card__support-text comment"},
+            cookbook.content
 
-    # Send a request to get the cookbook content and update the content to trigger the editor refresh 
-    vm.load_content = (name) ->
-        return m.request(
-            {
-                method: 'GET',
-                url: "/cookbooks/#name/content"
-                deserialize: (value) -> value
-            }
-        )
-        .then((content) ->
-            vm.content(content)
-        )
+map-state-to-props = (state) ->
+  {cookbook: state.selected-cookbook}
 
-    vm
+module.exports = CookbookEditor.connect map-state-to-props
 
-cookbook_content.controller = ! ->
-    cookbook_content.vm.init!
-
-    # Get the route param and load the cookbook content by name
-    cookbook_name = m.route.param "name"
-    cookbook_content.vm.load_content(cookbook_name)
-
-    # Create Codemirror editor and save the editor instance to the view model 
-    @config_editor = (elem, isInitialized, ctx) ->
-
-        if not isInitialized
-            cookbook_content.vm.editor = CodeMirror(elem, {
-                value: cookbook_content.vm.content!,
-                lineNumbers: true,
-                mode: "markdown",
-                lineWrapping: true,
-                viewportMargin: Infinity
-            })
-
-    @brew_onclick = ! ->
-        m.route("/brew/#cookbook_name")
-
-    @save_onclick = ! ->
-        value = cookbook_content.vm.editor.getValue!
-        return m.request(
-            {
-                method: "PUT",
-                url: "/cookbooks/#cookbook_name/content"
-                serialize: (data) -> data
-                data: value
-            }
-        )
-
-
-module.exports = cookbook_content

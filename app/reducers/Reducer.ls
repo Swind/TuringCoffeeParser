@@ -5,8 +5,14 @@ require! {
 }
 
 default_cookbooks = do ->
-  list = [1 to 10].map ! -> return Testdata.dummy_cb!
 
+  map = {}
+  for i from 1 to 10
+    cookbook = Testdata.dummy_cb!
+    cookbook.id = i
+    map[i] = cookbook
+
+  return map
 
 /*============================================================================
 *
@@ -17,6 +23,17 @@ default_cookbooks = do ->
 cookbooks = (state = default_cookbooks, action) ->
   return state
 
+selected-cookbook = (state = {}, action) ->
+  console.log action.type
+  console.log Actions.SELECT
+
+  switch action.type
+  case Actions.SELECT
+    console.log action.cookbook
+    return action.cookbook
+  default
+    return state
+
 editor = (state = {}, action) ->
   return state
 
@@ -25,6 +42,7 @@ barista = (state = {}, action) ->
 
 const TuringCoffeeStore = combineReducers {
   cookbooks
+  selected-cookbook
   editor
   barista
 }

@@ -1,11 +1,14 @@
 #Vendor 
 require! {
   "react": React
+  "history/lib/createBrowserHistory": create-browser-history
 
   "./react-wrapper": {Component, apply-provider}
   "./components/cookbook": CookbookList
+  "./components/editor": CookbookEditor
   "./components/barista": Barista
   "./reducers/Reducer": Reducer
+
 }
 
 # CSS
@@ -32,7 +35,7 @@ class Body extends Component
       @div {className: "mdl-layout mdl-js-layout mdl-layout--fixed-header"},
 
         # Header
-        @header {className: "mdl-layout__header mdl-layout__header--scroll mdl-color--primary"},
+        @header {className: "mdl-layout__header mdl-color--primary"},
 
            # Tab bar
            @div {className: "mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark is-real-link"},
@@ -47,12 +50,14 @@ class Body extends Component
 
 class RouterClass extends Component
   render: ! ->
+    history = create-browser-history!
     return do
-      @Router null,
+      @Router {},
         @Route {path: "/" component: Body},
           @IndexRoute {component: CookbookList}
           @Route {path: "cookbooks" component: CookbookList}
           @Route {path: "barista" component: Barista}
+          @Route {path: "editor" component: CookbookEditor}
 
 render-target = document.getElementById "body"
 React.render (React.create-element (apply-provider RouterClass, Reducer), null), render-target
