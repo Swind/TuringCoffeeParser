@@ -1,5 +1,6 @@
 require! {
     "react": React
+    "react-dom": ReactDOM
     "react-router": ReactRouter
     "react-redux": ReactRedux 
 }
@@ -28,13 +29,13 @@ apply-provider = (root-class, store) ->
 
   wrapper = React.create-class do
     render: ! ->
+      console.log @props
       children = @props.children
 
       return do
         React.DOM.div null,
-          provider {store: store}, (-> root-class.elem {children: children})
+          provider {store: store}, root-class.elem!
         
-
   return wrapper
 
 module.exports = {

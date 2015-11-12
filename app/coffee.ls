@@ -1,6 +1,7 @@
 #Vendor 
 require! {
   "react": React
+  "react-dom": ReactDOM
   "history/lib/createBrowserHistory": create-browser-history
 
   "./react-wrapper": {Component, apply-provider}
@@ -60,4 +61,4 @@ class RouterClass extends Component
           @Route {path: "editor/:cookbookId" component: CookbookEditor}
 
 render-target = document.getElementById "body"
-React.render (React.create-element (apply-provider RouterClass, Reducer), null), render-target
+ReactDOM.render (React.create-element (apply-provider RouterClass, Reducer), null), render-target

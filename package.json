@@ -37,10 +37,11 @@
     "lorem-ipsum": ""
   },
   "dependencies": {
-    "react": "^0.13.0",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
     "redux": "",
-    "react-redux": "3.*.*",
-    "react-router": "^1.0.0-rc3",
+    "react-redux": "^4.0.0",
+    "react-router": "^1.0.0",
     "good": "",
 
     "hapi": "",
