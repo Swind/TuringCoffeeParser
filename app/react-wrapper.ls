@@ -3,6 +3,7 @@ require! {
     "react-dom": ReactDOM
     "react-router": ReactRouter
     "react-redux": ReactRedux 
+    "classnames": ClassNames
 }
 
 /*==================================================================================
@@ -16,6 +17,7 @@ class Component extends React.Component implements React.DOM
   Route: React.create-factory ReactRouter.Route
   IndexRoute: React.create-factory ReactRouter.IndexRoute
   Link: React.create-factory ReactRouter.Link
+  ClassNames: ClassNames
 
   @elem = ->
     React.create-factory(@) ...
@@ -29,13 +31,12 @@ apply-provider = (root-class, store) ->
 
   wrapper = React.create-class do
     render: ! ->
-      console.log @props
       children = @props.children
 
       return do
         React.DOM.div null,
           provider {store: store}, root-class.elem!
-        
+
   return wrapper
 
 module.exports = {

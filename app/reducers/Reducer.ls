@@ -24,7 +24,14 @@ cookbooks = (state = default_cookbooks, action) ->
   return state
 
 editor = (state = {}, action) ->
-  return state
+  switch action.type
+  case Actions.EDITING
+    return {
+      editing-cookbook: action.editing-cookbook
+    }
+
+  default
+    return state
 
 barista = (state = {}, action) ->
   return state

@@ -5,8 +5,8 @@ require! {
   "history/lib/createBrowserHistory": create-browser-history
 
   "./react-wrapper": {Component, apply-provider}
-  "./components/cookbook": CookbookList
-  "./components/editor": CookbookEditor
+  "./components/cookbook-list": CookbookList
+  "./components/cookbook-editor": CookbookEditor
   "./components/barista": Barista
   "./reducers/Reducer": Reducer
 
@@ -16,6 +16,7 @@ require! {
 require! {
   "./libs/css/material.min.css": material-css
   "./scss/coffee.scss": coffee-css
+  "./scss/editor.scss": editor-css
 }
 
 # JS

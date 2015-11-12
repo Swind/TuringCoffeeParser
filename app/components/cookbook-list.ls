@@ -41,13 +41,13 @@ class CookbookCard extends Component
           @li {className: "mdl-menu__item"}, \Copy
           @li {className: "mdl-menu__item"}, \Delete
 
-class List extends Component
+class CookbookList extends Component
   render: ! ->
     const {dispatch, cookbooks} = @props
 
     return @div {className: "mdl-layout__tab-panel is-active" id:"cookbooks"},
              for id, cookbook of cookbooks
-               CookbookCard.elem {cookbook: cookbook, select-cookbook:@props.select-cookbook}
+               CookbookCard.elem {cookbook: cookbook, key: id}
 
 ##################################################################################
 #
@@ -57,9 +57,11 @@ class List extends Component
 map-state-to-props = (state) ->
   {cookbooks: state.cookbooks}
 
+/*
 map-dispatch-to-props = (dispatch) ->
   return {
-    select-cookbook: (cookbook) -> dispatch Actions.select-cookbook cookbook 
+    select-cookbook: (cookbook) -> dispatch Actions.select-cookbook cookbook
   }
+*/
 
-module.exports = List.connect map-state-to-props, map-dispatch-to-props
+module.exports = CookbookList.connect map-state-to-props
