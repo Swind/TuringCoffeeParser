@@ -23,17 +23,6 @@ default_cookbooks = do ->
 cookbooks = (state = default_cookbooks, action) ->
   return state
 
-selected-cookbook = (state = {}, action) ->
-  console.log action.type
-  console.log Actions.SELECT
-
-  switch action.type
-  case Actions.SELECT
-    console.log action.cookbook
-    return action.cookbook
-  default
-    return state
-
 editor = (state = {}, action) ->
   return state
 
@@ -42,7 +31,6 @@ barista = (state = {}, action) ->
 
 const TuringCoffeeStore = combineReducers {
   cookbooks
-  selected-cookbook
   editor
   barista
 }

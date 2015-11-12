@@ -32,7 +32,7 @@ class CookbookCard extends Component
 
         # Cookbook actions
           @div {className: "mdl-card__actions"},
-            @Link {to: "/editor" className:"mdl-button" onClick: ~> @props.select-cookbook cookbook}, "Edit"
+            @Link {to: "/editor/#{cookbook.id}" className:"mdl-button"}, "Edit"
 
         # Cookbook card menu
         @button {className: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id: "#{cookbook.id}-btn"},

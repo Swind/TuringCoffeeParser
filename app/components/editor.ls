@@ -4,7 +4,8 @@ require! {
 
 class CookbookEditor extends Component
   render: ! ->
-    cookbook = @props.cookbook
+    id = @props.params.cookbook-id
+    cookbook = @props.cookbooks[id]
 
     return do
       @div {className: "mdl-grid"},
@@ -17,7 +18,7 @@ class CookbookEditor extends Component
             cookbook.content
 
 map-state-to-props = (state) ->
-  {cookbook: state.selected-cookbook}
+  {cookbooks: state.cookbooks}
 
 module.exports = CookbookEditor.connect map-state-to-props
 

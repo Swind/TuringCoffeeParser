@@ -57,7 +57,7 @@ class RouterClass extends Component
           @IndexRoute {component: CookbookList}
           @Route {path: "cookbooks" component: CookbookList}
           @Route {path: "barista" component: Barista}
-          @Route {path: "editor" component: CookbookEditor}
+          @Route {path: "editor/:cookbookId" component: CookbookEditor}
 
 render-target = document.getElementById "body"
 React.render (React.create-element (apply-provider RouterClass, Reducer), null), render-target
