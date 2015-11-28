@@ -39,7 +39,11 @@ apply-provider = (root-class, store) ->
 
   return wrapper
 
+class Template implements React.DOM
+  Link: React.create-factory ReactRouter.Link
+
 module.exports = {
   Component
+  Template
   apply-provider
 }
