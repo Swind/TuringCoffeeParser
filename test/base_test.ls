@@ -1,6 +1,5 @@
 require! {
-    "../libs/processes/process": Process 
-    "../libs/processes/fixed_point": fixed_point 
+    "../libs/processes/process": Process
     "./testdata": testdata
     "assert": assert
 }
@@ -11,16 +10,26 @@ test = it
 do
     <- describe 'Circle generate points'
     <- test "The circle.points() should return a points list"
-    points = Process.create-process(testdata.circle).get-points!
-    assert.notEqual points.length, 0
+    circle = Process.create-process testdata.circle
+    points = circle.get-points!
 
-/*
+    assert.notEqual points.length, 0
+    assert.equal circle.get-water!, testdata.circle.total_water
+    assert.equal circle.get-time!, (circle.get-length! / testdata.circle.feedrate * 60)
+    assert.equal circle.get-length!, 200
+
 do
     <- describe 'Fixed point generate points'
     <- test "The fixed_point.points() should return a points list"
-    points = fixed_point.handler.points(testdata.fixed_point)
-    assert.notEqual points.length, 0
+    fixed = Process.create-process testdata.fixed-point
+    points = fixed.get-points!
 
+    assert.notEqual points.length, 0
+    assert.equal fixed.get-water!, 40
+    assert.equal fixed.get-time!, 150
+    assert.equal fixed.get-length!, 0
+
+/*
 do
     <- describe 'Sprial generate points'
     <- test "The spiral.points() should return a points list"

@@ -4,10 +4,12 @@
 
 require! {
   "./circle": Circle
+  "./fixed-point": FixedPoint
 }
 
 process-types = {
   circle: Circle
+  "fixed-point": FixedPoint
 }
 
 create-process = (params) ->

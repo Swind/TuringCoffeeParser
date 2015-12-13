@@ -1,14 +1,10 @@
 require! {
-    "./process": Process 
+  "./base": {Point, Process}
 }
 
-radians = Process.radians
-Point = Process.Point
+class SpiralTotalWater extends Process
 
-/*
-Parameters Example:
-
-{
+  default-params: {
     type: \process
     name: "spiral total water"
     radius: {
@@ -21,29 +17,38 @@ Parameters Example:
     }
     cylinder: 5
     point_interval: 0.1 #mm
-    feedrate: 80 #mm/min
-    extrudate: 0.2 #ml/mm
     total_water: 60 #ml
     total_time: 30 #sec
-}
-*/
 
-handler = {}
+  }
 
-handler.points = (params) ->
+  (@params) ->
+    @points = @generate-points!
+    @length = @params.point_interval * (@points.length - 1)
 
-    max_theta = radians(params.cylinder * 360)
+  get-time: ! ->
+    @params.total_time
+
+  get-length: ! ->
+    @length
+
+  get-water: ! ->
+    @params.total_water
+
+  generate-points: ! ->
+
+    max_theta = radians(@params.cylinder * 360)
     # a is acceleration
-    a = (params.radius.end - params.radius.start) / max_theta
+    a = (@params.radius.end - @params.radius.start) / max_theta
 
     total_theta = 0
-    point_list = []
+    points = []
 
     while total_theta <= max_theta
 
         # point interval / (2 * pi * r) = theta for one step
-        now_radius = a * total_theta + params.radius.start
-        now_theta = radians((params.point_interval / (2 * Math.PI * now_radius)) * 360)
+        now_radius = a * total_theta + @params.radius.start
+        now_theta = radians((@params.point_interval / (2 * Math.PI * now_radius)) * 360)
 
         total_theta = total_theta + now_theta
 
@@ -51,23 +56,17 @@ handler.points = (params) ->
         y = now_radius * Math.sin(total_theta)
 
         # Create the point object to save the information
-        point_list[*] = Point x, y
+        points[*] = Point x, y
 
     # Handler f and z
-    point_list = f_handler params, point_list
-    point_list = Process.z_axial_handler params, point_list
-
-    return point_list
-
-f_handler = (params, points) ->
-    total_len = params.point_interval * (points.length - 1)
-    f = (total_len * 60) / (params.total_time)
+    total_len = @params.point_interval * (points.length - 1)
+    f = (total_len * 60) / @params.total_time
 
     for point in points
-        point.f = f
+      point.f = f
+
+    points = Process.z_axial_handler @params, points
 
     return points
 
-module.exports = {
-    handler: handler
-}
+module.exports = SpiralTotalWater

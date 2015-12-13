@@ -12,7 +12,8 @@
   ],
   "scripts":{
       "start": "node-dev server.ls",
-      "build": "webpack --config webpack.front.config.ls"
+      "build": "webpack --config webpack.front.config.ls",
+      "test": "mocha test/base_test.ls --compilers ls:livescript"
   },
   "devDependencies": {
     "webpack":"",
@@ -33,6 +34,8 @@
 
     "source-map-support": "",
     "html-webpack-plugin": "",
+
+    "mocha":"",
 
     "lorem-ipsum": ""
   },

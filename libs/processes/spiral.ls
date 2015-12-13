@@ -1,47 +1,53 @@
 require! {
-    "./process": Process 
+  "./base": {Point, Process}
 }
 
-radians = Process.radians
-Point = Process.Point
+class Spiral extends Process
+  default-params: {
+      type: \process
+      name: \spiral
+      radius: {
+          start: 10 #mm
+          end: 20 #mm
+      }
+      high: {
+          start: 170 #mm
+          end: 165 #mm
+      }
+      cylinder: 5
+      point_interval: 0.1 #mm
+      feedrate: 80 #mm/min
+      extrudate: 0.2 #ml/mm
+  }
 
-/*
-Parameters Example:
+  (@params) ->
+    # Generate all points when this class created
+    # To calculator total water and time 
+    @points = @generate-points!
 
-{
-    type: \process
-    name: \spiral
-    radius: {
-        start: 10 #mm
-        end: 20 #mm
-    }
-    high: {
-        start: 170 #mm
-        end: 165 #mm
-    }
-    cylinder: 5
-    point_interval: 0.1 #mm
-    feedrate: 80 #mm/min
-    extrudate: 0.2 #ml/mm
-}
-*/
+  get-time: ! ->
+    @get-length! / @params.feedrate * 60
 
-handler = {}
+  get-length: ! ->
+    @points.length * @params.point_interval
 
-handler.points = (params) ->
+  get-water: ! ->
+    @params.total_water
 
-    max_theta = radians(params.cylinder * 360)
+  generate-points: ! ->
+
+    max_theta = radians(@params.cylinder * 360)
     # a is acceleration
-    a = (params.radius.end - params.radius.start) / max_theta
+    a = (@params.radius.end - @params.radius.start) / max_theta
 
     total_theta = 0
-    point_list = []
+    points = []
 
     while total_theta <= max_theta
 
         # point interval / (2 * pi * r) = theta for one step
-        now_radius = a * total_theta + params.radius.start
-        now_theta = radians((params.point_interval / (2 * Math.PI * now_radius)) * 360)
+        now_radius = a * total_theta + @params.radius.start
+        now_theta = radians((@params.point_interval / (2 * Math.PI * now_radius)) * 360)
 
         total_theta = total_theta + now_theta
 
@@ -49,21 +55,15 @@ handler.points = (params) ->
         y = now_radius * Math.sin(total_theta)
 
         # Create the point object to save the information
-        point_list[*] = Point x, y
+        points[*] = Point x, y
 
-    # Handler f and z
-    point_list = f_handler params, point_list
-    point_list = Process.z_axial_handler(params, point_list)
-
-    return point_list
-
-f_handler = (params, points) ->
-
+    # Handler f
     for point in points
-        point.f = params.feedrate
+      point.f = params.feedrate
+
+    # Handler z
+    points = Process.z_axial_handler(@params, points)
 
     return points
 
-module.exports = {
-    handler: handler
-}
+module.exports = Spiral

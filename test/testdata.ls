@@ -56,9 +56,9 @@ circle = {
     temperature: 65 
 }
 
-fixed_point = {
+fixed-point = {
     type: \process
-    name: \fixed_point
+    name: "fixed-point"
     description: "fixed point test process"
     coordinates: {
         x: 0 #mm
@@ -78,5 +78,5 @@ module.exports = {
     spiral: spiral 
     spiral_total_water: spiral_total_water
     circle: circle
-    fixed_point: fixed_point
+    fixed-point: fixed-point
 }
