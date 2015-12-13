@@ -5,11 +5,15 @@
 require! {
   "./circle": Circle
   "./fixed-point": FixedPoint
+  "./spiral": Spiral
+  "./spiral-total-water":SpiralTotalWater
 }
 
 process-types = {
   circle: Circle
   "fixed-point": FixedPoint
+  spiral: Spiral
+  "spiral-total-water": SpiralTotalWater
 }
 
 create-process = (params) ->

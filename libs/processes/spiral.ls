@@ -26,17 +26,20 @@ class Spiral extends Process
     @points = @generate-points!
 
   get-time: ! ->
-    @get-length! / @params.feedrate * 60
+    return @get-length! / @params.feedrate * 60
 
   get-length: ! ->
-    @points.length * @params.point_interval
+    return @points.length * @params.point_interval
 
   get-water: ! ->
-    @params.total_water
+    return @points.length * @params.extrudate
+
+  get-points: ! ->
+    return @points
 
   generate-points: ! ->
 
-    max_theta = radians(@params.cylinder * 360)
+    max_theta = @radians(@params.cylinder * 360)
     # a is acceleration
     a = (@params.radius.end - @params.radius.start) / max_theta
 
@@ -47,7 +50,7 @@ class Spiral extends Process
 
         # point interval / (2 * pi * r) = theta for one step
         now_radius = a * total_theta + @params.radius.start
-        now_theta = radians((@params.point_interval / (2 * Math.PI * now_radius)) * 360)
+        now_theta = @radians((@params.point_interval / (2 * Math.PI * now_radius)) * 360)
 
         total_theta = total_theta + now_theta
 
@@ -58,11 +61,9 @@ class Spiral extends Process
         points[*] = Point x, y
 
     # Handler f
-    for point in points
-      point.f = params.feedrate
-
-    # Handler z
-    points = Process.z_axial_handler(@params, points)
+    for point, index in points
+      point.f = @params.feedrate
+      point.z = @z-axial points.length, index
 
     return points
 

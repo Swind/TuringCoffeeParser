@@ -27,17 +27,20 @@ class SpiralTotalWater extends Process
     @length = @params.point_interval * (@points.length - 1)
 
   get-time: ! ->
-    @params.total_time
+    return @params.total_time
 
   get-length: ! ->
-    @length
+    return @length
 
   get-water: ! ->
-    @params.total_water
+    return @params.total_water
+
+  get-points: ! ->
+    return @points
 
   generate-points: ! ->
 
-    max_theta = radians(@params.cylinder * 360)
+    max_theta = @radians(@params.cylinder * 360)
     # a is acceleration
     a = (@params.radius.end - @params.radius.start) / max_theta
 
@@ -48,7 +51,7 @@ class SpiralTotalWater extends Process
 
         # point interval / (2 * pi * r) = theta for one step
         now_radius = a * total_theta + @params.radius.start
-        now_theta = radians((@params.point_interval / (2 * Math.PI * now_radius)) * 360)
+        now_theta = @radians((@params.point_interval / (2 * Math.PI * now_radius)) * 360)
 
         total_theta = total_theta + now_theta
 
@@ -62,10 +65,9 @@ class SpiralTotalWater extends Process
     total_len = @params.point_interval * (points.length - 1)
     f = (total_len * 60) / @params.total_time
 
-    for point in points
+    for point, index in points
       point.f = f
-
-    points = Process.z_axial_handler @params, points
+      point.z = @z-axial points.length, index
 
     return points
 

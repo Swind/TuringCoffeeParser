@@ -19,7 +19,7 @@ spiral = {
 
 spiral_total_water = {
     type: \process
-    name: "spiral total water"
+    name: "spiral-total-water"
     description: "spiral total water test process"
     radius: {
         start: 10 #mm

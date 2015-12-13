@@ -29,16 +29,18 @@ do
     assert.equal fixed.get-time!, 150
     assert.equal fixed.get-length!, 0
 
-/*
 do
     <- describe 'Sprial generate points'
     <- test "The spiral.points() should return a points list"
-    points = spiral.handler.points(testdata.spiral)
+    spiral = Process.create-process testdata.spiral
+    points = spiral.get-points!
+
     assert.notEqual points.length, 0
 
 do
     <- describe 'Sprial total water generate points'
     <- test "The spiral_total_water.points() should return a points list"
-    points = spiral_total_water.handler.points(testdata.spiral_total_water)
+    spiral-total-water = Process.create-process testdata.spiral_total_water
+    points = spiral-total-water.get-points!
+
     assert.notEqual points.length, 0
-*/
