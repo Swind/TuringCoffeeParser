@@ -1,6 +1,21 @@
 require! {
-  "../react-wrapper": {Template}
+  "../react-wrapper": {Component, Template}
 }
+
+class MenuComponent extends Component
+  componentWillMount: !->
+    if @_element
+      window.componentHandler.downgradeElements @_element
+
+  componentDidMount: !->
+    window.componentHandler.upgradeElements @_element
+
+  safeRef: (e) !~>
+    @_element = e
+
+  render: ->
+    @ul {className: "mdl-menu mdl-js-menu mdl-menu--bottom-right" htmlFor: @props.menu-id, ref: @safeRef},
+      @props.items
 
 class Card extends Template
 
@@ -8,13 +23,11 @@ class Card extends Template
     return @li {className: "mdl-menu__item" onClick: click-action}, name
 
   Menu: (menu-id, items) ->
-    return do
-      [
-        @button {className: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id: menu-id},
-          @i {className: "material-icons"}, \more_vert
-        @ul {className: "mdl-menu mdl-js-menu mdl-menu--bottom-right" htmlFor: menu-id},
-          items
-      ]
+    [
+      @button {className: "mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon", id: menu-id}, do
+        @i {className: "material-icons"}, \more_vert
+      MenuComponent.elem {menu-id: menu-id, items: items}
+    ]
 
   Desc: (desc) ->
     return do
