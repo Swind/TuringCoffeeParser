@@ -1,6 +1,6 @@
 require! {
-  "redux": {combineReducers, createStore} 
-  "../actions/CookbookActions": Actions
+  "redux": {combineReducers, createStore, compose, applyMiddleware} 
+  "../actions/CookbookEditingActions": CookbookEditingActions
   "./testdata": Testdata
 }
 
@@ -25,9 +25,9 @@ cookbooks = (state = default_cookbooks, action) ->
 
 editor = (state = {}, action) ->
   switch action.type
-  case Actions.EDITING
+  case CookbookEditingActions.UPDATE_EDITING_COOKBOOK
     return {
-      editing-cookbook: action.editing-cookbook
+      cookbook: action.cookbook
     }
 
   default
