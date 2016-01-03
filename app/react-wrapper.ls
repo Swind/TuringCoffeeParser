@@ -11,7 +11,7 @@ require! {
 *   React wrapper 
 *
 *=================================================================================*/
-class Component extends React.Component implements React.DOM
+class Component extends React.Component implements ReactMDL, React.DOM
 
   Router: React.create-factory ReactRouter.Router
   Route: React.create-factory ReactRouter.Route
@@ -21,6 +21,9 @@ class Component extends React.Component implements React.DOM
 
   @elem = ->
     React.create-factory(@) ...
+
+  @create = (c, props) ->
+    React.create-element(c, props) 
 
   @connect = ->
     ReactRedux.connect(...) @
