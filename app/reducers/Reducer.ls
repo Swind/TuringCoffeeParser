@@ -42,4 +42,6 @@ const TuringCoffeeStore = combineReducers {
   barista
 }
 
-module.exports = createStore TuringCoffeeStore
+const finalCreateStore = (compose (if window.devToolsExtension then window.devToolsExtension() else f -> f)) createStore
+
+module.exports = finalCreateStore TuringCoffeeStore
