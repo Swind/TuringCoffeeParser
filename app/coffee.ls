@@ -14,14 +14,15 @@ require! {
 
 # CSS
 require! {
-  "./libs/css/material.min.css": material-css
+  "material-design-lite/material.min.css": material-css
   "./scss/coffee.scss": coffee-css
   "./scss/editor.scss": editor-css
+  "./scss/step.scss": step-css
 }
 
 # JS
 require! {
-  "./libs/js/material.min.js": material-js
+  "material-design-lite/material.js": material-js
 }
 
 class FloatActionButton extends Component
