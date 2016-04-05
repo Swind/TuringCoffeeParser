@@ -3,6 +3,7 @@ require! {
   "../actions/CookbookEditingActions": Actions
   "./card": Card
   "material-ui/lib/slider": Slider
+  "material-ui/lib/paper": Paper
 }
 
 calculate-cookbook-total-time = (cookbook) ->
@@ -51,7 +52,7 @@ class ContentCard extends Component
                 @li null, do
                   [
                     @span null, "高度: #{x.high.start} mm"
-                    Component.create Slider.default, {
+                    Component.create Slider, {
                       value: x.high.start
                       step: 5
                       min: 0
@@ -66,7 +67,7 @@ class ContentCard extends Component
                 @li null, do
                   [
                     @span null, "總水量: #{x.total_water} ml"
-                    Component.create Slider.default, {
+                    Component.create Slider, {
                       value: x.total_water
                       step: 10
                       min: 0
@@ -107,7 +108,7 @@ class ContentCard extends Component
             generate-step-content x, i
         ]
 
-    @div {className: \group}, do
+    Component.create Paper, {className: \group, zDepth: 1}, do
       [
         @h3 null, content.name
         @div null, process
