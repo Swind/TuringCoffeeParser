@@ -151,15 +151,16 @@ class CookbookEditor extends Component
             @props.updateEditingCookbook new_cookbook
 
     editable-description = do
-      Component.create @Textfield, do
-        * label: 'Description',
-          value: cookbook.description,
+      Component.create do
+        @Textfield
+        * label: 'Description'
+          value: cookbook.desc
           style: {width: "100%"}
           rows: 3
           floatingLabel: true
           onChange: (e) ~>
             new_cookbook = Object.assign {}, cookbook
-            new_cookbook.description = e.target.value
+            new_cookbook.desc = e.target.value
             @props.updateEditingCookbook new_cookbook
 
     contents = [
