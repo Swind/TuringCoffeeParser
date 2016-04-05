@@ -6,7 +6,10 @@ require! {
     "classnames": ClassNames
     "react-mdl": ReactMDL
     "redux": Redux
+    "react-tap-event-plugin": injectTapEventPlugin
 }
+
+injectTapEventPlugin!
 
 /*==================================================================================
 *
