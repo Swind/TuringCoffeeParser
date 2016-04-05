@@ -115,19 +115,6 @@ class ContentCard extends Component
         menu
       ]
 
-class CookbookSummary extends Component
-  render: ->
-    @div {style: {height: "100%", width: "300px", position: "fixed", left: 0, top: 0}}, do
-      Component.create @Layout, {fixedDrawer: true}, do
-        Component.create @Drawer, {title: 'Title'}, do
-          items = []
-          for process, index in @props.cookbook.content
-            item = do
-              @a {href: "\##{index}"}, do
-                @span null, process.name
-            items.push item
-          Component.create @Navigation, null, items
-
 class CookbookEditor extends Component
 
   render: ! ->
@@ -139,9 +126,10 @@ class CookbookEditor extends Component
     card = new Card!
 
     editable-name = do
-      Component.create @Textfield, do
-        * label: 'Title',
-          value: cookbook.name,
+      Component.create do
+        @Textfield
+        * label: 'Title'
+          value: cookbook.name
           style: {width: "100%"}
           floatingLabel: true
           required: true
@@ -187,8 +175,6 @@ class CookbookEditor extends Component
                 new_cookbook[index] = p
                 @props.updateEditingCookbook new_cookbook
             }
-
-        # CookbookSummary.elem {cookbook: cookbook}
 
 map-state-to-props = (state) ->
   * cookbooks: state.cookbooks
