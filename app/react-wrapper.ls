@@ -4,14 +4,19 @@ require! {
     "react-router": ReactRouter
     "react-redux": ReactRedux 
     "classnames": ClassNames
+    "react-mdl": ReactMDL
+    "redux": Redux
+    "react-tap-event-plugin": injectTapEventPlugin
 }
+
+injectTapEventPlugin!
 
 /*==================================================================================
 *
 *   React wrapper 
 *
 *=================================================================================*/
-class Component extends React.Component implements React.DOM
+class Component extends React.Component implements ReactMDL, React.DOM
 
   Router: React.create-factory ReactRouter.Router
   Route: React.create-factory ReactRouter.Route
@@ -21,6 +26,9 @@ class Component extends React.Component implements React.DOM
 
   @elem = ->
     React.create-factory(@) ...
+
+  @create = ->
+    React.create-element(...)
 
   @connect = ->
     ReactRedux.connect(...) @
@@ -39,11 +47,15 @@ apply-provider = (root-class, store) ->
 
   return wrapper
 
+bindActionCreators = ->
+  Redux.bindActionCreators(...)
+
 class Template implements React.DOM
   Link: React.create-factory ReactRouter.Link
 
 module.exports = {
   Component
   Template
+  bindActionCreators
   apply-provider
 }

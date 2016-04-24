@@ -2,4 +2,24 @@
     .cb-editor {
         max-width: 860px;
     }
+
+    .mdl-textfield__input {
+        font-size: 20px;
+    }
+
+    .is-dirty .mdl-textfield__label {
+        font-size: 18px;
+        top: -4px;
+    }
+
+    .editor-summary-container {
+        position: fixed;
+        right: 30px;
+        bottom: 36px;
+        z-index: 999;
+    }
+
+    .is-current {
+        background-color: #cccccc;
+    }
 }

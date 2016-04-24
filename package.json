@@ -10,56 +10,55 @@
       "url": ""
     }
   ],
-  "scripts":{
-      "start": "node-dev server.ls",
-      "build": "webpack --config webpack.front.config.ls",
-      "test": "mocha test/base_test.ls --compilers ls:livescript"
+  "scripts": {
+    "start": "node-dev server.ls",
+    "build": "webpack --config webpack.front.config.ls",
+    "test": "mocha test/base_test.ls --compilers ls:livescript"
   },
   "devDependencies": {
-    "webpack":"",
-    "webpack-dev-server":"",
-    "livescript": "",
     "bower": "",
-
-    "livescript-loader": "",
-    "style-loader": "",
-    "sass-loader": "",
     "css-loader": "",
-    "url-loader": "",
     "file-loader": "",
-    "react-hot-loader": "",
-    "json-loader": "",
-
-    "node-sass": "",
-
-    "source-map-support": "",
     "html-webpack-plugin": "",
-
-    "mocha":"",
-
-    "lorem-ipsum": ""
+    "json-loader": "",
+    "less": "^2.6.1",
+    "less-loader": "^2.2.2",
+    "livescript": "",
+    "livescript-loader": "",
+    "lorem-ipsum": "",
+    "mocha": "",
+    "node-sass": "",
+    "react-hot-loader": "",
+    "sass-loader": "",
+    "source-map-support": "",
+    "style-loader": "",
+    "url-loader": "",
+    "webpack": "",
+    "webpack-dev-server": ""
   },
   "dependencies": {
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
-    "redux": "",
-    "react-redux": "^4.0.0",
-    "react-router": "^1.0.0",
     "classnames": "",
+    "express": "",
     "good": "",
-
+    "good-console": "",
     "hapi": "",
     "hapi-swagger": "",
-    "inert": "",
-    "vision": "",
-    "joi": "",
-    "good-console": "",
-
+    "http-proxy": "",
     "immutable": "",
+    "inert": "",
+    "joi": "",
+    "material-design-lite": "^1.1.1",
     "nanomsg": "",
     "nedb": "",
-    "express": "",
-    "http-proxy": "",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "react-dragula": "^1.1.15",
+    "react-mdl": "^1.4.1",
+    "react-redux": "^4.0.0",
+    "react-router": "^1.0.0",
+    "react-tap-event-plugin": "^0.2.2",
+    "redux": "",
+    "vision": "",
     "winston": ""
   }
 }
