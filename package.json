@@ -23,8 +23,6 @@
     "json-loader": "",
     "less": "^2.6.1",
     "less-loader": "^2.2.2",
-    "livescript": "",
-    "livescript-loader": "",
     "lorem-ipsum": "",
     "mocha": "",
     "node-sass": "",
