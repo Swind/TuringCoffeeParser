@@ -2,11 +2,13 @@
 
 const logger = require('../utils/logger');
 const Hapi = require('hapi');
+const CookbookMgr = require('./models/cookbooks');
 
 class APIServer {
-    constructor(address, port) {
+    constructor(address = "127.0.0.0", port = 3000) {
         this.address = address;
         this.port =port;
+
         // HTTP Server
         this.server = new Hapi.Server();
         this.server.connection({address: this.address, port: this.port});
@@ -14,7 +16,7 @@ class APIServer {
 
 
     add_route(method, path, handler) {
-      self.server.route(
+      this.server.route(
         {
           method: method,
           path: path,
@@ -26,13 +28,15 @@ class APIServer {
     start() {
       logger.info("Start the API server ...");
       
-      self.server.start((err)=>{
+      this.server.start((err)=>{
         if (err) {
           throw err;
         }
       });
 
-      logger.info('Server running at:', self.server.info.uri);
+      logger.info('Server running at:', this.server.info.uri);
     }
-
 }
+
+var server = new APIServer();
+server.start();
