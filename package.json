@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "start": "node-dev server.jsx",
-    "build": "webpack --config webpack.front.config.ls",
+    "build": "webpack",
     "test": "mocha test/test_cookbooks_api.jsx --compilers jsx:babel-register"
   },
   "devDependencies": {
@@ -28,7 +28,6 @@
     "lorem-ipsum": "",
     "mocha": "",
     "chai":"",
-    "supertest":"",
     "node-sass": "",
     "react-hot-loader": "",
     "sass-loader": "",

@@ -11,9 +11,9 @@ class APIServer {
         this.server.connection({address: this.address, port: this.port});
     }
 
-    register(name, options={}) {
+    register(name, plugin, options={}) {
         this.server.register({
-          register: require(name),
+          register: plugin,
           options: options
         }, (err)=>{
           if(err){

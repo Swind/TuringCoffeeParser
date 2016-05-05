@@ -82,7 +82,7 @@ class CookbooksAPI {
             }
           }
         },
-        handler: this.create 
+        handler: this.create.bind(this)
       }
     }
 
@@ -119,7 +119,7 @@ class CookbooksAPI {
             }
           }
         },
-        handler: this.update 
+        handler: this.update.bind(this)
       }
     }
 
@@ -156,7 +156,7 @@ class CookbooksAPI {
             }
           }
         },
-        handler: this.read 
+        handler: this.read.bind(this)
       }
     }
 

@@ -5,6 +5,7 @@ var HttpProxy = require('http-proxy');
 
 //Monkeypatch require for node-dev
 require.extensions['.jsx'] = require.extensions['.js'];
+
 var logger = require('./utils/logger');
 var ApiServer = require('./server/api_server');
 var CookbooksAPI = require('./server/api/cookbooks');
@@ -33,9 +34,9 @@ global.logger = logger;
 api_server = new ApiServer(ADDR, PORT);
 
 // Register Plugins
-api_server.register('inert');
-api_server.register('vision');
-api_server.register('hapi-swagger');
+api_server.register('inert', require('inert'));
+api_server.register('vision', require('vision'));
+api_server.register('hapi-swagger', require('hapi-swagger'));
 
 /*###############################################################
 #
