@@ -1,11 +1,7 @@
 language: node_js
 
-#cache:
-#  directories:
-#    - node_modules
-
 script:
 - ./node_modules/.bin/bower install
-- npm run build 
-- npm run test 
+- npm build 
+- npm test 
 
