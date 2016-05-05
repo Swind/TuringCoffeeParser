@@ -1,5 +1,5 @@
 {
-    "extensions": {
-        "ls": "livescript"
-    }
+  "jsx":{
+    "name": "babel/register"
+  }
 }

@@ -40,4 +40,4 @@ class CookbookMgr {
     }
 }
 
-module.exports = CookbookMgr
+module.exports = CookbookMgr 
