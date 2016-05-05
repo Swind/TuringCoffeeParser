@@ -13,10 +13,11 @@
   "scripts": {
     "start": "node-dev server.jsx",
     "build": "webpack --config webpack.front.config.ls",
-    "test": "mocha test/base_test.ls --compilers ls:livescript"
+    "test": "mocha test/test_cookbooks_api.jsx --compilers jsx:babel-register"
   },
   "devDependencies": {
     "babel-cli": "^6.8.0",
+    "babel-register": "^6.8.0",
     "bower": "",
     "css-loader": "",
     "file-loader": "",
@@ -26,6 +27,8 @@
     "less-loader": "^2.2.2",
     "lorem-ipsum": "",
     "mocha": "",
+    "chai":"",
+    "supertest":"",
     "node-sass": "",
     "react-hot-loader": "",
     "sass-loader": "",

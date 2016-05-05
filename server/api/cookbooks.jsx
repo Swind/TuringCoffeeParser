@@ -4,7 +4,6 @@ var Cookbooks = require('../models/cookbooks')
 class CookbooksAPI {
     constructor(manager) {
       this.manager = manager;
-      logger.info(this.manager);
     }
 
     failed(reply, statusCode, message){
@@ -191,7 +190,7 @@ class CookbooksAPI {
             }
           }
         },
-        handler: this.delete 
+        handler: this.delete.bind(this) 
       }
     }
 
