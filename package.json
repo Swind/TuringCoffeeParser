@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "classnames": "",
-    "express": "",
     "good": "",
     "good-console": "",
     "hapi": "",

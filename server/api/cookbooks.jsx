@@ -92,7 +92,7 @@ class CookbooksAPI {
           this.failed(reply, 503, err);
         }
         else {
-          this.sucessed(reply, 201, 'Create the cookbook successfully');
+          this.successed(reply, 201, 'Create the cookbook successfully');
         }
       });
     }
