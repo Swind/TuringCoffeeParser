@@ -84,28 +84,35 @@ describe('GET:/cookbooks', ()=>{
 
   describe('List and CRUD API of cookbooks', ()=>{
     it('Test POST:/cookbooks after add a cookbook', async function(done){
-      let data = {
-        name: 'test1',
-        description: 'description content',
-        content: TestData.spiral
-      };
-
-      // List all cookbooks
-      let resp = await api.get('/api/cookbooks');
-
-      // Now the cookbooks length should be 0
       try {
+        let data = {
+          name: 'test1',
+          description: 'description content',
+          content: TestData.spiral
+        };
+
+        // List all cookbooks
+        let resp = await api.get('/api/cookbooks');
+
+        // Now the cookbooks length should be 0
         json_result = JSON.parse(resp.payload);
         json_result['data'].should.be.empty;
 
         resp.result.statusCode.should.be.equal(200);
-      } catch(err){
-        done(err);
-      }
 
-      try {
         resp = await api.post('/api/cookbooks', data);
         resp.result.statusCode.should.be.equal(201);
+        json_result = JSON.parse(resp.payload);
+
+        created_cookbook = json_result['data'];
+        created_cookbook.should.be.not.empty;
+        created_cookbook.name.should.be.equal(data.name);
+        created_cookbook.description.should.be.equal(data.description);
+        created_cookbook.content.should.be.eql(data.content);
+        created_cookbook._id.should.be.not.empty;
+
+
+
         done();
       } catch(err){
         done(err);

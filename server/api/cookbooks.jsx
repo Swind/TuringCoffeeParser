@@ -48,17 +48,7 @@ class CookbooksAPI {
           this.failed(reply, 503, err);
         }
         else {
-          let data = {};
-          
-          for(let cookbook of cookbooks){
-            let id = cookbook._id;
-            // We want show the id as key, not a part of body.
-            delete cookbook._id;
-
-            data[id] = cookbook;
-          }
-
-          this.successed(reply, 200, 'List all cookbooks successfully', data);
+          this.successed(reply, 200, 'List all cookbooks successfully', cookbooks);
         }
       });
     }
@@ -92,7 +82,7 @@ class CookbooksAPI {
           this.failed(reply, 503, err);
         }
         else {
-          this.successed(reply, 201, 'Create the cookbook successfully');
+          this.successed(reply, 201, 'Create the cookbook successfully', doc);
         }
       });
     }
@@ -169,6 +159,9 @@ class CookbooksAPI {
         }
         else if(!cookbook) {
           this.failed(reply, 404, `Can't find cookbook with id ${id}`);
+        }
+        else {
+          this.successed(reply, 200, cookbook);
         }
       });
     }
