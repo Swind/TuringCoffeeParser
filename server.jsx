@@ -2,10 +2,6 @@ var Path = require('path');
 var Hapi = require('hapi');
 var HttpProxy = require('http-proxy');
 
-
-//Monkeypatch require for node-dev
-require.extensions['.jsx'] = require.extensions['.js'];
-
 var logger = require('./utils/logger');
 var ApiServer = require('./server/api_server');
 var CookbooksAPI = require('./server/api/cookbooks');
