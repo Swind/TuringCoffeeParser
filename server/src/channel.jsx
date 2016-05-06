@@ -5,7 +5,7 @@ class Monitor {
       this.subscribers = {};
     }
 
-    record_msg(name, msg){
+    update_data(name, msg){
       sub = this.subscribers[name];
       sub.data = JSON.parse(msg);
 
@@ -17,7 +17,7 @@ class Monitor {
     subscribe(address, name, action=null){
       sock = Nanomsg.socket('sub');
       sock.connect(address);
-      sock.on('data', this.record_msg(name));
+      sock.on('data', this.update_data(name));
 
       sub = {};
       sub.socket = sock;

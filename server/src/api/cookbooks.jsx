@@ -1,29 +1,11 @@
 var Joi = require('joi');
-var Cookbooks = require('../models/cookbooks') 
+var Cookbooks = require('../models/cookbooks');
+var API = require('./api');
 
-class CookbooksAPI {
+class CookbooksAPI extends API{
     constructor(manager) {
+      super();
       this.manager = manager;
-    }
-
-    failed(reply, statusCode, message){
-      reply({
-        statusCode: statusCode,
-        message: message,
-      });
-    }
-
-    successed(reply, statusCode, message, data){
-      let content = {
-        statusCode: statusCode,
-        message: message,
-      };
-
-      if(data){
-        content['data'] = data;
-      }
-
-      reply(content);
     }
 
     /*
