@@ -2,9 +2,9 @@ var TestData = require('./testdata');
 var Assert = require('assert');
 var Chai = require('chai');
 
-var ApiServer = require('../server/api_server');
-var CookbooksAPI = require('../server/api/cookbooks');
-var CookbooksMgr = require('../server/models/cookbooks');
+var ApiServer = require('../src/api_server');
+var CookbooksAPI = require('../src/api/cookbooks');
+var CookbooksMgr = require('../src/models/cookbooks');
 
 var logger = require('../utils/logger');
 global.logger = logger;
@@ -110,8 +110,6 @@ describe('GET:/cookbooks', ()=>{
         created_cookbook.description.should.be.equal(data.description);
         created_cookbook.content.should.be.eql(data.content);
         created_cookbook._id.should.be.not.empty;
-
-
 
         done();
       } catch(err){

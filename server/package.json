@@ -1,8 +1,8 @@
 {
-  "name": "turing-coffee-parser",
+  "name": "turing-coffee-server",
   "version": "0.0.1",
   "author": "Swind <swind@code-life.info>",
-  "description": "Turning Coffee",
+  "description": "Turning Coffee - Server",
   "homepage": "",
   "license": [
     {
@@ -19,25 +19,13 @@
   "devDependencies": {
     "babel-cli": "^6.8.0",
     "babel-register": "^6.8.0",
-    "bower": "",
-    "css-loader": "",
     "file-loader": "",
     "html-webpack-plugin": "",
     "json-loader": "",
-    "less": "^2.6.1",
-    "less-loader": "^2.2.2",
-    "lorem-ipsum": "",
     "mocha": "",
     "chai":"",
-    "node-sass": "",
-    "react-hot-loader": "",
-    "sass-loader": "",
     "source-map-support": "",
-    "style-loader": "",
-    "url-loader": "",
     "webpack": "",
-    "webpack-dev-server": "",
-    "babel-plugin-transform-async-to-generator":"",
     "babel-preset-es2015":"",
     "nodemon":""
   },
@@ -51,19 +39,11 @@
     "immutable": "",
     "inert": "",
     "joi": "",
-    "material-design-lite": "^1.1.1",
     "nanomsg": "",
     "nedb": "",
     "history": "1.17.0",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
-    "react-dragula": "^1.1.15",
-    "react-mdl": "^1.4.1",
-    "react-redux": "^4.0.0",
-    "react-router": "^1.0.0",
-    "react-tap-event-plugin": "^0.2.2",
-    "redux": "",
     "vision": "",
-    "winston": ""
+    "winston": "",
+    "babel-plugin-transform-async-to-generator":""
   }
 }
