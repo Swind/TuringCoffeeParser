@@ -13,8 +13,7 @@
   "scripts": {
     "start": "node-dev server.jsx",
     "build": "webpack",
-    "test": "mocha test/test_cookbooks_api.jsx --compilers jsx:babel-register"
-  },
+    "test": "mocha test/test_cookbooks_api.jsx --compilers jsx:babel-register" },
   "devDependencies": {
     "babel-cli": "^6.8.0",
     "babel-register": "^6.8.0",
@@ -35,7 +34,8 @@
     "style-loader": "",
     "url-loader": "",
     "webpack": "",
-    "webpack-dev-server": ""
+    "webpack-dev-server": "",
+    "babel-plugin-transform-async-to-generator":""
   },
   "dependencies": {
     "classnames": "",

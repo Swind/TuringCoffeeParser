@@ -1,7 +1,20 @@
-language: node_js
 sudo: false
+
+language: node_js
+
 node_js:
   - "6"
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.8
+      - g++-4.8
+
+before_install:
+  - if [[ $TRAVIS_OS_NAME == "linux" ]]; then export CC=gcc-4.8 && export CXX=g++-4.8; fi
 
 script:
 - ./node_modules/.bin/bower install
