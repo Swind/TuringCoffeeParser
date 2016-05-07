@@ -10,15 +10,40 @@ class Printer{
       this.monitor = new Channel.Monitor;
       this.cmd = new Channel.CmdChannel(PRINTER_CMD_ADDRESS);
 
-      this.monitor.subscribe(PRINTER_PUB_ADDRESS, PRINTER);
+      this.monitor.subscribe(PRINTER_PUB_ADDRESS, PRINTER, this.update_status_by_monitor.bind(this));
+
+      this.status = {};
+      this.last_status_update_time = 0; 
+
+      this.total_sent_cmd = 0;
     }
 
-    get status(){
-      return this.monitor.get_data(PRINTER);
-    } 
+    update_status_by_monitor(data){
 
-    send(msg){
-      this.cmd.send(msg);
+      update_if_existing = (name) => {
+        if (name in data){
+          this.status[name] = data[name];
+        }
+      }
+
+      update_if_existing('state');
+      update_if_existing('state_string');
+      update_if_existing('progress');
+
+      let date = new Date();
+      this.last_update_time = date.getTime();
+    }
+
+    send(cmd){
+      this.cmd.send({'C': cmd});
+    }
+
+    batch_send(cmds){
+      this.cmd.send({'G': cmds});
+    }
+
+    home(){
+      this.cmd.send({'C': 'G28'});
     }
 }
 
