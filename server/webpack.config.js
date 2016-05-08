@@ -38,7 +38,7 @@ module.exports =
   ],
   loaders: [ 
     {
-      test: /\.jsx?$/,
+      test: /\.js?$/,
       exclude: /(node_modules|bower_components)/,
       loader: 'babel',
       query: {
@@ -47,7 +47,7 @@ module.exports =
     }
   ],
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js']
   },
   externals: nodeModules,
   devtool: 'sourcemap'
