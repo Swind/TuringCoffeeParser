@@ -1,6 +1,6 @@
 var Base = require('./base');
 
-class Circle extends Base{
+class Circle extends Base.Process{
   constructor(params){
     super(params);
 
@@ -20,7 +20,8 @@ class Circle extends Base{
       total_water: 0, //mm
       point_interval: 0.1, //mm
       feedrate: 80, //mm
-      extrudate: 0.2 //ml/mm
+      extrudate: 0.2, //ml/mm
+      temperature: 60 //C
     }
   }
 
@@ -37,20 +38,23 @@ class Circle extends Base{
   }
 
   get points(){
-    circumference = 2 * Math.pi * this.params.radius.start;
-    cylinder = this.length / circumference;
-    av = (2 * Math.Pi * cylinder) / this.point_number;
+    let circumference = 2 * Math.pi * this.params.radius.start;
+    let cylinder = this.length / circumference;
+    let av = (2 * Math.Pi * cylinder) / this.point_number;
 
-    high = this.params.high.start;
-    diff = this.params.high.end - this.params.high.start;
+    let high = this.params.high.start;
+    let diff = this.params.high.end - this.params.high.start;
 
-    points = [];
+    let points = [];
 
     for(let index = 0; index < this.point_number; index++){
         x = this.params.radius * Math.cos(av * index);
         y = this.params.radius * Math.sin(av * index);
-        z = high + diff / this.point_number * index; 
-        f = this.params.feedrate
+        f = this.params.feedrate;
+
+        let point = new Point(x=x, y=y, f=f);
+
+        points.push(point);
     }
 
     return points
