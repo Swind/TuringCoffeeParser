@@ -21,7 +21,6 @@ before_install:
   - if [[ $TRAVIS_OS_NAME == "linux" ]]; then export CC=gcc-4.8 && export CXX=g++-4.8; fi
 
 script:
-  - ./node_modules/.bin/bower install
   - npm build 
   - npm test 
 

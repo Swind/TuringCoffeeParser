@@ -2,7 +2,7 @@ var Path = require('path');
 var Hapi = require('hapi');
 var HttpProxy = require('http-proxy');
 
-var logger = require('./utils/logger');
+var logger = require('./libs/utils/logger');
 var ApiServer = require('./server/api_server');
 var CookbooksAPI = require('./server/api/cookbooks');
 var CookbooksMgr = require('./server/models/cookbooks');

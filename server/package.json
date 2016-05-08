@@ -13,7 +13,7 @@
   "scripts": {
     "start": "nodemon --exec npm run babel-node -- server.js",
     "build": "webpack",
-    "test": "mocha test/test_cookbooks_api.js --compilers jsx:babel-register",
+    "test": "mocha test --compilers jsx:babel-register",
     "babel-node": "babel-node --presets=es2015 --ignore='foo|bar|baz'"
   },
   "devDependencies": {
