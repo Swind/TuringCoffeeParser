@@ -5,7 +5,7 @@ class Header extends Component {
   render() {
     return (
         <AppBar
-          title='Title'
+          title='Barista'
           iconClassNameRight='muidocs-icon-navigation-expand-more'
         />
     )

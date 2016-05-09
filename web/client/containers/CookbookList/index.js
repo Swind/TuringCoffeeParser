@@ -1,24 +1,50 @@
-import React from 'react';
-import ReactGridLayout from 'react-grid-layout'
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
-import Card from '../../components/CookbookCard';
+import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
-var layout = [
-  {i: 'Card', x: 0, y: 0, w:1, h:1}
+import CookbookCard from '../../components/CookbookCard';
+import * as CookbookActions from '../../actions/cookbooks'
+
+const WidthReactGridLayout = WidthProvider(ReactGridLayout)
+
+const layout = [
+  {i: 'Card', x: 0, y: 0, w:12, h:1, isDraggable: false, isResizable: false}
 ];
 
-class CookbookList extends React.Component {
+class CookbookList extends Component {
   constructor(props, context) {
     super(props, context);
   }
 
+  componentWillMount() {
+    const {actions} = this.props
+    actions.list()
+  }
+
   render() {
+    const {cookbooks} = this.props.cookbooks
     return (
-      <ReactGridLayout className='layout' cols={12} rowHeight={30} width={800}>
-        <Card key={'Card'}/>
-      </ReactGridLayout>
+      <WidthReactGridLayout className='layout' layout={layout} cols={12}>
+        <div key='Card'>
+          {cookbooks.map((cookbook, i) => <CookbookCard key={i} title={cookbook.name} subtitle='' href={`/editor/${cookbook._id}`}/>)}
+        </div>
+      </WidthReactGridLayout>
     );
   }
 }
 
-export default CookbookList;
+function mapStateToProps(state) {
+  return {
+    cookbooks: state.cookbooks
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(CookbookActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CookbookList)

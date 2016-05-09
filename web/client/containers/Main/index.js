@@ -3,23 +3,14 @@
  * which incorporates components providedby material-ui.
  */
 
-import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
-import {deepOrange500} from 'material-ui/styles/colors';
-import FlatButton from 'material-ui/FlatButton';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import React, {Component} from 'react'
 
-import ReactGridLayout from 'react-grid-layout'
+import {deepOrange500} from 'material-ui/styles/colors'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-import Header from '../../components/Header';
-import CookbookList from '../CookbookList';
-
-var layout = [
-  {i: 'Header', x: 0, y: 0, w: 1, h: 2, static: true},
-  {i: 'CookbookList', x: 1, y: 0, w:1, h:1}
-];
+import Header from '../../components/Header'
+import CookbookList from '../CookbookList'
 
 const styles = {
   container: {
@@ -34,21 +25,22 @@ const muiTheme = getMuiTheme({
   },
 });
 
-class Main extends React.Component {
+class Main extends Component {
   constructor(props, context) {
     super(props, context);
   }
 
   render() {
+    const {cookbooks, children} = this.props
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <ReactGridLayout className='layout' layout={layout} cols={12} rowHeight={30} width={1200}>
-          <Header key={'Header'}/>
-          <CookbookList key={'CookbookList'}/>
-        </ReactGridLayout>
+        <div>
+          <Header key='Header'/>
+          {children}
+        </div>
       </MuiThemeProvider>
     );
   }
 }
 
-export default Main;
+export default Main

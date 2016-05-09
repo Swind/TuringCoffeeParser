@@ -1,9 +1,11 @@
 
 import { routerReducer as routing } from 'react-router-redux'
 import { combineReducers } from 'redux'
-import todos from './todos'
+import cookbooks from './cookbooks'
+import editor from './editor'
 
 export default combineReducers({
   routing,
-  todos
+  cookbooks,
+  editor
 })
