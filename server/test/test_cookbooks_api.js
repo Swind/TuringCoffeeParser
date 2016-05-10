@@ -1,18 +1,17 @@
-var TestData = require('./testdata');
-var Assert = require('assert');
-var Chai = require('chai');
+const TestData = require('./testdata');
+const Chai = require('chai');
 
-var ApiServer = require('../src/api_server');
-var CookbooksAPI = require('../src/api/cookbooks');
-var CookbooksMgr = require('../src/models/cookbooks');
+const ApiServer = require('../src/api_server');
+const CookbooksAPI = require('../src/api/cookbooks');
+const CookbooksMgr = require('../src/models/cookbooks');
 
-var logger = require('../libs/utils/logger');
+const logger = require('../libs/utils/logger');
 
 Chai.should();
 
 class TestAPI {
-  constructor(api_server) {
-    this.server = api_server.server;
+  constructor(apiServer) {
+    this.server = apiServer.server;
   }
 
   get(url) {
@@ -32,31 +31,25 @@ class TestAPI {
   }
 
   inject(method, url, data = {}) {
-    let options = {
-      method: method,
-      url: url
-    }
+    const options = {
+      method,
+      url,
+    };
 
     if (data) {
-      options['payload'] = data;
+      options.payload = data;
     }
 
     return this.server.inject(options);
   }
 }
 
-function sleep(msec, val) {
-  return new Promise(function (resolve, reject) {
-    setTimeout(resolve, msec, val);
-  });
-}
-
-function check_cookbook_list_length(resp, exceped) {
+function checkCookbookListLength(resp, exceped) {
   resp.result.statusCode.should.be.equal(200);
 
   // Now the cookbooks length should be 'exceped'
-  let json_result = JSON.parse(resp.payload);
-  json_result['data'].length.should.be.equal(exceped);
+  const jsonResult = JSON.parse(resp.payload);
+  jsonResult.data.length.should.be.equal(exceped);
 }
 
 describe('GET:/cookbooks', () => {
@@ -75,8 +68,8 @@ describe('GET:/cookbooks', () => {
   describe('List and CRUD API of cookbooks', () => {
     it('Test GET:/cookbooks without any cookbook', async function (done) {
       try {
-        let resp = await api.get('/api/cookbooks');
-        check_cookbook_list_length(resp, 0);
+        const resp = await api.get('/api/cookbooks');
+        checkCookbookListLength(resp, 0);
         done();
       } catch (err) {
         done(err);
@@ -87,7 +80,7 @@ describe('GET:/cookbooks', () => {
   describe('CRUD API of cookbooks', () => {
     it('Test POST:/cookbooks (Add new cookbook)', async function (done) {
       try {
-        let data = {
+        const data = {
           name: 'test1',
           description: 'description content',
           content: TestData.Spiral
@@ -95,24 +88,24 @@ describe('GET:/cookbooks', () => {
 
         // List all cookbooks, now the cookbooks length should be 1
         let resp = await api.get('/api/cookbooks');
-        check_cookbook_list_length(resp, 0);
+        checkCookbookListLength(resp, 0);
 
         // Create a new cookbook
         resp = await api.post('/api/cookbooks', data);
         resp.result.statusCode.should.be.equal(201);
 
-        let json_result = JSON.parse(resp.payload);
+        const jsonResult = JSON.parse(resp.payload);
 
-        let created_cookbook = json_result['data'];
-        created_cookbook.should.be.not.empty;
-        created_cookbook.name.should.be.equal(data.name);
-        created_cookbook.description.should.be.equal(data.description);
-        created_cookbook.content.should.be.eql(data.content);
-        created_cookbook._id.should.be.not.empty;
+        const createdCookbook = jsonResult.data;
+        createdCookbook.should.be.not.empty;
+        createdCookbook.name.should.be.equal(data.name);
+        createdCookbook.description.should.be.equal(data.description);
+        createdCookbook.content.should.be.eql(data.content);
+        createdCookbook._id.should.be.not.empty;
 
         // List all cookbooks, now the cookbooks length should be 1
         resp = await api.get('/api/cookbooks');
-        check_cookbook_list_length(resp, 1);
+        checkCookbookListLength(resp, 1);
 
         done();
       } catch (err) {
@@ -123,7 +116,7 @@ describe('GET:/cookbooks', () => {
     it('Test DELTE:/cookbooks after add a cookbook', async function (done) {
       try {
         // Create a new cookbook
-        let data = {
+        const data = {
           name: 'test1',
           description: 'description content',
           content: TestData.Spiral
@@ -132,13 +125,13 @@ describe('GET:/cookbooks', () => {
         resp.result.statusCode.should.be.equal(201);
 
         resp = await api.get('/api/cookbooks');
-        check_cookbook_list_length(resp, 2);
+        checkCookbookListLength(resp, 2);
 
-        let json_result = JSON.parse(resp.payload);
-        let cookbooks = json_result['data'];
+        const jsonResult = JSON.parse(resp.payload);
+        const cookbooks = jsonResult.data;
 
-        for (cookbook of cookbooks) {
-          let id = cookbook._id;
+        for (const cookbook of cookbooks) {
+          const id = cookbook._id;
           resp = await api.delete(`/api/cookbooks/${id}`);
           resp.result.statusCode.should.be.equal(204);
         }
@@ -149,5 +142,4 @@ describe('GET:/cookbooks', () => {
       }
     });
   });
-
 });

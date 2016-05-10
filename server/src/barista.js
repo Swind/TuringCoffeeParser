@@ -1,12 +1,19 @@
-const Heater = require('./models/heater');
 const Refill = require('./models/refill');
 const Printer = require('./models/printer');
 
 class Barista {
-  constructor() {
-    this.printer = new Printer();
-    this.refill = new Refill();
-    this.heater = new Heater();
+  constructor(printer, cookbookMgr) {
+    this.printer = printer;
+    this.cookbookMgr = cookbookMgr;
+  }
+
+  brew(id) {
+    this.cookbookMgr.read(id, (err, cookbook) => {
+      if (err) {
+        return err;
+      }
+      const points = cookbook;
+    });
   }
 }
 

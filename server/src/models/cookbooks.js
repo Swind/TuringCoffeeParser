@@ -1,4 +1,4 @@
-const Nedb = require('nedb')
+const Nedb = require('nedb');
 
 class CookbookMgr {
   constructor(dbname, inMemoryOnly = false) {
