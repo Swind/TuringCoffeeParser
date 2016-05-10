@@ -1,0 +1,70 @@
+{
+    "GPIO_pin_number_scheme": "BOARD",
+    "Emulator": true,
+    "Unit": "C",
+
+    "Heater": {
+        "pin": 7 
+    },
+    "Sensors": [
+        {
+            "name": "PT100_tank",
+            "type": "PT100",
+            "ce": 0
+        },
+        {
+            "name": "output_temperature_sensor",
+            "type": "MAX31856",
+            "ce": 1
+        }
+    ],
+    "PID": {
+        "cycle_time": 1,
+        "k": 70,
+        "i": 165,
+        "d": 16
+    },
+
+    "HeaterEmulator":{
+        "power": 6000,
+        "capacity": 1500,
+        "start_temperature": 20,
+        "heat_dissipation_per_c": 600
+    },
+
+    "Printer":{
+        "PortName": "/dev/ttyACM1",
+        "PortName2": "/dev/ttyACM0",
+        "Baudrate": 115200
+    },
+
+    "Refill":{
+        "water_level_pin": [11, 12],
+        "motor_pin": [13, 15],
+        "motor_direct": false
+    },
+
+    "HeaterServer":
+    {
+        "Publish_Socket_Address": "ipc:///tmp/heater_pub_channel",
+        "Command_Socket_Address": "ipc:///tmp/heater_cmd_channel"
+    },
+
+    "PrinterServer":
+    {
+        "Publish_Socket_Address": "ipc:///tmp/printer_pub_channel",
+        "Command_Socket_Address": "ipc:///tmp/printer_cmd_channel"
+    },
+
+    "RefillServer":
+    {
+        "Command_Socket_Address": "ipc:///tmp/refill_cmd_channel",
+        "Publish_Socket_Address": "ipc:///tmp/refill_pub_channel"
+    },
+
+    "OutputServer":
+    {
+        "Command_Socket_Address": "ipc:///tmp/output_cmd_channel",
+        "Publish_Socket_Address": "ipc:///tmp/output_pub_channel"
+    }
+}

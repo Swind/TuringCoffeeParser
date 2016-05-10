@@ -20,3 +20,4 @@ build
 public
 cookbooks
 npm-debug.log
+*.pyc
