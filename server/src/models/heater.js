@@ -6,7 +6,7 @@ const CMD_ADDRESS = `ipc:///tmp/${NAME}_cmd_channel`;
 
 class Heater {
   // The default value if for the PID
-  constructor(k=70, i=165, d=16, cycleTime=1) {
+  constructor(k = 70, i = 165, d = 16, cycleTime = 1) {
     this.monitor = new Channel.Monitor;
     /* The message example from the heater server
       {
@@ -16,8 +16,12 @@ class Heater {
         temperature: 26.53
       }
     */
-    this.monitor.subscribe(PUB_ADDRESS, NAME, this.update_status);
+    this.k = k;
+    this.i = i;
+    this.d = d;
+    this.cycleTime = cycleTime;
 
+    this.monitor.subscribe(PUB_ADDRESS, NAME, this.update_status);
     this.cmd = new Channel.CmdChannel(CMD_ADDRESS);
   }
 

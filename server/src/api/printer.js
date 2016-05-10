@@ -7,7 +7,7 @@ class PrinterAPI extends API {
     this.printer = printer;
   }
 
-  getStatusSpec() {
+  statusSpec() {
     return {
       method: 'GET',
       path: '/api/printer',
@@ -16,11 +16,11 @@ class PrinterAPI extends API {
         description: 'Get the status of the printer',
         notes: 'Get the status of the printer',
       },
-      handler: this.get_status.bind(this),
+      handler: this.status.bind(this),
     };
   }
 
-  getStatus(request, reply) {
+  status(request, reply) {
     this.successed(reply, 200, 'Get the printer status successfully', this.printer.status);
   }
 
@@ -52,10 +52,10 @@ class PrinterAPI extends API {
         notes: 'Control the printer to move the head or extrude the water',
         validate: {
           payload: {
-            x: Joi.integer(),
-            y: Joi.integer(),
-            z: Joi.integer(),
-            f: Joi.integer(),
+            x: Joi.number().integer(),
+            y: Joi.number().integer(),
+            z: Joi.number().integer(),
+            f: Joi.number().integer(),
           },
         },
       },
@@ -66,6 +66,14 @@ class PrinterAPI extends API {
   jog(request, reply) {
     this.printer.jog(request.params);
     this.successed(reply, 200, 'Send the jog command to the printer successfully');
+  }
+
+  apiSpecs() {
+    return [
+      this.statusSpec(),
+      this.homeSpec(),
+      this.jogSpec(),
+    ];
   }
 }
 

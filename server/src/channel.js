@@ -8,6 +8,7 @@ class Monitor {
 
   updateData(name, msg) {
     const sub = this.subscribers[name];
+    logger.info(msg);
     sub.data = JSON.parse(msg);
 
     const d = new Date();
@@ -21,7 +22,7 @@ class Monitor {
   subscribe(address, name, action = null) {
     const sock = Nanomsg.socket('sub');
     sock.connect(address);
-    sock.on('data', this.update_data(name));
+    sock.on('data', this.updateData.bind(this, name));
 
     const sub = {};
     sub.socket = sock;
@@ -61,7 +62,7 @@ class CmdChannel {
   constructor(address, callback = null) {
     this.sock = Nanomsg.socket('pair');
     this.sock.connect(address);
-    this.sock.on('data', this.reply_handler.bind(this));
+    this.sock.on('data', this.replyHandler.bind(this));
 
     this.callback = callback;
   }

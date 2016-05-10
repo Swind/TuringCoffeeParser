@@ -1,6 +1,16 @@
 const ApiServer = require('./src/api_server');
+
 const CookbooksAPI = require('./src/api/cookbooks');
 const CookbooksMgr = require('./src/models/cookbooks');
+
+const PrinterAPI = require('./src/api/printer');
+const Printer = require('./src/models/printer');
+
+const RefillAPI = require('./src/api/refill');
+const Refill = require('./src/models/refill');
+
+const HeaterAPI = require('./src/api/heater');
+const Heater = require('./src/models/heater');
 
 /* ##############################################################
 #
@@ -30,9 +40,25 @@ apiServer.register('hapi-swagger', require('hapi-swagger'));
 #
 ###############################################################*/
 
-
+// Cookbooks
 const cookbookMgr = new CookbooksMgr();
-const cookbookApi = new CookbooksAPI(cookbookMgr);
+const cookbookAPI = new CookbooksAPI(cookbookMgr);
 
-apiServer.route(cookbookApi.apiSpecs());
+// Printer
+const printer = new Printer();
+const printerAPI = new PrinterAPI(printer);
+
+// Heater
+const heater = new Heater();
+const heaterAPI = new HeaterAPI(heater);
+
+// Refill
+const refill = new Refill();
+const refillAPI = new RefillAPI(refill);
+
+apiServer.route(cookbookAPI.apiSpecs());
+apiServer.route(printerAPI.apiSpecs());
+apiServer.route(heaterAPI.apiSpecs());
+apiServer.route(refillAPI.apiSpecs());
+
 apiServer.start();
