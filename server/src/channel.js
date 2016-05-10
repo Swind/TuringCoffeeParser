@@ -10,6 +10,9 @@ class Monitor {
     const sub = this.subscribers[name];
     sub.data = JSON.parse(msg);
 
+    const d = new Date();
+    sub.last_updated_time = d.getTime();
+
     if (sub.action != null) {
       sub.action(msg);
     }
@@ -25,6 +28,7 @@ class Monitor {
     sub.name = name;
     sub.action = action;
     sub.data = {};
+    sub.last_updated_time = 0;
 
     this.subscribers[name] = sub;
   }
@@ -32,6 +36,11 @@ class Monitor {
   getData(name) {
     const sub = this.subscrbiers[name];
     return sub.data;
+  }
+
+  getLastUpdatedTime(name) {
+    const sub = this.subscribers[name];
+    return sub.last_updated_time;
   }
 
   close(name) {

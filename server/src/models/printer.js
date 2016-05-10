@@ -9,9 +9,7 @@ class Printer {
   constructor() {
     // The monitor will call the callback function when receive the message from subscribed channel.
     this.monitor = new Channel.Monitor;
-
     this.monitor.subscribe(PRINTER_PUB_ADDRESS, PRINTER, this.update_status_by_monitor.bind(this));
-
     this.cmd = new Channel.CmdChannel(PRINTER_CMD_ADDRESS);
 
     // Save the latest printer status (Should we save the history of status ?)
@@ -20,6 +18,7 @@ class Printer {
 
     this.total_sent_cmd = 0;
   }
+
   updateStatusByMonitor(data) {
     const updateIfExisting = (name) => {
       if (name in data) {
