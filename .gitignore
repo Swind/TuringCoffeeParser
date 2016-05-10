@@ -19,3 +19,4 @@ cookbooks.json
 build
 public
 cookbooks
+npm-debug.log

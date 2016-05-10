@@ -18,16 +18,20 @@
   },
   "devDependencies": {
     "babel-cli": "^6.8.0",
+    "babel-eslint": "^6.0.4",
+    "babel-preset-es2015": "",
     "babel-register": "^6.8.0",
+    "chai": "",
+    "eslint": "^2.9.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-react": "^5.1.1",
     "file-loader": "",
     "html-webpack-plugin": "",
     "json-loader": "",
     "mocha": "",
-    "chai":"",
+    "nodemon": "",
     "source-map-support": "",
-    "webpack": "",
-    "babel-preset-es2015":"",
-    "nodemon":""
+    "webpack": ""
   },
   "dependencies": {
     "classnames": "",
@@ -44,6 +48,6 @@
     "history": "1.17.0",
     "vision": "",
     "winston": "",
-    "babel-plugin-transform-async-to-generator":""
+    "babel-plugin-transform-async-to-generator": ""
   }
 }

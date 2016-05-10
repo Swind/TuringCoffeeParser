@@ -1,9 +1,9 @@
-var TestData = require('./testdata');
-var Assert = require('assert');
-var Chai = require('chai');
+const TestData = require('./testdata');
+const Assert = require('assert');
+const Chai = require('chai');
 
-var logger = require('../libs/utils/logger');
-global.logger = logger;
+const logger = require('../libs/utils/logger');
+global.Logger = logger;
 
 Chai.should();
 

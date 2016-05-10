@@ -1,25 +1,25 @@
-var Joi = require('joi');
-
-class PrinterAPI{
-  constructor(barista){
+class PrinterAPI {
+  constructor(barista) {
     super();
     this.barista = barista;
   }
 
-  get_status_spec(){
+  getStatusSpec() {
     return {
       method: 'GET',
       path: '/api/printer',
       config: {
-        tags:['api'],
+        tags: ['api'],
         description: 'Get the status of the printer',
-        notes: 'List all cookbooks'
+        notes: 'List all cookbooks',
       },
-      handler: this.get_status.bind(this)
-    }
+      handler: this.get_status.bind(this),
+    };
   }
 
-  get_status(){
+  getStatus(request, reply) {
     this.successed(reply, 200, 'Get the printer status successfully', this.barista.printer);
   }
 }
+
+module.exports = PrinterAPI;

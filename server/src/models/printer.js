@@ -1,50 +1,72 @@
-var Channel = require('./channel');
+const Channel = require('../channel');
 
-const PRINTER_PUB_ADDRESS= "ipc:///tmp/printer_pub_channel"
-const PRINTER_CMD_ADDRESS= 'ipc:///tmp/printer_cmd_channel'
+const PRINTER_PUB_ADDRESS = 'ipc:///tmp/printer_pub_channel';
+const PRINTER_CMD_ADDRESS = 'ipc:///tmp/printer_cmd_channel';
 
-const PRINTER = 'printer'
+const PRINTER = 'printer';
 
-class Printer{
-    constructor() {
-      this.monitor = new Channel.Monitor;
-      this.cmd = new Channel.CmdChannel(PRINTER_CMD_ADDRESS);
+class Printer {
+  constructor() {
+    // The monitor will call the callback function when receive the message from subscribed channel.
+    this.monitor = new Channel.Monitor;
 
-      this.monitor.subscribe(PRINTER_PUB_ADDRESS, PRINTER, this.update_status_by_monitor.bind(this));
+    this.monitor.subscribe(PRINTER_PUB_ADDRESS, PRINTER, this.update_status_by_monitor.bind(this));
 
-      this.status = {};
-      this.last_status_update_time = 0; 
+    this.cmd = new Channel.CmdChannel(PRINTER_CMD_ADDRESS);
 
-      this.total_sent_cmd = 0;
-    }
+    // Save the latest printer status (Should we save the history of status ?)
+    this.status = {};
+    this.last_status_update_time = 0;
 
-    update_status_by_monitor(data){
-
-      update_if_existing = (name) => {
-        if (name in data){
-          this.status[name] = data[name];
-        }
+    this.total_sent_cmd = 0;
+  }
+  updateStatusByMonitor(data) {
+    const updateIfExisting = (name) => {
+      if (name in data) {
+        this.status[name] = data[name];
       }
+    };
 
-      update_if_existing('state');
-      update_if_existing('state_string');
-      update_if_existing('progress');
+    // The printer server will publish three types status.
+    // So we need to check the content is existing or not.
+    updateIfExisting('state');
+    updateIfExisting('state_string');
+    updateIfExisting('progress');
 
-      let date = new Date();
-      this.last_update_time = date.getTime();
-    }
+    const date = new Date();
+    this.last_update_time = date.getTime();
+  }
 
-    send(cmd){
-      this.cmd.send({'C': cmd});
-    }
+  send(cmd) {
+    this.cmd.send({
+      C: cmd,
+    });
+  }
 
-    batch_send(cmds){
-      this.cmd.send({'G': cmds});
-    }
+  batchSend(cmds) {
+    this.cmd.send({
+      G: cmds,
+    });
+  }
 
-    home(){
-      this.cmd.send({'C': 'G28'});
-    }
+  home() {
+    this.cmd.send({
+      C: 'G28',
+    });
+  }
+
+  jog(x = null, y = null, z = null, f = null) {
+    const data = {};
+
+    if (x) { data.x = x; }
+    if (y) { data.y = y; }
+    if (z) { data.z = z; }
+    if (f) { data.f = f; }
+
+    this.cmd.send({
+      C: data,
+    });
+  }
 }
 
-module.exports = Printer 
+module.exports = Printer;

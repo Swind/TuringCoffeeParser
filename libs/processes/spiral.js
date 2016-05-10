@@ -1,68 +1,70 @@
-var Base = require('./base');
+const Base = require('./base');
+const Point = Base.Point;
 
-class Spiral extends Base.Process{
-  constructor(params){
+class Spiral extends Base.Process {
+  constructor(params) {
     super(params);
 
     this.default = {
       type: 'process',
       name: 'spiral',
-      radius:{
-        start: 10, //mm
-        end: 20 //mm
+      radius: {
+        start: 10, // mm
+        end: 20, // mm
       },
-      high:{
-        start: 170, //mm
-        end: 170
+      high: {
+        start: 170, // mm
+        end: 170,
       },
       cylinder: 5,
-      point_interval: 0.1, //mm
-      feedrate: 80, //mm
-      extrudate: 0.2, //ml/mm
-      temperature: 60 //C
-    }
+      point_interval: 0.1, // mm
+      feedrate: 80, // mm
+      extrudate: 0.2, // ml/mm
+      temperature: 60, // C
+    };
 
-    this.points = this.generate_points();
+    this.points = this.generatePoints();
   }
 
-  get time(){
+  get time() {
     return this.length / this.params.feedrate * 60;
   }
 
-  get water(){
+  get water() {
     return this.points.length * this.params.extrudate;
   }
 
-  get length(){
+  get length() {
     return this.points.length * this.params.point_interval;
   }
 
-  get points(){
+  get points() {
     return this.points;
   }
 
-  generate_points(){
-    let max_theta = this.radians(this.params.cylinder * 360);
+  generatePoints() {
+    const maxTheta = this.radians(this.params.cylinder * 360);
     // a is acceleration
-    let a = (this.params.radius.end - this.params.radius.start) / max_theta;
+    const a = (this.params.radius.end - this.params.radius.start) / maxTheta;
 
-    let total_theta = 0;
-    let points = [];
+    let totalTheta = 0;
+    const points = [];
 
-    while(total_theta <= max_theta){
-        // point interval / (2 * pi * r) = theta for one step
-        let now_radius = a * total_theta + this.params.radius.start;
-        let now_theta = this.radians((this.params.point_interval / (2 * Math.PI * now_radius)) * 360);
+    while (totalTheta <= maxTheta) {
+      // point interval / (2 * pi * r) = theta for one step
+      const nowRadius = a * totalTheta + this.params.radius.start;
+      const nowTheta = this.radians((this.params.point_interval / (2 * Math.PI * nowRadius)) * 360);
 
-        let total_theta = total_theta + now_theta;
+      totalTheta = totalTheta + nowTheta;
 
-        x = now_radius * Math.cos(total_theta);
-        y = now_radius * Math.sin(total_theta);
+      const x = nowRadius * Math.cos(totalTheta);
+      const y = nowRadius * Math.sin(totalTheta);
 
-        // Create the point object to save the information
-        points.push(new Point(x=x, y=y, f=this.params.feedrate));
+      // Create the point object to save the information
+      points.push(new Point(x, y, this.params.feedrate));
     }
-    return points
-
+    return points;
   }
 }
+
+module.exports = Spiral;

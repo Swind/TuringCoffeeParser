@@ -1,48 +1,38 @@
-var Path = require('path');
-var Hapi = require('hapi');
-var HttpProxy = require('http-proxy');
+const ApiServer = require('./src/api_server');
+const CookbooksAPI = require('./src/api/cookbooks');
+const CookbooksMgr = require('./src/models/cookbooks');
 
-var logger = require('./libs/utils/logger');
-var ApiServer = require('./server/api_server');
-var CookbooksAPI = require('./server/api/cookbooks');
-var CookbooksMgr = require('./server/models/cookbooks');
-
-/*##############################################################
+/* ##############################################################
 #
-#    Global variables 
+#    Global variables
 #
 ###############################################################*/
 
-var ADDR = '0.0.0.0'
-var PORT = 3000;
+const ADDR = '0.0.0.0';
+const PORT = 3000;
 
-var IS_PRODUCTION = false;
-var PUBLIC_PATH = Path.resolve(__dirname, 'public');
-
-global.logger = logger;
-
-/*##############################################################
+/* ##############################################################
 #
-#    API Server 
+#    API Server
 #
 ###############################################################*/
 
-api_server = new ApiServer(ADDR, PORT);
+const apiServer = new ApiServer(ADDR, PORT);
 
 // Register Plugins
-api_server.register('inert', require('inert'));
-api_server.register('vision', require('vision'));
-api_server.register('hapi-swagger', require('hapi-swagger'));
+apiServer.register('inert', require('inert'));
+apiServer.register('vision', require('vision'));
+apiServer.register('hapi-swagger', require('hapi-swagger'));
 
-/*###############################################################
+/* ###############################################################
 #
-#    Route 
+#    Route
 #
 ###############################################################*/
 
 
-var cookbook_mgr = new CookbooksMgr();
-var cookbook_api = new CookbooksAPI(cookbook_mgr);
+const cookbookMgr = new CookbooksMgr();
+const cookbookApi = new CookbooksAPI(cookbookMgr);
 
-api_server.route(cookbook_api.api_specs());
-api_server.start();
+apiServer.route(cookbookApi.apiSpecs());
+apiServer.start();

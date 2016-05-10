@@ -1,7 +1,8 @@
-var Base = require('./base');
+const Base = require('./base');
+const Point = Base.Point;
 
-class Circle extends Base.Process{
-  constructor(params){
+class Circle extends Base.Process {
+  constructor(params) {
     super(params);
 
     this.length = params.total_water / params.extrudate;
@@ -10,55 +11,52 @@ class Circle extends Base.Process{
     this.defult = {
       type: 'process',
       name: 'circle',
-      radius:{
-        start: 20 //mm
+      radius: {
+        start: 20, // mm
       },
-      high:{
-        start: 170, //mm
-        end: 170
+      high: {
+        start: 170, // mm
+        end: 170,
       },
-      total_water: 0, //mm
-      point_interval: 0.1, //mm
-      feedrate: 80, //mm
-      extrudate: 0.2, //ml/mm
-      temperature: 60 //C
-    }
+      total_water: 0, // mm
+      point_interval: 0.1, // mm
+      feedrate: 80, // mm
+      extrudate: 0.2, // ml/mm
+      temperature: 60, // C
+    };
   }
 
-  get time(){
+  get time() {
     return this.length / this.params.feedrate * 60;
   }
 
-  get water(){
+  get water() {
     return this.params.total_water;
   }
 
-  get length(){
+  get length() {
     return this.length;
   }
 
-  get points(){
-    let circumference = 2 * Math.pi * this.params.radius.start;
-    let cylinder = this.length / circumference;
-    let av = (2 * Math.Pi * cylinder) / this.point_number;
+  get points() {
+    const circumference = 2 * Math.pi * this.params.radius.start;
+    const cylinder = this.length / circumference;
+    const av = (2 * Math.Pi * cylinder) / this.point_number;
 
-    let high = this.params.high.start;
-    let diff = this.params.high.end - this.params.high.start;
+    const points = [];
 
-    let points = [];
+    for (let index = 0; index < this.point_number; index++) {
+      const x = this.params.radius * Math.cos(av * index);
+      const y = this.params.radius * Math.sin(av * index);
+      const f = this.params.feedrate;
 
-    for(let index = 0; index < this.point_number; index++){
-        x = this.params.radius * Math.cos(av * index);
-        y = this.params.radius * Math.sin(av * index);
-        f = this.params.feedrate;
+      const point = new Point(x, y, f);
 
-        let point = new Point(x=x, y=y, f=f);
-
-        points.push(point);
+      points.push(point);
     }
 
-    return points
+    return points;
   }
 }
 
-module.exports = Circle
+module.exports = Circle;
