@@ -14,14 +14,6 @@ def get_heater(config):
         import heater
         return heater.Heater(config['Heater']['pin'])
 
-
-def get_sensors(config):
-    if config['Emulator']:
-        return map(__get_mock_sensor_monitor, config['Sensors'])
-    else:
-        return map(__get_sensor_monitor, config['Sensors'])
-
-
 def get_refill(config):
     if config['Emulator']:
         return mock.MockRefill()
@@ -29,16 +21,18 @@ def get_refill(config):
         import refill
         return refill.Refill()
 
+def get_sensor(config, t):
+    if config['Emulator']:
+        return __get_mock_sensor_monitor()
 
-def __get_mock_sensor_monitor(sensor_config):
+    if t in config:
+        return __get_sensor_monitor(config['Sensors'][t])
+    else:
+        return None
+
+def __get_mock_sensor_monitor():
     global mock_heater
     return monitor.TemperatureMonitor(mock.MockSensor(mock_heater))
-
-def get_sensor(config, t):
-    for sensor in config['Sensors']:
-        if sensor['name'] == t:
-            return __get_sensor_monitor(sensor)
-    return None
 
 def __get_sensor_monitor(sensor_config):
     if sensor_config['type'] == 'PT100':
