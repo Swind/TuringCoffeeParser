@@ -6,14 +6,16 @@ class Step extends Component {
     const {id, title, children} = this.props
 
     return (
-      <div className={style.step}>
-        <div>
-          <div className={style.circle}>{id}</div>
-          <div className={style.line}></div>
-        </div>
-        <div>
-          <div className={style.title}>{title}</div>
-          {children}
+      <div className={style.stepContainer}>
+        <div className={style.step}>
+          <div>
+            <div className={style.circle}>{id}</div>
+            <div className={style.line}></div>
+          </div>
+          <div>
+            <div className={style.title}>{title}</div>
+            {children}
+          </div>
         </div>
       </div>
     )

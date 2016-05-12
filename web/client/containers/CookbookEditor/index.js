@@ -11,6 +11,8 @@ import ListItem from 'material-ui/List/ListItem'
 import Paper from 'material-ui/Paper'
 import TextField from 'material-ui/TextField'
 import Slider from 'material-ui/Slider'
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
 
 import TimerIcon from 'material-ui/svg-icons/image/timer'
 import LocalDrinkIcon from 'material-ui/svg-icons/maps/local-drink'
@@ -70,13 +72,14 @@ class CookbookHeader extends Component {
 class CookbookProcess extends Component {
   render() {
     const {process} = this.props
-    let highStart, highEnd, totalWater, totalTime
+    let high, totalWater, totalTime
 
     if(process.high) {
-      highStart =
+      high=
         <li>
-          <span>{`Z: ${process.high.start} mm`}</span>
+          <span>{`Z: from ${process.high.start} to ${process.high.end} mm`}</span>
           <Slider step={5} min={0} max={300} value={process.high.start}/>
+          <Slider step={5} min={0} max={300} value={process.high.end}/>
         </li>
     }
 
@@ -98,8 +101,7 @@ class CookbookProcess extends Component {
     return (
       <div>
         <ul>
-          {highStart}
-          {highEnd}
+          {high}
           {totalWater}
           {totalTime}
         </ul>
@@ -123,6 +125,13 @@ class CookbookEditor extends Component {
     if (!cookbook) {
       return <div></div>
     }
+
+    const selectProcess = (
+      <SelectField value={0}>
+        <MenuItem value={0} primaryText="Spiral"/>
+        <MenuItem value={1} primaryText="Circle"/>
+      </SelectField>
+    )
 
     return (
       <WidthReactGridLayout className='layout' layout={layout} cols={12}>
