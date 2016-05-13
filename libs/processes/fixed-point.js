@@ -4,13 +4,9 @@ const Point = Base.Point;
 const QUICK_MOVE_F = 2000;
 
 class FixedPoint extends Base.Process {
-  constructor(params) {
-    super(params);
 
-    this.length = params.total_water / params.extrudate;
-    this.point_number = this.length / this.params.point_interval;
-
-    this.defult = {
+  static get default() {
+    return Object.assign({}, {
       type: 'process',
       name: 'fixed_point',
       coordinates: {
@@ -26,7 +22,13 @@ class FixedPoint extends Base.Process {
       feedrate: 80, // mm
       extrudate: 0.2, // ml/mm
       temperature: 60, // C
-    };
+    })
+  }
+
+  constructor(params = FixedPoint.default) {
+    super(params);
+
+    this.point_number = this.length / this.params.point_interval;
   }
 
   get time() {
@@ -38,7 +40,7 @@ class FixedPoint extends Base.Process {
   }
 
   get length() {
-    return 0;
+    return this.params.total_water / this.params.extrudate;
   }
 
   get points() {

@@ -2,13 +2,9 @@ const Base = require('./base');
 const Point = Base.Point;
 
 class Circle extends Base.Process {
-  constructor(params) {
-    super(params);
 
-    this.length = params.total_water / params.extrudate;
-    this.point_number = this.length / this.params.point_interval;
-
-    this.defult = {
+  static get default() {
+    return Object.assign({}, {
       type: 'process',
       name: 'circle',
       radius: {
@@ -22,8 +18,14 @@ class Circle extends Base.Process {
       point_interval: 0.1, // mm
       feedrate: 80, // mm
       extrudate: 0.2, // ml/mm
-      temperature: 60, // C
-    };
+      temperature: 60 // C
+    })
+  }
+
+  constructor(params = Circle.default) {
+    super(params);
+
+    this.point_number = this.length / this.params.point_interval;
   }
 
   get time() {
@@ -35,7 +37,7 @@ class Circle extends Base.Process {
   }
 
   get length() {
-    return this.length;
+    return this.params.total_water / this.params.extrudate;
   }
 
   get points() {

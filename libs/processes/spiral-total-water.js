@@ -1,10 +1,9 @@
 const Base = require('./base');
 
 class SpiralTotalWater extends Base.Process {
-  constructor(params) {
-    super(params);
 
-    this.default = {
+  static get default() {
+    return Object.assign({}, {
       type: 'process',
       name: 'spiral total water',
       radius: {
@@ -20,10 +19,13 @@ class SpiralTotalWater extends Base.Process {
       total_water: 60, // ml
       total_time: 30, // sec
       temperature: 60, // C
-    };
+    })
+  }
 
-    this.points = this.generatePoints();
-    this.length = this.point_interval * (this.points.length - 1);
+  constructor(params) {
+    super(params);
+
+    this._points = this.generatePoints();
   }
 
 
@@ -31,16 +33,28 @@ class SpiralTotalWater extends Base.Process {
     return this.params.total_time;
   }
 
+  set time(sec) {
+    this.params.total_time = sec;
+  }
+
   get water() {
     return this.params.total_water;
   }
 
+  set water(ml) {
+    this.params.total_water = ml;
+  }
+
   get length() {
-    return this.length;
+    return this.params.point_interval * (this.points.length - 1);
   }
 
   get points() {
-    return this.points;
+    return this._points;
+  }
+
+  set points(points) {
+    this._points = points
   }
 
   generatePoints() {

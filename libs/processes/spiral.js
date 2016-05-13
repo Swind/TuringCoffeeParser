@@ -2,10 +2,9 @@ const Base = require('./base');
 const Point = Base.Point;
 
 class Spiral extends Base.Process {
-  constructor(params) {
-    super(params);
 
-    this.default = {
+  static get default() {
+    return Object.assign({}, {
       type: 'process',
       name: 'spiral',
       radius: {
@@ -21,9 +20,12 @@ class Spiral extends Base.Process {
       feedrate: 80, // mm
       extrudate: 0.2, // ml/mm
       temperature: 60, // C
-    };
+    })
+  }
 
-    this.points = this.generatePoints();
+  constructor(params = Spiral.default) {
+    super(params);
+    this._points = this.generatePoints();
   }
 
   get time() {
@@ -39,7 +41,7 @@ class Spiral extends Base.Process {
   }
 
   get points() {
-    return this.points;
+    return this._points;
   }
 
   generatePoints() {

@@ -23,19 +23,27 @@ class Point {
 class Process {
   constructor(params) {
     this.params = params;
-    this.points = [];
+    this._points = [];
   }
 
   get time() {
-    return -1;
+    return undefined;
   }
 
   get water() {
-    return -1;
+    return undefined;
   }
 
   get length() {
-    return -1;
+    return undefined;
+  }
+
+  get points() {
+    return this._points
+  }
+
+  set points(points) {
+    this._points = points
   }
 
   radians(degress) {
