@@ -17,6 +17,7 @@ import MenuItem from 'material-ui/MenuItem'
 import TimerIcon from 'material-ui/svg-icons/image/timer'
 import LocalDrinkIcon from 'material-ui/svg-icons/maps/local-drink'
 
+import { PROCESS } from '../../constants/processes'
 import * as CookbookActions from '../../actions/cookbooks'
 import Step from '../../components/Step'
 import style from './style.css'
@@ -74,27 +75,27 @@ class CookbookProcess extends Component {
     const {process} = this.props
     let high, totalWater, totalTime
 
-    if(process.high) {
+    if(process.params.high !== undefined) {
       high=
         <li>
-          <span>{`Z: from ${process.high.start} to ${process.high.end} mm`}</span>
-          <Slider step={5} min={0} max={300} value={process.high.start}/>
-          <Slider step={5} min={0} max={300} value={process.high.end}/>
+          <span>{`Z: from ${process.params.high.start} to ${process.params.high.end} mm`}</span>
+          <Slider step={5} min={0} max={300} value={process.params.high.start}/>
+          <Slider step={5} min={0} max={300} value={process.params.high.end}/>
         </li>
     }
 
-    if (process.totalWater) {
+    if (process.params.total_water !== undefined) {
       totalWater =
         <li>
-          <span>{`Total Water: ${process.totalWater} ml`}</span>
-          <Slider step={10} min={0} max={300} value={process.totalWater}/>
+          <span>{`Total Water: ${process.params.total_water} ml`}</span>
+          <Slider step={10} min={0} max={500} value={process.params.total_water}/>
         </li>
     }
 
-    if (process.totalTime) {
+    if (process.params.total_time !== undefined) {
       totalTime =
         <li>
-          <span>{`Total time: ${process.totalWater} sec.`}</span>
+          <span>{`Total time: ${process.params.total_time} sec.`}</span>
         </li>
     }
 
@@ -106,6 +107,24 @@ class CookbookProcess extends Component {
           {totalTime}
         </ul>
       </div>
+    )
+  }
+}
+
+class SelectProcess extends Component {
+  render() {
+    const {selected, onChange} = this.props
+
+    const processMenuItems = Object.keys(PROCESS).map((k, i) => {
+      return <MenuItem key={i} value={k} primaryText={k}/>
+    })
+
+    const onChangeWrapper = (_, index, value) => onChange(value)
+
+    return (
+      <SelectField value={selected} onChange={onChangeWrapper}>
+        {processMenuItems}
+      </SelectField>
     )
   }
 }
@@ -126,12 +145,29 @@ class CookbookEditor extends Component {
       return <div></div>
     }
 
-    const selectProcess = (
-      <SelectField value={0}>
-        <MenuItem value={0} primaryText="Spiral"/>
-        <MenuItem value={1} primaryText="Circle"/>
-      </SelectField>
-    )
+    const processes = cookbook.processes.map((x, i) => {
+
+      const processHandle = new PROCESS[x.name].handle(x)
+
+      const onSelectedProcessChange = (selected) => {
+        const clone = Object.assign({}, cookbook)
+        clone.processes[i] = Object.assign({}, PROCESS[selected].handle.default)
+        actions.modify(clone)
+      }
+
+      const selectProcess = (
+        <SelectProcess
+          selected={x.name}
+          onChange={onSelectedProcessChange}
+        />
+      )
+
+      return (
+        <Step key={i} id={i+1} title={selectProcess}>
+          <CookbookProcess process={processHandle}/>
+        </Step>
+      )
+    })
 
     return (
       <WidthReactGridLayout className='layout' layout={layout} cols={12}>
@@ -140,13 +176,7 @@ class CookbookEditor extends Component {
             cookbook={cookbook}
           />
           <Divider />
-          {
-            cookbook.processes.map((x, i) =>
-              <Step key={i} id={i+1} title={x.name}>
-                <CookbookProcess process={x}/>
-              </Step>
-            )
-          }
+          {processes}
         </Paper>
       </WidthReactGridLayout>
     )
