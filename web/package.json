@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --port 3001",
-    "mockServer": "./node_modules/nodemon/bin/nodemon.js mockServer.js",
+    "mockServer": "./node_modules/nodemon/bin/nodemon.js --watch ./mockServer.js mockServer.js",
     "build": "NODE_ENV=production webpack --progress --colors"
   },
   "license": "MIT",
