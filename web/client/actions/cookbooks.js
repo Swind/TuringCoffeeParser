@@ -10,6 +10,14 @@ const asyncGetRequest = (action, path) => dispatch => {
        )
   }
 
+const asyncPostRequest = (action, path, content) => dispatch => {
+    request
+      .post(path)
+      .send(content)
+      .set('Accept', 'application/json')
+      .end()
+  }
+
 const asyncPutRequest = (action, path, content) => dispatch => {
     request
       .put(path)
@@ -23,8 +31,11 @@ const asyncPutRequest = (action, path, content) => dispatch => {
 const _list = createAction('list cookbooks')
 const _load = createAction('load cookbook')
 const _save = createAction('save cookbook')
+const _create = createAction('create cookbook')
 
 export const list = () => asyncGetRequest(_list, '/api/cookbooks')
 export const load = id => asyncGetRequest(_load, `/api/cookbooks/${id}`)
 export const save = (id, content) => asyncPutRequest(_save, `/api/cookbooks/${id}`, content)
+export const create = (content) => asyncPostRequest(_create, '/api/cookbooks', content)
+
 export const modify = createAction('modify cookbook')
