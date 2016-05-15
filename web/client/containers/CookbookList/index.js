@@ -2,23 +2,14 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
-
-import IconButton from 'material-ui/IconButton'
 import AddIcon from 'material-ui/svg-icons/content/add'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
-import CookbookCard from '../../components/CookbookCard';
+import CookbookCard from '../../components/CookbookCard'
 import * as CookbookActions from '../../actions/cookbooks'
-
-const WidthReactGridLayout = WidthProvider(ReactGridLayout)
-
-const layout = [
-  {i: 'Card', x: 0, y: 0, w:12, h:1, isDraggable: false, isResizable: false}
-];
 
 class CookbookDialog extends Component {
 
@@ -29,7 +20,7 @@ class CookbookDialog extends Component {
 
   render() {
 
-    const {onCreateCookbook} = this.props
+    const {style, onCreateCookbook} = this.props
 
     const onCancel = () => {
       this.setState({open: false})
@@ -59,7 +50,7 @@ class CookbookDialog extends Component {
     ]
 
     return (
-      <div>
+      <div style={style}>
         <RaisedButton label='Add new cookbook' icon={<AddIcon/>} onMouseUp={() => this.setState({open: true})}/>
         <Dialog title="Create a new cookbook"
           modal={false}
@@ -97,24 +88,22 @@ class CookbookList extends Component {
     }
 
     return (
-      <WidthReactGridLayout className='layout' layout={layout} cols={12}>
-        <div key='Card'>
-          {
-            cookbooks.map(
-              (cookbook, i) => {
-                return (
-                  <CookbookCard
-                    key={i}
-                    title={cookbook.name}
-                    subtitle=''
-                    href={`/editor/${cookbook._id}`}
-                    onDelete={() => onDeleteCookbook(cookbook._id)}
-                  />)}
-            )
-          }
-          <CookbookDialog onCreateCookbook={onCreateCookbook}/>
-        </div>
-      </WidthReactGridLayout>
+      <div>
+        {
+          cookbooks.map(
+            (cookbook, i) => {
+              return (
+                <CookbookCard
+                  key={i}
+                  title={cookbook.name}
+                  subtitle=''
+                  href={`/editor/${cookbook._id}`}
+                  onDelete={() => onDeleteCookbook(cookbook._id)}
+                />)}
+          )
+        }
+        <CookbookDialog style={{'paddingTop': '20px'}} onCreateCookbook={onCreateCookbook}/>
+      </div>
     );
   }
 }
