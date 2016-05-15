@@ -225,6 +225,7 @@ class CookbookEditor extends Component {
 
     const onSaveCookbook = () => {
       let clone = Object.assign({}, cookbook)
+      delete clone._id
       actions.save(params.cookbookId, clone)
     }
 
