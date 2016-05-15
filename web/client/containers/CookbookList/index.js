@@ -91,6 +91,11 @@ class CookbookList extends Component {
       actions.list()
     }
 
+    const onDeleteCookbook = (id) => {
+      actions.remove(id)
+      actions.list()
+    }
+
     return (
       <WidthReactGridLayout className='layout' layout={layout} cols={12}>
         <div key='Card'>
@@ -103,6 +108,7 @@ class CookbookList extends Component {
                     title={cookbook.name}
                     subtitle=''
                     href={`/editor/${cookbook._id}`}
+                    onDelete={() => onDeleteCookbook(cookbook._id)}
                   />)}
             )
           }

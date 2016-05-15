@@ -38,5 +38,21 @@ export default handleActions({
       cookbooks: state.cookbooks,
       message: message
     }
+  },
+  'remove cookbook' (state, action) {
+    const response = action.payload
+
+    let cookbooks, message
+    if (response.status === 200) {
+      cookbooks = response.body.data
+      message = response.body.message
+    } else {
+      message = `Error ${response.status}: Failed to remove cookbook`
+    }
+
+    return {
+      cookbooks: state.cookbooks,
+      message: message
+    }
   }
 }, initialState)

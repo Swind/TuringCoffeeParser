@@ -11,21 +11,16 @@ import CardText from 'material-ui/Card/CardText'
 class CookbookCard extends Component {
   render() {
 
-    const {title, subtitle, href} = this.props
+    const {title, subtitle, href, onDelete} = this.props
 
     return (
       <Card>
-        <CardTitle title={title} subtitle={subtitle} actAsExpander={true} showExpandableButton={true}/>
-        <CardText expandable={true}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-          Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-          Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-        </CardText>
+        <CardTitle title={title} subtitle={subtitle} actAsExpander={true}/>
         <CardActions>
           <Link to={href}>
             <FlatButton label='Edit'/>
           </Link>
+          <FlatButton label='Delete' onMouseUp={onDelete}/>
         </CardActions>
       </Card>
     )
