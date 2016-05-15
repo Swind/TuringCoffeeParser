@@ -195,12 +195,32 @@ class SelectProcess extends Component {
 
 class CookbookEditor extends Component {
 
+  calcMenuLeft() {
+    return (window.innerWidth/24 * 16) + 'px'
+  }
+
+  calcMenutop() {
+    return (window.scrollY) + 'px'
+  }
+
+  onScroll() {
+    if (this.refs.menu) {
+      this.refs.menu.style.left = this.calcMenuLeft()
+      this.refs.menu.style.top = this.calcMenutop()
+    }
+  }
+
   componentWillMount() {
     const {params, actions} = this.props
     actions.load(params.cookbookId)
   }
 
   componentDidMount() {
+    window.addEventListener('scroll', this.onScroll.bind(this))
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll.bind(this))
   }
 
   render () {
@@ -210,14 +230,6 @@ class CookbookEditor extends Component {
     if (!cookbook) {
       return <div></div>
     }
-
-    const calcMenuLeft = () => (window.innerWidth/24 * 16) + 'px'
-    const calcMenutop = () => (window.scrollY) + 'px'
-
-    window.addEventListener('scroll', () => {
-      this.refs.menu.style.left = calcMenuLeft()
-      this.refs.menu.style.top = calcMenutop()
-    })
 
     const onAddProcess = () => {
       let clone = Object.assign({}, cookbook)
@@ -274,7 +286,7 @@ class CookbookEditor extends Component {
               <AddIcon />
             </FloatingActionButton>
           </Paper>
-          <div key='Menu' style={{'position': 'fixed', 'left': calcMenuLeft(), 'top': calcMenutop()}} ref='menu'>
+          <div key='Menu' style={{'position': 'fixed', 'left': this.calcMenuLeft(), 'top': this.calcMenutop()}} ref='menu'>
             <Paper zDepth={1}>
               <IconButton tooltip='Save' onMouseUp={onSaveCookbook}>
                 <SaveIcon />

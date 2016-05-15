@@ -65,7 +65,7 @@ class CookbookDialog extends Component {
 
 class CookbookList extends Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
   }
 
   componentWillMount() {
