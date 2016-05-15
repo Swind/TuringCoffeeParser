@@ -34,11 +34,14 @@ class PIDController(object):
         self.__observers = []
 
     def start(self):
+        logger.info("[Hardware] Heater start...")
         self.__heater.start()
 
+        logger.info("[Hardware] Sensor start...")
         for sensor in self.__sensors:
             sensor.start()
 
+        logger.info("PID controller start...")
         self.worker.start()
 
     def set_params(self, cycle_time, k_param, i_param, d_param, set_point):

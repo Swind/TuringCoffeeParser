@@ -48,7 +48,7 @@ class CookbooksAPI extends API {
           payload: {
             name: Joi.string().required(),
             description: Joi.string(),
-            content: Joi.object(),
+            processes: Joi.array(),
           },
         },
       },
@@ -84,7 +84,7 @@ class CookbooksAPI extends API {
           payload: {
             name: Joi.string().required(),
             description: Joi.string(),
-            content: Joi.object(),
+            processes: Joi.array(),
           },
         },
       },
@@ -101,7 +101,7 @@ class CookbooksAPI extends API {
       } else if (numReplaced === 0) {
         this.failed(reply, 404, `Can't find the cookbook with id ${id}`);
       } else {
-        this.successed(`Update cookbook ${id} successfully`);
+        this.successed(reply, 200, `Update cookbook ${id} successfully`);
       }
     });
   }
@@ -136,7 +136,7 @@ class CookbooksAPI extends API {
       } else if (!cookbook) {
         this.failed(reply, 404, `Can't find cookbook with id ${id}`);
       } else {
-        this.successed(reply, 200, cookbook);
+        this.successed(reply, 200, `Read the cookbook by id ${id} successfully`, cookbook);
       }
     });
   }

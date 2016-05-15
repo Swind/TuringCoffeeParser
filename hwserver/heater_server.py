@@ -2,6 +2,9 @@ import pid_controller
 from utils import json_config
 from utils import channel
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 class HeaterServer(object):
 
@@ -24,14 +27,19 @@ class HeaterServer(object):
         self.publish_pid_status(*pid_status)
 
     def start(self):
+        logger.info("Heater server starting ...")
+
         # Start pid controller thread
         self.pid_controller.start()
 
         # Add observer to publish pid status
         self.pid_controller.add_observer(self.__pid_controller_observer)
 
+        logger.info("Heater server start successfully...")
+
         # The main thread will receive and set the pid parameters by nanomsg
         self.receive_pid_parameters()
+
 
     # ============================================================================================================
     #

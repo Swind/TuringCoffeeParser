@@ -35,8 +35,12 @@ class Monitor {
   }
 
   getData(name) {
-    const sub = this.subscrbiers[name];
-    return sub.data;
+    let data = {};
+    if (name in this.subscribers) {
+      data = this.subscribers[name].data;
+    }
+
+    return data;
   }
 
   getLastUpdatedTime(name) {

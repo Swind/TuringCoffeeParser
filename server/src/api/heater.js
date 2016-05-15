@@ -21,7 +21,7 @@ class HeaterAPI extends API {
   }
 
   status(request, reply) {
-    this.successed(reply, 200, 'Get the heater status', this.refill.status);
+    this.successed(reply, 200, 'Get the heater status', this.heater.status);
   }
 
   setTemperatureSpec() {
