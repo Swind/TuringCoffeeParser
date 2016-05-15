@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
@@ -21,6 +22,7 @@ import TimerIcon from 'material-ui/svg-icons/image/timer'
 import LocalDrinkIcon from 'material-ui/svg-icons/maps/local-drink'
 import AddIcon from 'material-ui/svg-icons/content/add'
 import SaveIcon from 'material-ui/svg-icons/content/save'
+import ExitIcon from 'material-ui/svg-icons/action/exit-to-app'
 
 import { PROCESS } from '../../constants/processes'
 import * as CookbookActions from '../../actions/cookbooks'
@@ -277,6 +279,11 @@ class CookbookEditor extends Component {
               <IconButton tooltip='Save' onMouseUp={onSaveCookbook}>
                 <SaveIcon />
               </IconButton>
+              <Link to='/'>
+                <IconButton tooltip='Exit'>
+                  <ExitIcon />
+                </IconButton>
+              </Link>
             </Paper>
           </div>
           <Snackbar
