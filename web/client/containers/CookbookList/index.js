@@ -4,6 +4,9 @@ import { connect } from 'react-redux'
 
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
+import IconButton from 'material-ui/IconButton'
+import AddIcon from 'material-ui/svg-icons/content/add'
+
 import CookbookCard from '../../components/CookbookCard';
 import * as CookbookActions from '../../actions/cookbooks'
 
@@ -29,6 +32,9 @@ class CookbookList extends Component {
       <WidthReactGridLayout className='layout' layout={layout} cols={12}>
         <div key='Card'>
           {cookbooks.map((cookbook, i) => <CookbookCard key={i} title={cookbook.name} subtitle='' href={`/editor/${cookbook._id}`}/>)}
+          <IconButton tooltip='Add new cookbook'>
+            <AddIcon />
+          </IconButton>
         </div>
       </WidthReactGridLayout>
     );
