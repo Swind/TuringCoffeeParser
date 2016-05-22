@@ -4,176 +4,30 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
-import Avatar from 'material-ui/Avatar'
 import Divider from 'material-ui/Divider'
 import FontIcon from 'material-ui/FontIcon'
-import List from 'material-ui/List/List'
-import ListItem from 'material-ui/List/ListItem'
 import Paper from 'material-ui/Paper'
-import TextField from 'material-ui/TextField'
-import Slider from 'material-ui/Slider'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
-import IconButton from 'material-ui/IconButton'
 import Snackbar from 'material-ui/Snackbar';
 
-import TimerIcon from 'material-ui/svg-icons/image/timer'
-import LocalDrinkIcon from 'material-ui/svg-icons/maps/local-drink'
 import AddIcon from 'material-ui/svg-icons/content/add'
-import SaveIcon from 'material-ui/svg-icons/content/save'
-import ExitIcon from 'material-ui/svg-icons/action/exit-to-app'
 
 import { PROCESS } from '../../constants/processes'
 import * as CookbookActions from '../../actions/cookbooks'
 import Step from '../../components/Step'
 import style from './style.css'
 
+import CookbookHeader from './cookbookHeader'
+import CookbookProcessParameter from './cookbookProcessParameter'
+import CookbookMenu from './cookbookMenu'
+
 const WidthReactGridLayout = WidthProvider(ReactGridLayout)
 
 const layout = [
   {i: "Paper", x: 4, y: 0, w: 16, isDraggable: false, isResizable: false},
 ]
-
-class CookbookHeader extends Component {
-  render () {
-    const {cookbook} = this.props
-    return (
-      <div>
-        <TextField
-          style={{"width": "100%"}}
-          required={true}
-          floatingLabel={true}
-          floatingLabelText='Title'
-          value={cookbook.name}
-        />
-        <TextField
-          style={{"width": "100%"}}
-          required={true}
-          floatingLabel={true}
-          floatingLabelText='Description'
-          value={cookbook.description}
-        />
-        <List>
-          <ListItem
-            disabled={true}
-            leftAvatar={
-              <Avatar icon={<TimerIcon/>}/>
-            }
-          >
-            {0}
-          </ListItem>
-          <ListItem
-            disabled={true}
-            leftAvatar={
-              <Avatar icon={<LocalDrinkIcon/>}/>
-            }
-          >
-            {0}
-          </ListItem>
-        </List>
-      </div>
-    )
-  }
-}
-
-class CookbookProcessParameter extends Component {
-
-  componentWillMount() {
-    const {params} = this.props
-    this.setState({params: params})
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({params: nextProps.params})
-  }
-
-  render() {
-    const {onModify} = this.props
-    let high, totalWater, totalTime, radius
-
-    const onChange = () => {
-      onModify(this.state.params)
-    }
-
-    let cloneParams = Object.assign({}, this.state.params)
-    const onHighStartChange = (_, v) => {
-      cloneParams.high.start = v
-      this.setState({params: cloneParams})
-    }
-
-    const onHighEndChange = (_, v) => {
-      cloneParams.high.end = v
-      this.setState({params: cloneParams})
-    }
-
-    const onTotalWaterChange = (_, v) => {
-      cloneParams.total_water = v
-      this.setState({params: cloneParams})
-    }
-
-    const onTotalTimeChange = (_, v) => {
-      cloneParams.total_time = v
-      this.setState({params: cloneParams})
-    }
-
-    const onRadiusStartChange = (_, v) => {
-      cloneParams.radius.start = v
-      this.setState({params: cloneParams})
-    }
-
-    const onRadiusEndChange = (_, v) => {
-      cloneParams.radius.end = v
-      this.setState({params: cloneParams})
-    }
-
-    if (this.state.params.radius !== undefined) {
-      radius =
-        <li>
-          <span>{`Radius: from ${this.state.params.radius.start} to ${this.state.params.radius.end} mm`}</span>
-          <Slider step={5} min={0} max={300} value={this.state.params.radius.start} onChange={onRadiusStartChange} onDragStop={onChange}/>
-          <Slider step={5} min={0} max={300} value={this.state.params.radius.end} onChange={onRadiusEndChange} onDragStop={onChange}/>
-        </li>
-    }
-
-    if (this.state.params.high !== undefined) {
-      high=
-        <li>
-          <span>{`High: from ${this.state.params.high.start} to ${this.state.params.high.end} mm`}</span>
-          <Slider step={5} min={0} max={300} value={this.state.params.high.start} onChange={onHighStartChange} onDragStop={onChange}/>
-          <Slider step={5} min={0} max={300} value={this.state.params.high.end} onChange={onHighEndChange} onDragStop={onChange}/>
-        </li>
-    }
-
-    if (this.state.params.total_water !== undefined) {
-      totalWater =
-        <li>
-          <span>{`Total Water: ${this.state.params.total_water} ml`}</span>
-          <Slider step={10} min={0} max={500} value={this.state.params.total_water} onChange={onTotalWaterChange} onDragStop={onChange}/>
-        </li>
-    }
-
-    if (this.state.params.total_time !== undefined) {
-      totalTime =
-        <li>
-          <span>Total time:</span>
-          <TextField type="number" value={this.state.params.total_time} inputStyle={{'textAlign': 'center'}} onChange={onTotalTimeChange}/>
-          <span>seconds</span>
-        </li>
-    }
-
-    return (
-      <div>
-        <ul>
-          {radius}
-          {high}
-          {totalWater}
-          {totalTime}
-        </ul>
-      </div>
-    )
-  }
-}
 
 class SelectProcess extends Component {
   render() {
@@ -277,9 +131,7 @@ class CookbookEditor extends Component {
       <WidthReactGridLayout className='layout' layout={layout} cols={24}>
         <div key='Paper'>
           <Paper className={style.Paper} zDepth={1}>
-            <CookbookHeader
-              cookbook={cookbook}
-            />
+            <CookbookHeader cookbook={cookbook} />
             <Divider />
             {processes}
             <FloatingActionButton secondary={true} onMouseUp={onAddProcess}>
@@ -287,16 +139,7 @@ class CookbookEditor extends Component {
             </FloatingActionButton>
           </Paper>
           <div key='Menu' style={{'position': 'fixed', 'left': this.calcMenuLeft(), 'top': this.calcMenutop()}} ref='menu'>
-            <Paper zDepth={1}>
-              <IconButton tooltip='Save' onMouseUp={onSaveCookbook}>
-                <SaveIcon />
-              </IconButton>
-              <Link to='/'>
-                <IconButton tooltip='Exit'>
-                  <ExitIcon />
-                </IconButton>
-              </Link>
-            </Paper>
+            <CookbookMenu onSaveCookbook={onSaveCookbook}/>
           </div>
           <Snackbar
             open={editor.openSave}
