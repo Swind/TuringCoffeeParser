@@ -44,5 +44,7 @@
     "webpack-dev-server": "^1.14.1",
     "webpack-hot-middleware": "^2.7.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "chart.js": "^2.1.3"
+  }
 }
