@@ -99,6 +99,24 @@ server.route(
   }
 );
 
+server.route(
+  {
+    method: 'GET',
+    path: '/api/heater',
+    handler: function (request, reply) {
+      return reply({
+        statusCode: 200,
+        message: "Save cookbook successfully",
+        data: {
+          setPoint: 50,
+          dutyCycle: 90,
+          temperature: (Math.random() * 100)
+        }
+      })
+    }
+  }
+);
+
 server.start((err) => {
   if (err) {
     throw err
