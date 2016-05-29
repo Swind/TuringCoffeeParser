@@ -1,41 +1,5 @@
 import { createAction } from 'redux-actions'
-import request from 'superagent'
-
-const asyncGetRequest = (action, path) => dispatch => {
-    request
-      .get(path)
-      .set('Accept', 'application/json')
-      .end((err, res) =>
-        dispatch((err)? action(err): action(res))
-       )
-  }
-
-const asyncPostRequest = (action, path, content) => dispatch => {
-    request
-      .post(path)
-      .send(content)
-      .set('Accept', 'application/json')
-      .end()
-  }
-
-const asyncPutRequest = (action, path, content) => dispatch => {
-    request
-      .put(path)
-      .send(content)
-      .set('Accept', 'application/json')
-      .end((err, res) =>
-        dispatch((err)? action(err): action(res))
-      )
-  }
-
-const asyncDeleteRequest = (action, path) => dispatch => {
-    request
-      .delete(path)
-      .set('Accept', 'application/json')
-      .end((err, res) =>
-        dispatch((err)? action(err): action(res))
-      )
-  }
+import { asyncGetRequest, asyncPutRequest, asyncPostRequest, asyncDeleteRequest } from './asyncRequest'
 
 const _list = createAction('list cookbooks')
 const _load = createAction('load cookbook')
