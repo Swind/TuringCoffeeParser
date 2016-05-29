@@ -13,9 +13,6 @@ logger = logging.getLogger(__name__)
 
 class OutputServer(object):
 
-    stop = False
-    full = False
-
     def __init__(self):
         # Read config
         self.config = json_config.parse_json('config.json')
@@ -35,8 +32,11 @@ class OutputServer(object):
         self.pause = False
 
     def start(self):
-        self.publish_worker.start()
+        logger.info("Output server starting ...")
         self.sensor.start()
+        logger.info("Output server start successfully...")
+
+        self.publish_output_temperature();
 
     def publish_output_temperature(self):
         while True:
@@ -51,9 +51,11 @@ class OutputServer(object):
             else:
                 temperature = 0
 
+            logger.debug({'temperature': temperature})
             self.pub_channel.send({'temperature': temperature})
             time.sleep(1)
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     server = OutputServer()
     server.start()

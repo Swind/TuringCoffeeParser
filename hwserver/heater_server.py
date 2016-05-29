@@ -3,7 +3,6 @@ from utils import json_config
 from utils import channel
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 class HeaterServer(object):
@@ -83,5 +82,6 @@ class HeaterServer(object):
                 cmd['cycle_time'], cmd['k'], cmd['i'], cmd['d'], cmd['set_point'])
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     server = HeaterServer()
     server.start()

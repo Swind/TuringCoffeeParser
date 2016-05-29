@@ -9,7 +9,6 @@ import hardware
 import logging
 logger = logging.getLogger(__name__)
 
-
 class RefillServer(object):
 
     stop = False
@@ -79,5 +78,6 @@ class RefillServer(object):
             time.sleep(1)
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     server = RefillServer()
     server.start()

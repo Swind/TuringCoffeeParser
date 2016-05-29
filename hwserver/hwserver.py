@@ -17,9 +17,9 @@ class HWServer :
         return worker
 
     def start(self):
-        self.__create_worker(HeaterServer())
-        self.__create_worker(RefillServer())
-        self.__create_worker(OutputServer())
+        self.__create_worker(HeaterServer()).start()
+        self.__create_worker(RefillServer()).start()
+        self.__create_worker(OutputServer()).start()
 
         # Use the main thread to execute printer server
         self.printer_server = PrinterServer()
