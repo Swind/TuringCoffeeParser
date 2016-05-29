@@ -9,6 +9,7 @@ import React from 'react'
 import App from './containers/Main'
 import CookbookList from './containers/CookbookList'
 import CookbookEditor from './containers/CookbookEditor'
+import Monitor from './containers/Monitor'
 import configure from './store'
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -24,6 +25,7 @@ ReactDOM.render(
         <IndexRoute component={CookbookList}></IndexRoute>
         <Route path='cookbooks' component={CookbookList}></Route>
         <Route path='editor/:cookbookId' component={CookbookEditor}></Route>
+        <Route path='monitor' component={Monitor}></Route>
       </Route>
     </Router>
   </Provider>,
