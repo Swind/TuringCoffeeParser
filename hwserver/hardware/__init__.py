@@ -23,7 +23,7 @@ def get_sensor(config, t):
     if config['Emulator']:
         return __get_mock_sensor_monitor(config)
 
-    if t in config:
+    if t in config['Sensors']:
         return __get_sensor_monitor(config['Sensors'][t])
     else:
         return None
