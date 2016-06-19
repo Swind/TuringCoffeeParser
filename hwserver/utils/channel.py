@@ -1,4 +1,4 @@
-import msgpack
+import json
 
 from nanomsg import (
     PUB,
@@ -42,7 +42,7 @@ class Channel(object):
                 if error.errno == EAGAIN:
                     return None
 
-        return msgpack.unpackb(result)
+        return json.loads(result)
 
     def send(self, msg):
-        return self.__socket.send(msgpack.packb(msg))
+        return self.__socket.send(json.dumps(msg))
