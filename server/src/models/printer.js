@@ -55,15 +55,16 @@ class Printer {
   }
 
   jog(x = null, y = null, z = null, f = null) {
-    const data = {};
 
-    if (x) { data.x = x; }
-    if (y) { data.y = y; }
-    if (z) { data.z = z; }
-    if (f) { data.f = f; }
+    let cmd = "G1 ";
+
+    if (x !== undefined) { cmd += `X${x} ` }
+    if (y !== undefined) { cmd += `Y${y} ` }
+    if (z !== undefined) { cmd += `Z${z} ` }
+    if (f !== undefined) { cmd += `F${f} ` }
 
     this.cmd.send({
-      C: data,
+      G: cmd,
     });
   }
 }

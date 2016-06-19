@@ -59,12 +59,13 @@ class PrinterAPI extends API {
           },
         },
       },
-      handler: this.home.bind(this),
+      handler: this.jog.bind(this),
     };
   }
 
   jog(request, reply) {
-    this.printer.jog(request.params);
+    const payload = request.payload
+    this.printer.jog(payload.x, payload.y, payload.z, payload.f);
     this.successed(reply, 200, 'Send the jog command to the printer successfully');
   }
 
