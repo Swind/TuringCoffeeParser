@@ -94,7 +94,7 @@ class CookbookList extends Component {
             (cookbook, i) => {
               return (
                 <CookbookCard
-                  key={i}
+                  key={cookbook._id}
                   title={cookbook.name}
                   subtitle=''
                   href={`/editor/${cookbook._id}`}
