@@ -39,7 +39,7 @@ class Smoothie(object):
                     str(self._port), self._baudrate, timeout=5, writeTimeout=10000)
             return True
         except serial.SerialException:
-            logger.error('Unexpected error while connecting to serial')
+            logger.exception('Unexpected error while connecting to serial')
             return False
 
     def readline(self):
@@ -48,7 +48,7 @@ class Smoothie(object):
         try:
             ret = self._serial.readline()
         except:
-            logger.error('Unexpected error while reading serial')
+            logger.exception('Unexpected error while reading serial')
             return None
         if ret == '':
             return ''
@@ -69,10 +69,10 @@ class Smoothie(object):
                 time.sleep(0.5)
                 self._serial_write(cmd + '\n')
             except:
-                logger.error('Unexpected error while writing serial')
+                logger.exception('Unexpected error while writing serial')
                 return False
         except:
-            logger.error('Unexpected error while writing serial')
+            logger.exception('Unexpected error while writing serial')
             return False
 
         return True
