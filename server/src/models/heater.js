@@ -42,7 +42,7 @@ class Heater {
       set_point: temperature,
     };
 
-    this.cmd.send(JSON.stringify(payload));
+    this.cmd.send(payload);
   }
 }
 
