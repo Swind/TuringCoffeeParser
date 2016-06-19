@@ -43,7 +43,7 @@ class HeaterAPI extends API {
   }
 
   setTemperature(request, reply) {
-    const temperature = request.params.temperature;
+    const temperature = request.payload.temperature;
     this.heater.setTemperature(temperature);
     this.successed(reply, 200, 'Set the temperature successfully');
   }
