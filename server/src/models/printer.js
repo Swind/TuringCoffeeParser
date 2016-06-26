@@ -56,15 +56,8 @@ class Printer {
 
   jog(x = null, y = null, z = null, f = null) {
 
-    let cmd = "G1 ";
-
-    if (x !== undefined) { cmd += `X${x} ` }
-    if (y !== undefined) { cmd += `Y${y} ` }
-    if (z !== undefined) { cmd += `Z${z} ` }
-    if (f !== undefined) { cmd += `F${f} ` }
-
     this.cmd.send({
-      G: cmd,
+      C: {x: x, y: y, z: z, f: f},
     });
   }
 }
