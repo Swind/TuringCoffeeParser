@@ -1,8 +1,9 @@
 import time
-import math
-import json
+import logging
 
 import spidev
+
+logger = logging.getLogger(__name__)
 
 
 class MAX31856(object):
@@ -18,7 +19,6 @@ class MAX31856(object):
     def readRegister(self, reg_num, byte):
         self.spi.xfer([reg_num])
         buf = self.spi.readbytes(17)
-        print buf
         return buf[reg_num+1:reg_num+1+byte]
 
     def writeRegister(self, reg_num, data):
@@ -36,8 +36,6 @@ class MAX31856(object):
             self.requestTempConv()
             out = self.readRegister(0x0c, 4)
 
-            print out
-
             [tc_highByte, tc_middleByte, tc_lowByte] = [out[0], out[1], out[2]]
             temp = ((tc_highByte << 16) | (tc_middleByte << 8) | tc_lowByte) >> 5
 
@@ -48,12 +46,11 @@ class MAX31856(object):
 
             fault = out[3]
 
-            print "%08x" % fault
             if ((fault & 0x80)):
-                print ("Cold Junction Out-of-Range")
+                logger.error("Cold Junction Out-of-Range")
                 continue
             if ((fault & 0x40)):
-                print ("Thermocouple Out-of-Range")
+                logger.error("Thermocouple Out-of-Range")
                 continue
             if ((fault & 0x20)):
                 print ("Cold-Junction High Fault")
