@@ -42,6 +42,12 @@ class Smoothie(object):
             logger.exception('Unexpected error while connecting to serial')
             return False
 
+    def close(self):
+        if self._port == 'VIRTUAL':
+            self._serial = None
+        else:
+            self._serial.close()
+
     def readline(self):
         if self._serial is None:
             return None
@@ -52,14 +58,14 @@ class Smoothie(object):
             return None
         if ret == '':
             return ''
-        logger.info('Recv: %s' % (
+        logger.info('%s Recv: %s' % (self._port,
             unicode(ret, 'ascii', 'replace').encode('ascii', 'replace').rstrip()))
         return ret
 
     def write(self, cmd):
         if self._serial is None:
             return
-        logger.info('Write \'{}\''.format(cmd))
+        logger.info('{} Write \'{}\''.format(self._port, cmd))
         try:
             self._serial.write(cmd + '\n')
         except serial.SerialTimeoutException:
