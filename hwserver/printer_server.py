@@ -1,222 +1,301 @@
-"""Serial communication with the printer for printing is done from a separate
-process, this to ensure that the PIL does not block the serial printing.
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-This file is the 2nd process that is started to handle communication
-with the printer. And handles all communication with the initial
-process.
-
-"""
-
-__copyright__ = 'Copyright (C) 2013 David Braam - Released under terms of the AGPLv3 License'
-
-import threading
+import copy
+import logging
 import Queue
-import time
 
-from utils import smoothie
+from threading import Lock, Thread
 
 from utils import json_config
 from utils import channel
 
-import logging
 logger = logging.getLogger(__name__)
+CONST_ML = 30
+CONST_COLD_TEMPERATURE = 20
 
 
-class GCODE_G1:
+def _point_to_gcode(point):
+    if point is None:
+        return None
 
-    @staticmethod
-    def parse_axis(axis, string, end_with):
-        len_of_axis = len(axis)
-        start_axis = string.find(axis) + len_of_axis
-        end_axis = string.find(end_with, start_axis)
-        if end_axis == -1:
-            end_axis = len(string)
-        return float(string[start_axis:end_axis])
+    gcode = 'G1'
+    if ('x' in point) and (point['x'] is not None):
+        gcode += ' X{}'.format(point['x'])
+    if ('y' in point) and (point['y'] is not None):
+        gcode += ' Y{}'.format(point['y'])
+    if ('z' in point) and (point['z'] is not None):
+        gcode += ' Z{}'.format(point['z'])
+    if ('e' in point) and (point['e'] is not None):
+        gcode += ' E{}'.format(point['e'])
+    if ('f' in point) and (point['f'] is not None):
+        gcode += ' F{}'.format(point['f'])
 
-    @staticmethod
-    def parse(string):
-        if 'G1' not in string:
-            return None
+    return gcode
 
-        x = y = z = e1 = e2 = f = None
 
-        if 'X' in string:
-            x = GCODE_G1.parse_axis('X', string, ' ')
-        if 'Y' in string:
-            y = GCODE_G1.parse_axis('Y', string, ' ')
-        if 'Z' in string:
-            z = GCODE_G1.parse_axis('Z', string, ' ')
-        if 'E1' in string:
-            e1 = GCODE_G1.parse_axis('E1', string, ' ')
-        if 'E2' in string:
-            e2 = GCODE_G1.parse_axis('E2', string, ' ')
-        if 'F' in string:
-            f = GCODE_G1.parse_axis('F', string, '\n')
+def _calculate_ratio(t, hot_t, cold_t, out_t):
 
-        return GCODE_G1(x, y, z, e1, e2, f)
+    if hot_t == cold_t:
+        return 0
 
-    def __init__(self, x = None, y = None, z = None, e1 = None, e2 = None, f = None):
-        self.x = x
-        self.y = y
-        self.z = z
-        self.e1 = e1
-        self.e2 = e2
-        self.f = f
+    t = float(t)
+    hot_t = float(hot_t)
+    cold_t = float(cold_t)
+    out_t = float(out_t)
 
-    def __str__(self):
-        gcode = 'G1'
-        if self.x is not None:
-            gcode = gcode + ' X{}'.format(self.x)
+    ratio = (t - cold_t)/(hot_t - cold_t) + (t - out_t)/(hot_t - out_t)
 
-        if self.y is not None:
-            gcode = gcode + ' Y{}'.format(self.y)
+    if ratio <= 0:
+        return 0
+    elif ratio >= 1:
+        return 1
+    else:
+        return ratio
 
-        if self.z is not None:
-            gcode = gcode + ' Z{}'.format(self.z)
 
-        if self.e1 is not None:
-            gcode = gcode + ' E{}'.format(self.e1)
+class _AtomicValue(object):
 
-        if self.e2 is not None:
-            gcode = gcode + ' E{}'.format(self.e2)
+    def __init__(self, initial_value):
+        self.__lock = Lock()
+        self.__value = initial_value
 
-        if self.f is not None:
-            gcode = gcode + ' F{}'.format(self.f)
+    @property
+    def value(self):
+        self.__lock.acquire()
+        v = self.__value
+        self.__lock.release()
+        return v
 
-        return gcode
+    @value.setter
+    def value(self, v):
+        self.__lock.acquire()
+        self.__value = v
+        self.__lock.release()
 
-class State:
-    INITIAL = 0
-    CONNECTING = 1
-    OPERATIONAL = 2
-    PRINTING = 3
-    PAUSED = 4
-    CLOSED = 5
-    ERROR = 6
-    CLOSED_WITH_ERROR = 7
-    STOPPING = 8
 
-    @staticmethod
-    def get_state_string(state):
-        if state is State.INITIAL:
-            return 'Offline'
-        elif state is State.CONNECTING:
-            return 'Connecting'
-        elif state is State.OPERATIONAL:
-            return 'Operational'
-        elif state is State.PRINTING:
-            return 'Printing'
-        elif state is State.PAUSED:
-            return 'Paused'
-        elif state is State.CLOSED:
-            return 'Closed'
-        elif state is State.ERROR:
-            return 'Error'
-        elif state is State.CLOSED_WITH_ERROR:
-            return 'Closed with error'
-        elif state is State.STOPPING:
-            return 'STOPPING'
+class PrinterConfig(object):
+
+    def __init__(self, port, baudrate):
+        self.port = port
+        self.baudrate = baudrate
+
+
+class PrinterController(object):
+
+    def __init__(self, cold_config, hot_config):
+        from utils.smoothie import Smoothie
+        self._hot_printer = Smoothie(hot_config.port, hot_config.baudrate)
+        self._cold_printer = Smoothie(cold_config.port, cold_config.baudrate)
+
+        self._printer_lock = Lock()
+        self.command_counter = _AtomicValue(0)
+
+    def connect(self):
+        if self._hot_printer.open() is not True:
+            logger.error('Cannot open printer for hot water')
+            return False
+        if self._cold_printer.open() is not True:
+            logger.error('Cannot open printer for cold water')
+            return False
+
+        # Home
+        self.send_gcodes('G28', 'G28')
+        # Set Units to Millimeters
+        self.send_gcodes('G21', 'G21')
+        # Set to Absolute Positioning
+        self.send_gcodes('G90', 'G90')
+        # Set extruder to relative mode
+        self.send_gcodes('M83', 'M83')
+
+        return True
+
+    def disconnect(self):
+        self._hot_printer.close()
+        self._cold_printer.close()
+
+    def send_gcodes(self, hot_command=None, cold_command=None):
+
+        self._printer_lock.acquire()
+
+        if hot_command is not None:
+            self._hot_printer.write(hot_command)
+        if cold_command is not None:
+            self._cold_printer.write(cold_command)
+
+        if hot_command is not None:
+            while 'ok' not in self._hot_printer.readline():
+                continue
+        if cold_command is not None:
+            while 'ok' not in self._cold_printer.readline():
+                continue
+
+        self._printer_lock.release()
+
+
+class HeaterTemperatureReader(object):
+
+    def __init__(self, addr):
+        self._heater = channel.Channel(addr, 'Sub', False)
+        self._thread = Thread(target=self._update_temperature)
+        self._thread.daemon = True
+        self._thread.start()
+        self._heater_temperature = _AtomicValue(0)
+
+    def __del__(self):
+        self._stop_flag = True
+        self._thread.join()
+
+    def _update_temperature(self):
+        while self._stop_flag is not True:
+            heater_status = self._heater.recv()
+            self._heater_temperature.value = heater_status['temperature']
+
+    def read(self):
+        return self._heater_temperature.value
+
+
+class OutputTemperatureReader(object):
+
+    def __init__(self, addr):
+        self._output = channel.Channel(addr, 'Sub', False)
+        self._thread = Thread(target=self._update_temperature)
+        self._thread.daemon = True
+        self._thread.start()
+        self._output_temperature = _AtomicValue(0)
+
+    def __del__(self):
+        self._stop_flag = True
+        self._thread.join()
+
+    def _update_temperature(self):
+        while self._stop_flag is not True:
+            output_status = self._output.recv()
+            self._output_temperature.value = output_status['temperature']
+
+    def read(self):
+        return self._output_temperature.value
+
+    def stop(self):
+        self._stop_flag = True
+
+
+class ColdTemperatureReader(object):
+
+    def __init__(self):
+        pass
+
+    def read(self):
+        return CONST_COLD_TEMPERATURE
+
+
+class _TemperatureMixer(object):
+
+    def __init__(self,
+                 output_temp_reader,
+                 heater_temp_reader,
+                 cold_temp_reader):
+        self._output_temp_reader = output_temp_reader
+        self._heater_temp_reader = heater_temp_reader
+        self._cold_temp_reader = cold_temp_reader
+
+    def __del__(self):
+        self._stop()
+
+    def _calibrate(self, expect_t):
+        pass
+
+    def _group_points(self, points):
+        water_sum = 0
+        boundary = 0
+        for index, point in enumerate(points):
+            if 'e' in point:
+                water_sum += point['e']
+                if water_sum > CONST_ML:
+                    boundary = index
+                    break
+
+        boundary = boundary + 1
+        points_set = points[:boundary]
+        points = points[boundary:]
+
+        return (points_set, points)
+
+    def _mix(self, points):
+        point_pairs = []
+        cold_t = self._cold_temp_reader.read()
+        hot_t = self._heater_temp_reader.read()
+        out_t = self._output_temp_reader.read()
+
+        for point in points:
+            point_pair = [copy.deepcopy(point), copy.deepcopy(point)]
+            if ('e' in point) and ('t' in point):
+                ratio = _calculate_ratio(point['t'], hot_t, cold_t, out_t)
+                point_pair[0]['e'] = point_pair[0]['e'] * ratio
+                point_pair[1]['e'] = point['e'] - point_pair[0]['e']
+            else:
+                point_pairs[1].pop('e')
+        return point_pairs
+
+    def _send(self, printer, point_pairs):
+        gcodes = []
+        for point in point_pairs:
+            hot_gcode = _point_to_gcode(point[0])
+            cold_gcode = _point_to_gcode(point[1])
+            gcodes.append([hot_gcode, cold_gcode])
+
+        for gcode in gcodes:
+            printer.send_gcodes(gcode[0], gcode[1])
+
+    def mix(self, printer, points):
+        remains_points = points
+        while True:
+            (point_group, remains_points) = self._group_points(remains_points)
+            point_pairs = self._mix(point_group)
+            self._send(printer, point_pairs)
+
+            if len(remains_points) == 0:
+                break
 
 
 class PrinterServer(object):
 
-    """The serialComm class is the interface class which handles the
-    communication between stdin/stdout and the machineCom class.
-
-    This interface class is used to run the (USB) serial communication
-    in a different process then the GUI.
-
-    """
-
-    def __init__(self):
-        # Read config
-        self.config = json_config.parse_json('config.json')
+    def __init__(self,
+                 config,
+                 output_temp_reader,
+                 heater_temp_reader,
+                 cold_temp_reader,
+                 printer_controller):
 
         # Create nanomsg socket to publish status and receive command
-        pub_address = self.config['PrinterServer']['Publish_Socket_Address']
+        pub_address = config['PrinterServer']['Publish_Socket_Address']
         self.pub_channel = channel.Channel(pub_address, 'Pub', True)
         logger.info('Create the publish channel at {}'.format(pub_address))
 
         # Receive the printer command
-        cmd_address = self.config['PrinterServer']['Command_Socket_Address']
+        cmd_address = config['PrinterServer']['Command_Socket_Address']
         self.cmd_channel = channel.Channel(cmd_address, 'Pair', True)
         logger.info('Create the command channel at {}'.format(cmd_address))
 
-        self._comm = None
-
-        if self.config['Emulator']:
-            port_name = 'VIRTUAL'
-            port_name2 = 'VIRTUAL'
-        else:
-            port_name = self.config['Printer']['PortName']
-            port_name2 = self.config['Printer']['PortName2']
-
-        baudrate = int(self.config['Printer']['Baudrate'])
-
-        self._comm = smoothie.Smoothie(port_name, baudrate)
-        self._comm2 = smoothie.Smoothie(port_name2, baudrate)
+        self._printer_controller = printer_controller
+        self._temperature_mixer = _TemperatureMixer(
+                output_temp_reader=output_temp_reader,
+                heater_temp_reader=heater_temp_reader,
+                cold_temp_reader=cold_temp_reader)
 
         self._callback = self
 
-        self._state = State.INITIAL
-        self._cmd_queue = Queue.Queue()
-        self._reset_count()
-
-        self._state_table = {
-                State.INITIAL: self._open,
-                State.CONNECTING: self._connect,
-                State.OPERATIONAL: self._check_cmd_queue,
-                State.PRINTING: self._exec_command,
-                State.PAUSED: self._pause,
-                State.STOPPING: self._stop,
-                State.CLOSED: self._close
-        }
-
-        self._paused_cmd = None
         self._stop_flag = False
-        self._pause_flag = False
-
-        self._state_lock = threading.Lock()
-        self._thread = threading.Thread(target=self._start)
+        self._point_queue = Queue.Queue()
+        self._thread = Thread(target=self._start)
         self._thread.daemon = True
         self._thread.start()
 
     def __del__(self):
         self.close()
 
-    # ================================================================================
-    #
-    #   MachineCom callback Interface
-    #
-    # ================================================================================
-    def mcLog(self, message):
-        #self.pub_channel.send({"log": message})
-        pass
-
-    def mcTempUpdate(self, temp, bedTemp, targetTemp, bedTargetTemp):
-        # Because now the temperature is not controled by arduino
-        #self.pub_channel.send({"temperature": temp})
-        pass
-
-    def mcStateChange(self, state, state_string):
-        if self._comm is None:
-            return
-        if self._comm2 is None:
-            return
-
-        self.pub_channel.send(
-            {'state': state, 'state_string': state_string})
-
-    def mcMessage(self, message):
-        #self.pub_channel.send({"message": message})
-        pass
-
     def mcProgress(self, lineNr):
         self.pub_channel.send({'progress': lineNr})
-
-    def mcZChange(self, newZ):
-        #self.pub_channel.send({"changeZ": newZ})
-        pass
 
     # ================================================================================
     #
@@ -227,249 +306,66 @@ class PrinterServer(object):
     def stop(self):
         self._stop_flag = True
 
-    def pause(self):
-        self._pause_flag = True
-
     def close(self):
         self.stop()
 
     def _start(self):
-        while True:
-            state = self._get_state()
-            if state in self._state_table:
-                self._state_table[state]()
-            else:
-                logger.error('This should not happen')
-
-    def _change_state(self, new_state):
-        if self._state is new_state:
+        if self._printer_controller.connect() is not True:
+            logger.error("Printer connect fail")
             return
 
-        old_state_str = State.get_state_string(self._state)
-        new_state_str = State.get_state_string(new_state)
+        while self._stop_flag is not True:
+            points = self._point_queue.get(True)
+            logger.info(points)
+            self._temperature_mixer.mix(self._printer_controller, points)
 
-        self._state_lock.acquire()
-        self._state = new_state
-        self._state_lock.release()
-
-        self._callback.mcStateChange(new_state, new_state_str)
-
-        logger.info('Changing state from {} to {}'.format(old_state_str, new_state_str))
-
-    def _get_state(self):
-        self._state_lock.acquire()
-        state = self._state
-        self._state_lock.release()
-        return state
-
-    def _open(self):
-        if self._comm.open() == True and self._comm2.open():
-            self._change_state(State.CONNECTING)
-            return True
-        else:
-            self._change_state(State.CLOSED_WITH_ERROR)
-            return False
-
-    def _close(self):
-        self._change_state(State.NONE)
-
-    def _connect(self):
-        line = self._comm.readline()
-
-        if line is None:
-            return False
-
-        if line == '' or 'wait' in line:
-
-            if self._comm.write('M105') is False:
-                return False
-
-            line = self._comm.readline()
-            if line is None:
-                return False
-
-        if 'ok' not in line:
-            return False
-
-        if line is None:
-            return False
-
-        if line == '' or 'wait' in line:
-
-            if self._comm2.write('M105') is False:
-                return False
-
-            line = self._comm2.readline()
-            if line is None:
-                return False
-
-        if 'ok' not in line:
-            return False
-
-        self._change_state(State.OPERATIONAL)
-        return True
-
-    def _exec_command(self):
-        current_comm = self._comm
-        while True:
-            cmd = None
-            if self._paused_cmd is not None:
-                cmd = self._paused_cmd
-                self._paused_cmd = None
-            else:
-                try:
-                    cmd = self._cmd_queue.get(False)
-                except Queue.Empty:
-                    self._change_state(State.OPERATIONAL)
-                    break;
-
-            i = 0
-            while i < len(cmd):
-                gcode = cmd[i]
-
-                g1 = GCODE_G1.parse(gcode)
-                if g1 is None:
-                    if self._comm.write(gcode) is False:
-                        self._flush_command()
-                        self._change_state(State.CLOSED_WITH_ERROR)
-                        return
-
-                    while 'ok' not in self._comm.readline():
-                        continue
-
-                    if self._comm2.write(gcode) is False:
-                        self._flush_command()
-                        self._change_state(State.CLOSED_WITH_ERROR)
-                        return
-
-                    while 'ok' not in self._comm2.readline():
-                        continue
-
-                else:
-                    if self._pause_flag is True:
-                        self._change_state(State.PAUSED)
-                        self._paused_cmd = cmd[i:]
-                        return
-
-                    if self._stop_flag is True:
-                        self._change_state(State.STOPPING)
-                        return
-
-                    g1_hot = g1
-                    g1_cold = None
-                    if (g1.e1 is not None) and (g1.e2 is not None):
-                        g1_cold = GCODE_G1(x = g1.x, y = g1.y, z = g1.z, e1 = g1.e2, f = g1.f)
-                        g1_hot.e2 = None
-                    elif (g1.e1 is None) and (g1.e2 is not None):
-                        g1_cold = GCODE_G1(x = g1.x, y = g1.y, z = g1.z, e1 = g1.e2, f = g1.f)
-                        g1_hot.e2 = None
-
-                    if g1_hot is not None:
-                        self._comm.write(str(g1_hot))
-                    if g1_cold is not None:
-                        self._comm2.write(str(g1_cold))
-
-                    if g1_hot is not None:
-                        while 'ok' not in self._comm.readline():
-                            continue
-
-                    if g1_cold is not None:
-                        while 'ok' not in self._comm2.readline():
-                            continue
-
-                self._cmd_counter = self._cmd_counter + 1
-                self._callback.mcProgress(self._cmd_counter)
-                i = i + 1
-
-    def _pause(self):
-        if self._pause_flag is False:
-            self._change_state(State.PRINTING)
-        if self._stop_flag is True:
-            self._change_state(State.STOPPING)
-        time.sleep(1)
-
-    def _stop(self):
-        self._flush_command()
-        self._change_state(State.OPERATIONAL)
-        self._stop_flag = False
-
-    def _close(self):
-        self._change_state(State.NONE)
-
-    def _check_cmd_queue(self):
-        while self._cmd_queue.empty():
-            time.sleep(1)
-        self._change_state(State.PRINTING)
-
-    def _flush_command(self):
-        while not self._cmd_queue.empty():
-            self._cmd_queue.get()
-
-    def _send_command(self, cmd):
-        type_cmd = type(cmd)
-        if type_cmd is str:
-            self._cmd_queue.put([cmd])
-        elif type_cmd is list:
-            self._cmd_queue.put(cmd)
-        else:
-            return False
-        return True
-
-    def _reset_count(self):
-        self._cmd_counter = 0
+        self._printer_controller.disconnect()
 
     def start(self):
         while True:
-            cmd = self.cmd_channel.recv()
+            points = self.cmd_channel.recv()
+            logger.info(points)
 
-            if 'STOP' in cmd:
+            if 'STOP' in points:
                 self.stop()
-
-            elif 'G' in cmd:
-                self._send_command(cmd['G'])
-
-            elif 'C' in cmd:
-                self._send_command(cmd['C'])
-
-            elif 'INFORMATION' in cmd:
+            elif 'G' in points:
+                self._point_queue.put(points['G'])
+            elif 'C' in points:
+                self._point_queue.put([points['C']])
+            elif 'INFORMATION' in points:
                 self.cmd_channel.send(
-                    {'state': self._comm.getState(), 'state_string': self._comm.getStateString()})
-
-            elif 'SHUTDOWN' in cmd:
-                self.mcMessage('Shoutdown printer server')
+                    {
+                        'state': self._comm.getState(),
+                        'state_string': self._comm.getStateString()
+                    })
+            elif 'SHUTDOWN' in points:
+                logger.info("Printer shutdown")
                 break
 
-            elif 'PAUSE' in cmd:
-                self._comm.pause()
-
-            elif 'RESET_COUNT' in cmd:
-                self._reset_count()
-
-    def is_closed(self):
-        state = self._get_state()
-        if state is State.CLOSED:
-            return True
-        return False
-
-    def is_operational(self):
-        state = self._get_state()
-        if state is State.OPERATIONAL:
-            return True
-        return False
-
-    def is_printing(self):
-        state = self._get_state()
-        if state is State.PRINTING:
-            return True
-        return False
-
-    def is_pausing(self):
-        state = self._get_state()
-        if state is State.PAUSED:
-            return True
-        return False
-
-
 if __name__ == '__main__':
-    server = PrinterServer()
+
+    config = json_config.parse_json('config.json')
+
+    if config['Emulator']:
+        port_name = 'VIRTUAL'
+        port_name2 = 'VIRTUAL'
+    else:
+        port_name = config['Printer']['PortName']
+        port_name2 = config['Printer']['PortName2']
+
+    baudrate = int(config['Printer']['Baudrate'])
+
+    printer_controller = PrinterController(
+            cold_config=PrinterConfig(port_name, baudrate),
+            hot_config=PrinterConfig(port_name2, baudrate))
+
+    server = PrinterServer(
+            config=config,
+            output_temp_reader=OutputTemperatureReader(
+                config['OutputServer']['Publish_Socket_Address']),
+            heater_temp_reader=HeaterTemperatureReader(
+                config['HeaterServer']['Publish_Socket_Address']),
+            cold_temp_reader=ColdTemperatureReader(),
+            printer_controller=printer_controller
+            )
     server.start()
