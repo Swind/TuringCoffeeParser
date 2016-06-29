@@ -54,5 +54,22 @@ export default handleActions({
       cookbooks: state.cookbooks,
       message: message
     }
+  },
+  'brew' (state, action) {
+
+    const response = action.payload
+
+    let cookbooks, message
+    if (response.status === 200) {
+      cookbooks = response.body.data
+      message = response.body.message
+    } else {
+      message = `Error ${response.status}: Failed to brew this cookbook`
+    }
+
+    return {
+      cookbooks: state.cookbooks,
+      message: message
+    }
   }
 }, initialState)

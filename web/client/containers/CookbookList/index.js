@@ -87,6 +87,10 @@ class CookbookList extends Component {
       actions.list()
     }
 
+    const onBrew = (id) => {
+      actions.brew(id)
+    }
+
     return (
       <div>
         {
@@ -98,6 +102,7 @@ class CookbookList extends Component {
                   title={cookbook.name}
                   subtitle=''
                   href={`/editor/${cookbook._id}`}
+                  onBrew={() => onBrew(cookbook._id)}
                   onDelete={() => onDeleteCookbook(cookbook._id)}
                 />)}
           )

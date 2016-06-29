@@ -6,6 +6,7 @@ const _load = createAction('load cookbook')
 const _save = createAction('save cookbook')
 const _create = createAction('create cookbook')
 const _remove = createAction('remove cookbook')
+const _brew = createAction('Brew')
 
 export const list = () => asyncGetRequest(_list, '/api/cookbooks')
 export const load = id => asyncGetRequest(_load, `/api/cookbooks/${id}`)
@@ -14,3 +15,4 @@ export const create = (content) => asyncPostRequest(_create, '/api/cookbooks', c
 export const remove = (id) => asyncDeleteRequest(_remove, `/api/cookbooks/${id}`)
 
 export const modify = createAction('modify cookbook')
+export const brew = (id) => asyncPostRequest(_brew, '/api/barista/brew', {id})
