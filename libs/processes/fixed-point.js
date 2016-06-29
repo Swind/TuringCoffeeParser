@@ -1,7 +1,7 @@
 const Base = require('./base');
 const Point = Base.Point;
 
-const QUICK_MOVE_F = 2000;
+const QUICK_MOVE_F = 5000;
 
 class FixedPoint extends Base.Process {
 
