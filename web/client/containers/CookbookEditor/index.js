@@ -113,6 +113,12 @@ class CookbookEditor extends Component {
         actions.modify(clone)
       }
 
+      const onDeleteStep = () => {
+        let clone = Object.assign({}, cookbook)
+        clone.processes.splice(i, 1)
+        actions.modify(clone)
+      }
+
       const selectProcess = (
         <SelectProcess
           selected={x.name}
@@ -121,7 +127,7 @@ class CookbookEditor extends Component {
       )
 
       return (
-        <Step key={i} id={i+1} title={selectProcess}>
+        <Step key={i} id={i+1} title={selectProcess} onDelete={onDeleteStep}>
           <CookbookProcessParameter params={processHandle.params} onModify={onModifyProcess}/>
         </Step>
       )
