@@ -16,7 +16,7 @@ class CookbookProcessParameter extends Component {
 
   render() {
     const {onModify} = this.props
-    let high, totalWater, totalTime, radius
+    let high, totalWater, totalTime, radius, temperature
 
     const onChange = () => {
       onModify(this.state.params)
@@ -50,6 +50,11 @@ class CookbookProcessParameter extends Component {
 
     const onRadiusEndChange = (_, v) => {
       cloneParams.radius.end = v
+      this.setState({params: cloneParams})
+    }
+
+    const onTemperatureChange = (_, v) => {
+      cloneParams.temperature = v
       this.setState({params: cloneParams})
     }
 
@@ -88,6 +93,14 @@ class CookbookProcessParameter extends Component {
         </li>
     }
 
+    if (this.state.params.temperature !== undefined) {
+      temperature =
+        <li>
+          <span>{`Temperature: ${this.state.params.temperature} °C`}</span>
+          <Slider step={1} min={0} max={100} value={this.state.params.temperature} onChange={onTemperatureChange} onDragStop={onChange}/>
+        </li>
+    }
+
     return (
       <div>
         <ul>
@@ -95,6 +108,7 @@ class CookbookProcessParameter extends Component {
           {high}
           {totalWater}
           {totalTime}
+          {temperature}
         </ul>
       </div>
     )
