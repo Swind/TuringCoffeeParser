@@ -91,6 +91,10 @@ class CookbookEditor extends Component {
       actions.modify(clone)
     }
 
+    const onCookbookChange = (cookbook) => {
+      actions.modify(cookbook)
+    }
+
     const onSaveCookbook = () => {
       let clone = Object.assign({}, cookbook)
       delete clone._id
@@ -137,7 +141,7 @@ class CookbookEditor extends Component {
       <WidthReactGridLayout className='layout' layout={layout} cols={24}>
         <div key='Paper'>
           <Paper className={style.Paper} zDepth={1}>
-            <CookbookHeader cookbook={cookbook} />
+            <CookbookHeader cookbook={cookbook} onChange={onCookbookChange}/>
             <Divider />
             {processes}
             <FloatingActionButton secondary={true} onMouseUp={onAddProcess}>

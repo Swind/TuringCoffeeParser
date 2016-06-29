@@ -9,25 +9,42 @@ import TimerIcon from 'material-ui/svg-icons/image/timer'
 import LocalDrinkIcon from 'material-ui/svg-icons/maps/local-drink'
 
 class CookbookHeader extends Component {
+
+  onNameChange (_, v) {
+    const {cookbook, onChange} = this.props
+    let clone = Object.assign({}, this.props.cookbook)
+    clone.name = v
+    onChange(clone)
+  }
+
+  onDescChange (_, v) {
+    const {cookbook, onChange} = this.props
+    let clone = Object.assign({}, this.props.cookbook)
+    clone.description = v
+    onChange(clone)
+  }
+
   render () {
     const {cookbook} = this.props
     return (
       <div>
         <TextField
-          id='title'
+          id={`${cookbook.id}_title`}
           style={{'width': '100%'}}
           required={true}
           floatingLabel={true}
           floatingLabelText='Title'
           value={cookbook.name}
+          onChange={this.onNameChange.bind(this)}
         />
         <TextField
-          id='description'
+          id={`${cookbook.id}_description`}
           style={{'width': '100%'}}
           required={true}
           floatingLabel={true}
           floatingLabelText='Description'
           value={cookbook.description}
+          onChange={this.onDescChange.bind(this)}
         />
         <List>
           <ListItem

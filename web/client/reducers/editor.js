@@ -25,7 +25,7 @@ export default handleActions({
   },
   'modify cookbook' (state, action) {
     return {
-      cookbook: state.cookbook,
+      cookbook: action.payload,
       message: 'Modify cookbook',
     }
   },
