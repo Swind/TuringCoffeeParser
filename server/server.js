@@ -12,6 +12,9 @@ const Refill = require('./src/models/refill');
 const HeaterAPI = require('./src/api/heater');
 const Heater = require('./src/models/heater');
 
+const BaristaAPI = require('./src/api/barista');
+const Barista = require('./src/models/barista');
+
 /* ##############################################################
 #
 #    Global variables
@@ -56,9 +59,14 @@ const heaterAPI = new HeaterAPI(heater);
 const refill = new Refill();
 const refillAPI = new RefillAPI(refill);
 
+// Barista
+const barista = new Barista(printer, cookbookMgr);
+const baristaAPI = new BaristaAPI(barista);
+
 apiServer.route(cookbookAPI.apiSpecs());
 apiServer.route(printerAPI.apiSpecs());
 apiServer.route(heaterAPI.apiSpecs());
 apiServer.route(refillAPI.apiSpecs());
+apiServer.route(baristaAPI.apiSpecs());
 
 apiServer.start();
