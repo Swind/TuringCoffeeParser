@@ -1,7 +1,8 @@
-import spiral from '../libs/processes/spiral'
-import circle from '../libs/processes/circle'
-import spiralTotalWater from '../libs/processes/spiral-total-water'
-import fixedPoint from '../libs/processes/fixed-point'
+import spiral from '../../libs/processes/spiral'
+import circle from '../../libs/processes/circle'
+import spiralTotalWater from '../../libs/processes/spiral-total-water'
+import fixedPoint from '../../libs/processes/fixed-point'
+import wait from '../../libs/processes/wait'
 
 export const PROCESS = {
   'spiral' : {
@@ -15,5 +16,8 @@ export const PROCESS = {
   },
   'spiral total water': {
     handle: spiralTotalWater
+  },
+  'wait': {
+    handle: wait
   }
 }
