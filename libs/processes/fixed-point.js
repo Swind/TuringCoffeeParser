@@ -43,7 +43,7 @@ class FixedPoint extends Base.Process {
     return this.params.total_water / this.params.extrudate;
   }
 
-  get points() {
+  get _points() {
     const x = this.params.coordinates.x;
     const y = this.params.coordinates.y;
 

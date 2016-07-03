@@ -1,6 +1,6 @@
 const Hapi = require('hapi');
 
-const logger = require('../libs/utils/logger');
+const logger = require('utils/logger');
 
 class APIServer {
   constructor(address = '127.0.0.0', port = 3000) {

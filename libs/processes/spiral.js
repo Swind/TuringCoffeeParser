@@ -25,7 +25,7 @@ class Spiral extends Base.Process {
 
   constructor(params = Spiral.default) {
     super(params);
-    this._points = this.generatePoints();
+    this.created_points = this.generatePoints();
   }
 
   get time() {
@@ -33,15 +33,15 @@ class Spiral extends Base.Process {
   }
 
   get water() {
-    return this.points.length * this.params.extrudate;
+    return this.created_points.length * this.params.extrudate;
   }
 
   get length() {
-    return this.points.length * this.params.point_interval;
+    return this.created_points.length * this.params.point_interval;
   }
 
-  get points() {
-    return this._points;
+  get _points() {
+    return this.created_points;
   }
 
   generatePoints() {

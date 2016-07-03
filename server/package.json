@@ -11,7 +11,7 @@
     }
   ],
   "scripts": {
-    "start": "nodemon --exec npm run babel-node -- server.js",
+    "start": "nodemon --exec npm run babel-node -- build/backend.js",
     "build": "webpack",
     "test": "mocha test --compilers jsx:babel-register",
     "babel-node": "babel-node --presets=es2015 --ignore='foo|bar|baz'"

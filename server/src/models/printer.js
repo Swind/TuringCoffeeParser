@@ -36,28 +36,15 @@ class Printer {
     this.last_update_time = date.getTime();
   }
 
-  send(cmd) {
+  send_points(points) {
     this.cmd.send({
-      C: cmd,
+      "points": points,
     });
   }
 
-  batchSend(cmds) {
+  send_cancle() {
     this.cmd.send({
-      G: cmds,
-    });
-  }
-
-  home() {
-    this.cmd.send({
-      C: 'G28',
-    });
-  }
-
-  jog(x = null, y = null, z = null, f = null) {
-
-    this.cmd.send({
-      C: {x: x, y: y, z: z, f: f},
+      "cancle": True,
     });
   }
 }

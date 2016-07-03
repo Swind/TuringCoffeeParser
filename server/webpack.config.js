@@ -26,7 +26,7 @@ fs.readdirSync('node_modules')
 ============================================================*/
 module.exports =
 {
-  entry: './server.jsx',
+  entry: './server.js',
   target: 'node',
   output: {
     path: path.join(__dirname, 'build'),
@@ -47,6 +47,10 @@ module.exports =
     }
   ],
   resolve: {
+    root: [
+      path.resolve('./src'),
+      path.resolve('../libs'),
+    ],
     extensions: ['', '.js']
   },
   externals: nodeModules,

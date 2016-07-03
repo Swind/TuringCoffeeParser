@@ -40,7 +40,7 @@ class Circle extends Base.Process {
     return this.params.total_water / this.params.extrudate;
   }
 
-  get points() {
+  get _points() {
     const circumference = 2 * Math.pi * this.params.radius.start;
     const cylinder = this.length / circumference;
     const av = (2 * Math.Pi * cylinder) / this.point_number;

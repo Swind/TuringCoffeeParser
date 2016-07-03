@@ -1,23 +1,22 @@
 const Base = require('./base');
-const WaitCommand = Base.WaitCommand;
+const HomeCommand = Base.HomeCommand;
 
 
-class Wait extends Base.Process {
+class Home extends Base.Process {
 
   static get default() {
     return Object.assign({}, {
       type: 'command',
-      name: 'wait',
-      total_time: 30
+      name: 'home',
     })
   }
 
-  constructor(params = Wait.default) {
+  constructor(params = Home.default) {
     super(params);
   }
 
   get time() {
-    return this.params.time;
+    return 0;
   }
 
   get water() {
@@ -30,9 +29,9 @@ class Wait extends Base.Process {
 
   get points() {
     return [
-      WaitCommand(this.params.total_time)
+      HomeCommand()
     ];
   }
 }
 
-module.exports = Wait;
+module.exports = Home
