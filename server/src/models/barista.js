@@ -23,7 +23,7 @@ class Barista {
         all_points = all_points.concat(process_obj.points())
       });
 
-      printer.send_points(all_points);
+      this.printer.send_points(all_points);
 
       return 0;
     });
@@ -31,18 +31,18 @@ class Barista {
 
   home(){
     let home_obj = Process.createProcess(Home.default());
-    printer.set_points([home_obj]);
+    this.printer.send_points([home_obj]);
 
     return 0;
   }
 
   jog(x, y, z, e, f, t){
     let point = new Point(x, y, f);
+    point.z = z;
     point.e = e;
-    point.f = f;
     point.t = t;
 
-    printer.set_points([point]);
+    this.printer.send_points([point]);
 
     return 0;
   }
