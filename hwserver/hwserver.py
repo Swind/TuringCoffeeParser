@@ -1,11 +1,22 @@
 from threading import Thread
 from utils import json_config
 
-from printer_server import PrinterServer, PrinterConfig, PrinterController, \
-        OutputTemperatureReader, HeaterTemperatureReader, ColdTemperatureReader
+from printer_server.server import PrinterServer
+from printer_server.printer import PrinterController
+from printer_server.temperature_reader import HeaterTemperatureReader, \
+        OutputTemperatureReader, ColdTemperatureReader
+from printer_server.pubsub.nanomsg_pubsub import NanomsgPublisher
+from printer_server.reqrep.nanomsg_reqrep import NanomsgResponser
+from utils.smoothie import Smoothie
+
 from heater_server import HeaterServer
 from refill_server import RefillServer
 from output_server import OutputServer
+
+from sys import path
+from os.path import dirname as dir
+
+path.append(dir(path[0]))
 
 
 class HWServer:
@@ -35,12 +46,15 @@ class HWServer:
         baudrate = int(config['Printer']['Baudrate'])
 
         printer_controller = PrinterController(
-                cold_config=PrinterConfig(port_name, baudrate),
-                hot_config=PrinterConfig(port_name2, baudrate))
+                cold_driver=Smoothie(port_name, baudrate),
+                hot_driver=Smoothie(port_name2, baudrate))
 
         # Use the main thread to execute printer server
         self.printer_server = PrinterServer(
-                config=config,
+                publisher=NanomsgPublisher(
+                    config['PrinterServer']['Publish_Socket_Address']),
+                responser=NanomsgResponser(
+                    config['PrinterServer']['Command_Socket_Address']),
                 output_temp_reader=OutputTemperatureReader(
                     config['OutputServer']['Publish_Socket_Address']),
                 heater_temp_reader=HeaterTemperatureReader(

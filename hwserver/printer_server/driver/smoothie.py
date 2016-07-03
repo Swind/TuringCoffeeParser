@@ -2,23 +2,13 @@ import time
 import logging
 import serial
 
+from printer_driver import PrinterDriver
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class VirtualPrinter(object):
-
-    def __init__(self):
-        pass
-
-    def readline(self):
-        return 'ok'
-
-    def write(self, msg):
-        print msg
-
-
-class Smoothie(object):
+class Smoothie(PrinterDriver):
 
     def __init__(self, port=None, baudrate=None):
         self._port = port
@@ -31,22 +21,15 @@ class Smoothie(object):
 
     def open(self):
         try:
-            if self._port == 'VIRTUAL':
-                self._serial = VirtualPrinter()
-            else:
-                logger.info('Open serial \'{}\' with baudrate \'{}\''.format(self._port, self._baudrate))
-                self._serial = serial.Serial(
-                    str(self._port), self._baudrate, timeout=5, writeTimeout=10000)
+            logger.info('Open serial \'{}\' with baudrate \'{}\''.format(self._port, self._baudrate))
+            self._serial = serial.Serial(str(self._port), self._baudrate, timeout=5, writeTimeout=10000)
             return True
         except serial.SerialException:
             logger.exception('Unexpected error while connecting to serial')
             return False
 
     def close(self):
-        if self._port == 'VIRTUAL':
-            self._serial = None
-        else:
-            self._serial.close()
+        self._serial.close()
 
     def readline(self):
         if self._serial is None:
