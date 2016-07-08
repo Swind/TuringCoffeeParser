@@ -44,14 +44,10 @@ class PrinterController(object):
             logger.error('Cannot open printer for cold water')
             return False
 
-        # Home
-        self.send_gcodes('G28', 'G28')
-        # Set Units to Millimeters
-        self.send_gcodes('G21', 'G21')
-        # Set to Absolute Positioning
-        self.send_gcodes('G90', 'G90')
-        # Set extruder to relative mode
-        self.send_gcodes('M83', 'M83')
+        # HOME, Set Unit to Millimeters,
+        # Set to Absolute Positioning, Set extruder to relative mode
+        for cmd in ['G28', 'G21', 'G90', 'M83']:
+            self.send_gcodes(cmd, cmd)
 
         return True
 

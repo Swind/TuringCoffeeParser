@@ -83,7 +83,6 @@ class RealTimeTemperatureMixer(object):
     def mix(self, points):
         groups = self._group(points)
         for group in groups:
-            print group
             tmp = self._mix(group)
             yield tmp
 
@@ -159,11 +158,8 @@ class PrinterServer(object):
         while self._stop_flag is not True:
             try:
                 params = self._q.get(False, 1)
-                logger.info(params)
                 points = [Point(p) for p in params]
-                logger.info(params)
                 point_groups = self._split_points_by_wait(points)
-                logger.info(point_groups)
                 for g in point_groups:
                     if type(g) is list:
                         point_pairs = self._mixer.mix(g)
