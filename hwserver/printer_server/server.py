@@ -99,7 +99,6 @@ class PointStepRunner(object):
             cold_gcode = pair[1].to_gcode()
             self._ctrler.send_gcodes(hot_gcode, cold_gcode)
             yield False
-        yield True
 
 
 class PrinterServer(object):
