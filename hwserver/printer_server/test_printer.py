@@ -1,3 +1,5 @@
+import pytest
+
 from driver.printer_driver import PrinterDriver
 from printer import PrinterController
 
@@ -26,40 +28,70 @@ class MockDriver(PrinterDriver):
         return self._cmds
 
 
-def test_printer_normal_operations():
-
+@pytest.fixture
+def ctrler():
     c = MockDriver()
     h = MockDriver()
     ctrler = PrinterController(hot_driver=h, cold_driver=c)
-    assert ctrler.connect() is True
+    return {'c': c, 'h': h, 'ctrler': ctrler}
+
+
+def test_printer_connect(ctrler):
+    assert ctrler['ctrler'].connect() is True
 
     # After connecting, driver should recieve G28, G21, G90, and M83
     init_cmds = ['G28', 'G21', 'G90', 'M83']
-    assert c.get_cmds() == init_cmds
-    assert h.get_cmds() == init_cmds
+    assert ctrler['c'].get_cmds() == init_cmds
+    assert ctrler['h'].get_cmds() == init_cmds
 
-    c.flush()
-    h.flush()
+    ctrler['ctrler'].disconnect()
 
-    verified_gcode = 'G1 X0'
-    ctrler.send_gcodes(hot_command=verified_gcode)
-    assert h.get_cmds()[0] == verified_gcode
-    assert len(c.get_cmds()) == 0
 
-    c.flush()
-    h.flush()
+def test_printer_with_cold(ctrler):
+
+    ctrler['c'].flush()
+    ctrler['h'].flush()
 
     verified_gcode = 'G1 X0'
-    ctrler.send_gcodes(cold_command=verified_gcode)
-    assert c.get_cmds()[0] == verified_gcode
-    assert len(h.get_cmds()) == 0
+    ctrler['ctrler'].send_gcodes(cold_command=verified_gcode)
 
-    c.flush()
-    h.flush()
+    assert len(ctrler['c'].get_cmds()) == 1
+    assert ctrler['c'].get_cmds()[0] == verified_gcode
+
+    assert len(ctrler['h'].get_cmds()) == 0
+
+    ctrler['ctrler'].disconnect()
+
+
+def test_printer_with_hot(ctrler):
+
+    ctrler['c'].flush()
+    ctrler['h'].flush()
 
     verified_gcode = 'G1 X0'
-    ctrler.send_gcodes(hot_command=verified_gcode, cold_command=verified_gcode)
-    assert c.get_cmds()[0] == verified_gcode
-    assert h.get_cmds()[0] == verified_gcode
+    ctrler['ctrler'].send_gcodes(hot_command=verified_gcode)
 
-    ctrler.disconnect()
+    assert len(ctrler['c'].get_cmds()) == 0
+
+    assert len(ctrler['h'].get_cmds()) == 1
+    assert ctrler['h'].get_cmds()[0] == verified_gcode
+
+    ctrler['ctrler'].disconnect()
+
+
+def test_printer_with_both(ctrler):
+
+    ctrler['c'].flush()
+    ctrler['h'].flush()
+
+    verified_gcode = 'G1 X0'
+    ctrler['ctrler'].send_gcodes(
+            cold_command=verified_gcode, hot_command=verified_gcode)
+
+    assert len(ctrler['c'].get_cmds()) == 1
+    assert ctrler['c'].get_cmds()[0] == verified_gcode
+
+    assert len(ctrler['h'].get_cmds()) == 1
+    assert ctrler['h'].get_cmds()[0] == verified_gcode
+
+    ctrler['ctrler'].disconnect()
