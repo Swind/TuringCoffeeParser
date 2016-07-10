@@ -1,6 +1,7 @@
 // MiddleWares
 const zAixs = require('./middleware/z-aixs');
 const Temperature = require('./middleware/temperature');
+const water = require('./middleware/water');
 
 class Point {
   constructor(x = null, y = null, f = null) {
@@ -58,7 +59,7 @@ class WaitCommand extends Command {
 
 class Process {
   constructor(params) {
-    this.middleWares = [zAixs, Temperature];
+    this.middleWares = [zAixs, water];
     this.params = params;
   }
 
