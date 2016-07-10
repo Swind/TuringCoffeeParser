@@ -30,7 +30,7 @@ class Wait extends Base.Process {
 
   get points() {
     return [
-      WaitCommand(this.params.total_time)
+      new WaitCommand(this.params.total_time)
     ];
   }
 }

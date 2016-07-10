@@ -101,4 +101,5 @@ class Process {
 module.exports = {
   Point,
   Process,
+  WaitCommand,
 };
