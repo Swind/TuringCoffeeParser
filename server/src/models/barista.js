@@ -20,8 +20,7 @@ class Barista {
       let all_points = []
       cookbook.processes.forEach(function (process){
         process_obj = Process.createProcess(process);
-        console.log(process_obj);
-        all_points = all_points.concat(process_obj.generatePoints())
+        all_points = all_points.concat(process_obj.points)
       });
 
       this.printer.send_points(all_points);
