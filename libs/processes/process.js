@@ -9,7 +9,7 @@ var _processes = {
   "circle": Circle,
   "fixed_point": FixedPoint,
   "spiral": Spiral,
-  "spiral_total_water": SpiralTotalWater,
+  "spiral total water": SpiralTotalWater,
   "wait": Wait,
   "home": Home,
 }

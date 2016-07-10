@@ -84,13 +84,13 @@ class Process {
   }
 
   get points(){
-    let points = this._points();
+    let points = this._points;
 
     for (const middleWare of this.middleWares) {
-      points = middleWare(points, params);
+      points = middleWare(points, this.params);
     }
 
-    return points 
+    return points
   }
 
   radians(degress) {
