@@ -48,8 +48,6 @@ module.exports =
   ],
   resolve: {
     root: [
-      path.resolve('./src'),
-      path.resolve('../libs'),
     ],
     extensions: ['', '.js']
   },
