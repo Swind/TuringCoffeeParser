@@ -156,25 +156,31 @@ class PrinterServer(object):
             return
 
         while self._stop_flag is not True:
+
+            params = None
+
             try:
                 params = self._q.get(False, 1)
-                points = [Point(p) for p in params]
-                point_groups = self._split_points_by_wait(points)
-                for g in point_groups:
-                    if type(g) is list:
-                        point_pairs = self._mixer.mix(g)
-                        for points in point_pairs:
-                            stepper = self._runner.step(points)
-                            while self._stop_flag is not True:
-                                try:
-                                    stepper.next()
-                                except StopIteration:
-                                    break
-                    else:
-                        if self._wait(g.total_time) is not True:
-                            break
             except Empty:
+                time.sleep(1)
                 continue
+
+            points = [Point(p) for p in params]
+            point_groups = self._split_points_by_wait(points)
+
+            for g in point_groups:
+                if type(g) is list:
+                    point_pairs = self._mixer.mix(g)
+                    for points in point_pairs:
+                        stepper = self._runner.step(points)
+                        while self._stop_flag is not True:
+                            try:
+                                stepper.next()
+                            except StopIteration:
+                                break
+                else:
+                    if self._wait(g.total_time) is not True:
+                        break
 
         self._ctrler.disconnect()
         self._stop_flag = False
