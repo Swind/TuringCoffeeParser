@@ -1,9 +1,9 @@
 const Refill = require('./refill');
 const Printer = require('./printer');
-const Process = require('processes/process')
-const Home = require('processes/home')
-const Wait = require('processes/wait')
-const Point = require('processes/base').Point
+const Process = require('../libs/processes/process')
+const Home = require('../libs/processes/home')
+const Wait = require('../libs/processes/wait')
+const Point = require('../libs/processes/base').Point
 
 class Barista {
   constructor(printer, cookbookMgr) {
@@ -20,7 +20,8 @@ class Barista {
       let all_points = []
       cookbook.processes.forEach(function (process){
         process_obj = Process.createProcess(process);
-        all_points = all_points.concat(process_obj.points())
+        console.log(process_obj);
+        all_points = all_points.concat(process_obj.generatePoints())
       });
 
       this.printer.send_points(all_points);

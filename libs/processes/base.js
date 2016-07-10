@@ -1,3 +1,7 @@
+// MiddleWares
+const zAixs = require('./middleware/z-aixs');
+const Temperature = require('./middleware/temperature');
+
 class Point {
   constructor(x = null, y = null, f = null) {
     /*
@@ -54,8 +58,12 @@ class WaitCommand extends Command {
 
 class Process {
   constructor(params) {
+    this.middleWares = [zAixs, Temperature];
     this.params = params;
-    this._points = [];
+  }
+
+  registerMiddleWare(middleWare) {
+    this.middleWares.push(middleWare);
   }
 
   get time() {
@@ -70,12 +78,18 @@ class Process {
     return undefined;
   }
 
-  get points() {
-    return this._points
+  get _points(){
+    return []
   }
 
-  set points(points) {
-    this._points = points
+  get points(){
+    let points = this._points();
+
+    for (const middleWare of this.middleWares) {
+      points = middleWare(points, params);
+    }
+
+    return points 
   }
 
   radians(degress) {

@@ -1,5 +1,5 @@
 const Nanomsg = require('nanomsg');
-const logger = require('utils/logger');
+const logger = require('./libs/utils/logger');
 
 class Monitor {
   constructor() {

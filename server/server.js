@@ -44,7 +44,7 @@ apiServer.register('hapi-swagger', require('hapi-swagger'));
 ###############################################################*/
 
 // Cookbooks
-const cookbookMgr = new CookbooksMgr();
+const cookbookMgr = new CookbooksMgr("cookbooks.db");
 const cookbookAPI = new CookbooksAPI(cookbookMgr);
 
 // Printer

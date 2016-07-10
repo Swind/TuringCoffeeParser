@@ -69,7 +69,7 @@ module.exports = {
     contentBase: './client',
     hot: true,
     proxy: {
-      "/api/*": "http://localhost:3002/"
+      "/api/*": "http://localhost:3000/"
     }
   }
 }
