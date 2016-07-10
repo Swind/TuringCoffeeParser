@@ -11,11 +11,11 @@ class SpiralTotalWater extends Base.Process {
         end: 20, // mm
       },
       high: {
-        start: 170, // mm
-        end: 170,
+        start: 300, // mm
+        end: 300,
       },
       cylinder: 5,
-      point_interval: 0.1, // mm
+      point_interval: 2.0, // mm
       total_water: 60, // ml
       total_time: 30, // sec
       temperature: 60, // C

@@ -11,11 +11,11 @@ class Circle extends Base.Process {
         start: 20, // mm
       },
       high: {
-        start: 170, // mm
-        end: 170,
+        start: 300, // mm
+        end: 300,
       },
       total_water: 0, // mm
-      point_interval: 0.1, // mm
+      point_interval: 2.0, // mm
       feedrate: 80, // mm
       extrudate: 0.2, // ml/mm
       temperature: 60 // C
