@@ -75,7 +75,7 @@ class CookbookList extends Component {
 
   render() {
     const {actions} = this.props
-    const {cookbooks} = this.props.cookbooks
+    const {cookbooks, message} = this.props.cookbooks
 
     const onCreateCookbook = (content) => {
       actions.create(content)
@@ -91,26 +91,37 @@ class CookbookList extends Component {
       actions.brew(id)
     }
 
-    return (
-      <div>
-        {
-          cookbooks.map(
-            (cookbook, i) => {
-              return (
-                <CookbookCard
-                  key={cookbook._id}
-                  title={cookbook.name}
-                  subtitle=''
-                  href={`/editor/${cookbook._id}`}
-                  onBrew={() => onBrew(cookbook._id)}
-                  onDelete={() => onDeleteCookbook(cookbook._id)}
-                />)}
-          )
-        }
-        <CookbookDialog style={{'paddingTop': '20px'}} onCreateCookbook={onCreateCookbook}/>
-      </div>
-    );
+    let display
+    if (Array.isArray(cookbooks)) {
+      display = 
+        <div>
+          {
+            cookbooks.map(
+              (cookbook, i) => {
+                return (
+                  <CookbookCard
+                    key={cookbook._id}
+                    title={cookbook.name}
+                    subtitle=''
+                    href={`/editor/${cookbook._id}`}
+                    onBrew={() => onBrew(cookbook._id)}
+                    onDelete={() => onDeleteCookbook(cookbook._id)}
+                  />)}
+            )
+          }
+          <CookbookDialog style={{'paddingTop': '20px'}} onCreateCookbook={onCreateCookbook}/>
+        </div>
+    } else {
+      display = <div>{message}</div>
+    }
+
+    return display
   }
+}
+
+CookbookList.propTypes = {
+  actions: React.PropTypes.object,
+  cookbooks: React.PropTypes.object
 }
 
 function mapStateToProps(state) {
