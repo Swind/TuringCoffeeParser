@@ -14,6 +14,7 @@ class Circle extends Base.Process {
         start: 300, // mm
         end: 300,
       },
+      cylinder: 5,
       total_water: 0, // mm
       point_interval: 2.0, // mm
       feedrate: 80, // mm
