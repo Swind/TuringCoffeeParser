@@ -149,7 +149,7 @@ class CookbookProcessParameter extends Component {
 
     if (this.state.params.total_water !== undefined) {
       let {total_water} = this.props.params
-      let title = (v) => `Total water: ${v} mm`
+      let title = (v) => `Total water: ${v} ml`
       let onTotalWaterChange = (v) => {
         let cloneParams = Object.assign({}, this.props.params)
         cloneParams.total_water = v
