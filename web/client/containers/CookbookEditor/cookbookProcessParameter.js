@@ -175,7 +175,7 @@ class CookbookProcessParameter extends Component {
       let suffix = 'seconds'
       let onTotalTimeChange = (v) => {
         let cloneParams = Object.assign({}, this.props.params)
-        cloneParams.total_time= v
+        cloneParams.total_time = parseInt(v)
         onModify(cloneParams)
       }
       totalTimeParameter = <TextParameter prefix={prefix} suffix={suffix} value={total_time} onChange={onTotalTimeChange}/>
@@ -187,7 +187,7 @@ class CookbookProcessParameter extends Component {
       let suffix = ''
       let onCylinderChange = (v) => {
         let cloneParams = Object.assign({}, this.props.params)
-        cloneParams.total_time= v
+        cloneParams.total_time= parseInt(v)
         onModify(cloneParams)
       }
       cylinderParameter = <TextParameter prefix={prefix} suffix={suffix} value={cylinder} onChange={onCylinderChange}/>
