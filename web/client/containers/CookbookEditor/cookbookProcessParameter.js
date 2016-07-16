@@ -86,7 +86,7 @@ class TextParameter extends Component {
     return (
         <li>
           <span>{prefix}</span>
-          <TextField type={type} value={value} inputStyle={{'textAlign': 'center'}} onChange={this.onValueChange.bind(this)}/>
+          <TextField id={'textfield'} type={type} value={value} inputStyle={{'textAlign': 'center'}} onChange={this.onValueChange.bind(this)}/>
           <span>{suffix}</span>
         </li>
     )
