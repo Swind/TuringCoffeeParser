@@ -8,6 +8,8 @@ import ListItem from 'material-ui/List/ListItem'
 import TimerIcon from 'material-ui/svg-icons/image/timer'
 import LocalDrinkIcon from 'material-ui/svg-icons/maps/local-drink'
 
+import { PROCESS } from '../../constants/processes.js'
+
 class CookbookHeader extends Component {
 
   onNameChange (_, v) {
@@ -26,6 +28,17 @@ class CookbookHeader extends Component {
 
   render () {
     const {cookbook} = this.props
+
+    const totalTime = cookbook.processes.reduce((prev, x) => {
+      const handle = new PROCESS[x.name].handle(x)
+      return prev + handle.time
+    }, 0)
+
+    const totalWater = cookbook.processes.reduce((prev, x) => {
+      const handle = new PROCESS[x.name].handle(x)
+      return prev + handle.water
+    }, 0)
+
     return (
       <div>
         <TextField
@@ -53,7 +66,7 @@ class CookbookHeader extends Component {
               <Avatar icon={<TimerIcon/>}/>
             }
           >
-            {0}
+            {`${totalTime} seconds`}
           </ListItem>
           <ListItem
             disabled={true}
@@ -61,7 +74,7 @@ class CookbookHeader extends Component {
               <Avatar icon={<LocalDrinkIcon/>}/>
             }
           >
-            {0}
+            {`${totalWater} ml`}
           </ListItem>
         </List>
       </div>
