@@ -106,7 +106,7 @@ class CookbookProcessParameter extends Component {
 
   render() {
     const {onModify} = this.props
-    let totalWaterParameter, totalTimeParameter, radiusParameter, temperatureParameter, highParameter
+    let totalWaterParameter, totalTimeParameter, radiusParameter, temperatureParameter, highParameter, cylinderParameter
 
     const onChange = () => {
       onModify(this.state.params)
@@ -181,11 +181,24 @@ class CookbookProcessParameter extends Component {
       totalTimeParameter = <TextParameter prefix={prefix} suffix={suffix} value={total_time} onChange={onTotalTimeChange}/>
     }
 
+    if (this.state.params.cylinder !== undefined) {
+      let {cylinder} = this.props.params
+      let prefix = 'Cylinder: '
+      let suffix = ''
+      let onCylinderChange = (v) => {
+        let cloneParams = Object.assign({}, this.props.params)
+        cloneParams.total_time= v
+        onModify(cloneParams)
+      }
+      cylinderParameter = <TextParameter prefix={prefix} suffix={suffix} value={cylinder} onChange={onCylinderChange}/>
+    }
+
 
     return (
       <div>
         <ul>
           {radiusParameter}
+          {cylinderParameter}
           {highParameter}
           {totalWaterParameter}
           {temperatureParameter}
