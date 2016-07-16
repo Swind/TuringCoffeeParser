@@ -106,7 +106,9 @@ class CookbookProcessParameter extends Component {
 
   render() {
     const {onModify} = this.props
-    let totalWaterParameter, totalTimeParameter, radiusParameter, temperatureParameter, highParameter, cylinderParameter
+    let totalWaterParameter, totalTimeParameter, radiusParameter,
+      temperatureParameter, highParameter, cylinderParameter,
+      feedrateParameter
 
     const onChange = () => {
       onModify(this.state.params)
@@ -193,6 +195,16 @@ class CookbookProcessParameter extends Component {
       cylinderParameter = <TextParameter prefix={prefix} suffix={suffix} value={cylinder} onChange={onCylinderChange}/>
     }
 
+    if (this.state.params.feedrate !== undefined) {
+      let {feedrate} = this.props.params
+      let title = (v) => `Feedrate: ${v} mm`
+      let onFeedrateChange = (v) => {
+        let cloneParams = Object.assign({}, this.props.params)
+        cloneParams.feedrate = parseInt(v)
+        onModify(cloneParams)
+      }
+      feedrateParameter = <SlideParameter title={title} value={feedrate} min={0} max={2000} step={20} onChange={onFeedrateChange}/>
+    }
 
     return (
       <div>
@@ -203,6 +215,7 @@ class CookbookProcessParameter extends Component {
           {totalWaterParameter}
           {temperatureParameter}
           {totalTimeParameter}
+          {feedrateParameter}
         </ul>
       </div>
     )
