@@ -125,15 +125,26 @@ class CookbookProcessParameter extends Component {
     }
 
     if (this.state.params.radius !== undefined) {
-      let {radius} = this.props.params
-      let title = (start, end) => `Radius: from ${start} to ${end} mm`
-      let onradiusChange = (start, end) => {
-        let cloneParams = Object.assign({}, this.props.params)
-        cloneParams.radius.start = start
-        cloneParams.radius.end = end
-        onModify(cloneParams)
+      if (this.state.params.radius.end !== undefined) {
+        let {radius} = this.props.params
+        let title = (start, end) => `Radius: from ${start} to ${end} mm`
+        let onRadiusChange = (start, end) => {
+          let cloneParams = Object.assign({}, this.props.params)
+          cloneParams.radius.start = start
+          cloneParams.radius.end = end
+          onModify(cloneParams)
+        }
+        radiusParameter = <RangeParameter title={title} start={radius.start} end={radius.end} min={0} max={50} step={1} onChange={onRadiusChange}/>
+      } else {
+        let {radius} = this.props.params
+        let title = (v) => `Radius: ${v} mm`
+        let onRadiusChange = (v) => {
+          let cloneParams = Object.assign({}, this.props.params)
+          cloneParams.radius.start = v
+          onModify(cloneParams)
+        }
+        radiusParameter = <SlideParameter title={title} value={radius.start} min={0} max={50} step={1} onChange={onRadiusChange}/>
       }
-      radiusParameter = <RangeParameter title={title} start={radius.start} end={radius.end} min={0} max={300} step={5} onChange={onradiusChange}/>
     }
 
     if (this.state.params.total_water !== undefined) {
