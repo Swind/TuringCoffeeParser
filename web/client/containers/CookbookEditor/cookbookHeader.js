@@ -29,7 +29,7 @@ class CookbookHeader extends Component {
     return (
       <div>
         <TextField
-          id={`${cookbook.id}_title`}
+          id={`${cookbook._id}_title`}
           style={{'width': '100%'}}
           required={true}
           floatingLabel={true}
@@ -38,7 +38,7 @@ class CookbookHeader extends Component {
           onChange={this.onNameChange.bind(this)}
         />
         <TextField
-          id={`${cookbook.id}_description`}
+          id={`${cookbook._id}_description`}
           style={{'width': '100%'}}
           required={true}
           floatingLabel={true}
