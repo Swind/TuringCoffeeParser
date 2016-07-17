@@ -29,7 +29,7 @@ class Point {
 class Command {
   constructor(command) {
     this.type = 'command'
-    this.command = command
+    this.name = command
   }
 
   get json() {
