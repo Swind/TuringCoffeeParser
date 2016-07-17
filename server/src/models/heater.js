@@ -4,6 +4,9 @@ const NAME = 'printer';
 const PUB_ADDRESS = `ipc:///tmp/${NAME}_pub_channel`;
 const CMD_ADDRESS = `ipc:///tmp/${NAME}_cmd_channel`;
 
+const OUTPUT_NAME = 'output'
+const OUTPUT_PUB_ADDRESS = `ipc:///tmp/${OUTPUT_NAME}_pub_channel`
+
 class Heater {
   // The default value if for the PID
   constructor(k = 70, i = 165, d = 16, cycleTime = 1) {
@@ -13,7 +16,7 @@ class Heater {
         cycle_time: 5,
         duty_cycle: 70,
         set_point: 80,
-        temperature: 26.53
+        temperature: 26.53,
       }
     */
     this.k = k;
@@ -21,12 +24,34 @@ class Heater {
     this.d = d;
     this.cycleTime = cycleTime;
 
-    this.monitor.subscribe(PUB_ADDRESS, NAME, this.update_status);
+    this.monitor.subscribe(PUB_ADDRESS, NAME, null);
     this.cmd = new Channel.CmdChannel(CMD_ADDRESS);
+
+    /* The message example from the output server
+     * {
+     *  temperature: 60
+     * }
+     */
+    this.monitor.subscribe(OUTPUT_PUB_ADDRESS, OUTPUT_NAME, null)
   }
 
   get status() {
-    return this.monitor.getData(NAME);
+    /* The status example
+      {
+        cycle_time: 5,
+        duty_cycle: 70,
+        set_point: 80,
+        temperature: 26.53,
+        output_temperature: 60 
+      }
+    */
+    heater_status = this.monitor.getData(NAME);
+    output_status = this.monitor.getData(OUTPUT_NAME);
+
+    return {
+      ...heater_status,
+      ...output_status
+    }
   }
 
   get lastUpdatedTime() {
