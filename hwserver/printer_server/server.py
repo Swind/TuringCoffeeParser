@@ -141,7 +141,7 @@ class PrinterServer(object):
         return point_groups
 
     def _wait(self, sec):
-        while self._stop_flag is not True:
+        while (self._stop_flag is not True) and (sec != 0):
             time.sleep(1)
             sec = sec - 1
 
@@ -179,7 +179,8 @@ class PrinterServer(object):
                             except StopIteration:
                                 break
                 else:
-                    if self._wait(g.total_time) is not True:
+                    logger.info('Wait {} seconds'.format(g.time))
+                    if self._wait(g.time) is not True:
                         break
 
         self._ctrler.disconnect()
