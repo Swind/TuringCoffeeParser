@@ -17,7 +17,7 @@ class Wait extends Base.Process {
   }
 
   get time() {
-    return this.params.time;
+    return this.params.total_time;
   }
 
   get water() {
