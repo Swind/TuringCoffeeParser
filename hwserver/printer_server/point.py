@@ -131,3 +131,9 @@ class Point(object):
         if 'type' not in self._params:
             return None
         return self._params['type']
+
+    @property
+    def time(self):
+        if self.name != 'wait':
+            return 0
+        return self._params['time']

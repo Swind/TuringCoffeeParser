@@ -62,3 +62,9 @@ def test_point_to_gcode_with_missing_field():
     assert p.is_point() is True
     g = p.to_gcode()
     assert g == 'G1 X0 Y0 Z0 F0'
+
+
+def test_point_time_function():
+    p = Point({'type': 'command', 'name': 'wait', 'time': 10})
+    assert p.is_command() is True
+    assert p.time == 10
