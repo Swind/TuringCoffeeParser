@@ -49,8 +49,11 @@ class Heater {
     output_status = this.monitor.getData(OUTPUT_NAME);
 
     return {
-      ...heater_status,
-      ...output_status
+      cycle_time: heater_status.cycle_time,
+      duty_cycle: heater_status.duty_cycle,
+      set_point: heater_status.set_point,
+      temperature: heater_status.temperature,
+      output_temperature: output_status.temperature
     }
   }
 
