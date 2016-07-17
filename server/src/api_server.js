@@ -1,5 +1,4 @@
 const Hapi = require('hapi');
-
 const logger = require('./libs/utils/logger');
 
 class APIServer {
@@ -9,6 +8,7 @@ class APIServer {
 
     // HTTP Server
     this.server = new Hapi.Server();
+
     this.server.connection({
       address: this.address,
       port: this.port,
@@ -46,6 +46,20 @@ class APIServer {
       path,
       handler,
       config,
+    });
+  }
+
+  enable_static_file_server(folder_path){
+    this.server.route({
+        method: 'GET',
+        path: '/{param*}',
+        handler: {
+            directory: {
+                path: folder_path,
+                redirectToSlash: true,
+                index: true
+            }
+        }
     });
   }
 

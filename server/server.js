@@ -69,4 +69,6 @@ apiServer.route(heaterAPI.apiSpecs());
 apiServer.route(refillAPI.apiSpecs());
 apiServer.route(baristaAPI.apiSpecs());
 
+apiServer.enable_static_file_server("./public")
+
 apiServer.start();

@@ -47,9 +47,7 @@ module.exports =
     }
   ],
   resolve: {
-    root: [
-    ],
-    extensions: ['', '.js']
+    extensions: ['', '.js', '.jsx']
   },
   externals: nodeModules,
   devtool: 'sourcemap'
