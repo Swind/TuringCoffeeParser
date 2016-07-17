@@ -9,6 +9,7 @@ import * as HeaterAction from '../../actions/heater'
 const tankTemperatureColor = 'rgba(33, 150, 243, 0.5)'
 const dutyCycleColor = 'rgba(244, 67, 54, 0.5)'
 const setPointColor = 'rgba(255, 152, 0, 0.5)'
+const outputTemperatureColor = 'rgba(156, 39, 176, 0.5)'
 
 class Monitor extends Component {
 
@@ -18,6 +19,7 @@ class Monitor extends Component {
     this.state.tankTemperatures = []
     this.state.dutyCycles = []
     this.state.setPoints = []
+    this.state.outputTemperature = []
     this.state.labels = []
   }
 
@@ -39,6 +41,7 @@ class Monitor extends Component {
     state.tankTemperatures.push(monitor.tankTemperature)
     state.dutyCycles.push(monitor.dutyCycle)
     state.setPoints.push(monitor.setPoint)
+    state.outputTemperature.push(monitor.outputTemperature)
     state.labels.push('')
 
     if (state.tankTemperatures.length > 600) {
@@ -46,6 +49,7 @@ class Monitor extends Component {
       state.dutyCycles.shift()
       state.setPoints.shift()
       state.labels.shift()
+      state.outputTemperature.shift()
     }
 
     this.setState(state)
@@ -79,6 +83,13 @@ class Monitor extends Component {
         backgroundColor: dutyCycleColor,
         borderColor: dutyCycleColor,
         data: this.state.dutyCycles
+      },
+      {
+        label: 'Output Temp.',
+        fill: false,
+        backgroundColor: outputTemperatureColor,
+        borderColor: outputTemperatureColor,
+        data: this.state.outputTemperature
       }
     ]
 
@@ -93,6 +104,9 @@ class Monitor extends Component {
         </InfoCard>
         <InfoCard title="Duty cycle" color={dutyCycleColor}>
           {monitor.dutyCycle.toFixed(3) + '%'}
+        </InfoCard>
+        <InfoCard title="Output temp." color={outputTemperatureColor}>
+          {monitor.outputTemperature.toFixed(3) + '℃'}
         </InfoCard>
       </div>
     )

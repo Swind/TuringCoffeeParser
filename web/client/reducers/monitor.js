@@ -14,7 +14,8 @@ export default handleActions({
       return {
         tankTemperature: response.body.data.temperature,
         setPoint: response.body.data.set_point,
-        dutyCycle: response.body.data.duty_cycle
+        dutyCycle: response.body.data.duty_cycle,
+        outputTemperature: response.body.data.output_temperature
       }
     } else {
       return state

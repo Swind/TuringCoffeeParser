@@ -111,6 +111,7 @@ server.route(
           setPoint: 50,
           dutyCycle: 90,
           temperature: (Math.random() * 100)
+          output_temperature: (Math.random() * 100)
         }
       })
     }
