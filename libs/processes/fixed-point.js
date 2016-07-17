@@ -54,6 +54,12 @@ class FixedPoint extends Base.Process {
 
     return points;
   }
+
+  post_action(points){
+    points[0].e = 0;
+
+    return points;
+  }
 }
 
 module.exports = FixedPoint;

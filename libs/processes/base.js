@@ -17,6 +17,7 @@ class Point {
     this.x = x;
     this.y = y;
     this.f = f;
+    this.e = 0;
     this.z = null;
     this.t = null;
   }
@@ -90,11 +91,17 @@ class Process {
       points = middleWare(points, this.params);
     }
 
+    points = this.post_action(points);
+
     return points
   }
 
   radians(degress) {
     return degress * Math.PI / 180;
+  }
+
+  post_action(points){
+    return points
   }
 }
 
