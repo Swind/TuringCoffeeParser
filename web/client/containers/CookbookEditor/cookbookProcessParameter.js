@@ -236,8 +236,8 @@ class CookbookProcessParameter extends Component {
         cloneParams.coordinates.y = (r === NaN)? 0: r;
         onModify(cloneParams)
       }
-      xParameter = <SlideParameter title={xtitle} value={coordinates.x} min={-50} max={50} step={1} onChange={onXChange}/>
-      yParameter = <SlideParameter title={ytitle} value={coordinates.y} min={-50} max={50} step={1} onChange={onYChange}/>
+      xParameter = <SlideParameter title={xtitle} value={coordinates.x} min={-100} max={100} step={1} onChange={onXChange}/>
+      yParameter = <SlideParameter title={ytitle} value={coordinates.y} min={-100} max={100} step={1} onChange={onYChange}/>
     }
 
     return (
