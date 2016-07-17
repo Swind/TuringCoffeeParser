@@ -108,22 +108,33 @@ class CookbookProcessParameter extends Component {
     const {onModify} = this.props
     let totalWaterParameter, totalTimeParameter, radiusParameter,
       temperatureParameter, highParameter, cylinderParameter,
-      feedrateParameter
+      feedrateParameter, xParameter, yParameter
 
     const onChange = () => {
       onModify(this.state.params)
     }
 
     if (this.props.params.high !== undefined) {
-      let {high} = this.props.params
-      let title = (start, end) => `High: from ${start} to ${end} mm`
-      let onHighChange = (start, end) => {
-        let cloneParams = Object.assign({}, this.props.params)
-        cloneParams.high.start = start
-        cloneParams.high.end = end
-        onModify(cloneParams)
+      if (this.props.params.high.end !== undefined) {
+        let {high} = this.props.params
+        let title = (start, end) => `High: from ${start} to ${end} mm`
+        let onHighChange = (start, end) => {
+          let cloneParams = Object.assign({}, this.props.params)
+          cloneParams.high.start = start
+          cloneParams.high.end = end
+          onModify(cloneParams)
+        }
+        highParameter = <RangeParameter title={title} start={high.start} end={high.end} min={0} max={300} step={5} onChange={onHighChange}/>
+      } else {
+        let {high} = this.props.params
+        let title = (start, end) => `High: ${start} mm`
+        let onHighChange = (v) => {
+          let cloneParams = Object.assign({}, this.props.params)
+          cloneParams.high.start = v
+          onModify(cloneParams)
+        }
+        highParameter = <SlideParameter title={title} value={high.start} min={0} max={300} step={5} onChange={onHighChange}/>
       }
-      highParameter = <RangeParameter title={title} start={high.start} end={high.end} min={0} max={300} step={5} onChange={onHighChange}/>
     }
 
     if (this.state.params.radius !== undefined) {
@@ -177,10 +188,11 @@ class CookbookProcessParameter extends Component {
       let suffix = 'seconds'
       let onTotalTimeChange = (v) => {
         let cloneParams = Object.assign({}, this.props.params)
-        cloneParams.total_time = parseInt(v)
+        const r = parseInt(v)
+        cloneParams.total_time = (r === NaN)? 0: r;
         onModify(cloneParams)
       }
-      totalTimeParameter = <TextParameter prefix={prefix} suffix={suffix} value={total_time} onChange={onTotalTimeChange}/>
+      totalTimeParameter = <TextParameter type={'number'} prefix={prefix} suffix={suffix} value={total_time} onChange={onTotalTimeChange}/>
     }
 
     if (this.state.params.cylinder !== undefined) {
@@ -189,10 +201,11 @@ class CookbookProcessParameter extends Component {
       let suffix = ''
       let onCylinderChange = (v) => {
         let cloneParams = Object.assign({}, this.props.params)
-        cloneParams.total_time= parseInt(v)
+        const r = parseInt(v)
+        cloneParams.cylinder = (r === NaN)? 0: r;
         onModify(cloneParams)
       }
-      cylinderParameter = <TextParameter prefix={prefix} suffix={suffix} value={cylinder} onChange={onCylinderChange}/>
+      cylinderParameter = <TextParameter type={'number'} prefix={prefix} suffix={suffix} value={cylinder} onChange={onCylinderChange}/>
     }
 
     if (this.state.params.feedrate !== undefined) {
@@ -200,10 +213,31 @@ class CookbookProcessParameter extends Component {
       let title = (v) => `Feedrate: ${v} mm`
       let onFeedrateChange = (v) => {
         let cloneParams = Object.assign({}, this.props.params)
-        cloneParams.feedrate = parseInt(v)
+        const r = parseInt(v)
+        cloneParams.feedrate = (r === NaN)? 0: r;
         onModify(cloneParams)
       }
       feedrateParameter = <SlideParameter title={title} value={feedrate} min={0} max={2000} step={20} onChange={onFeedrateChange}/>
+    }
+
+    if (this.state.params.coordinates !== undefined) {
+      let {coordinates} = this.props.params
+      let xtitle = (v) => `X: ${v} mm`
+      let onXChange = (v) => {
+        let cloneParams = Object.assign({}, this.props.params)
+        const r = parseInt(v)
+        cloneParams.coordinates.x = (r === NaN)? 0: r;
+        onModify(cloneParams)
+      }
+      let ytitle = (v) => `Y: ${v} mm`
+      let onYChange = (v) => {
+        let cloneParams = Object.assign({}, this.props.params)
+        const r = parseInt(v)
+        cloneParams.coordinates.y = (r === NaN)? 0: r;
+        onModify(cloneParams)
+      }
+      xParameter = <SlideParameter title={xtitle} value={coordinates.x} min={-50} max={50} step={1} onChange={onXChange}/>
+      yParameter = <SlideParameter title={ytitle} value={coordinates.y} min={-50} max={50} step={1} onChange={onYChange}/>
     }
 
     return (
@@ -211,6 +245,8 @@ class CookbookProcessParameter extends Component {
         <ul>
           {radiusParameter}
           {cylinderParameter}
+          {xParameter}
+          {yParameter}
           {highParameter}
           {totalWaterParameter}
           {temperatureParameter}
