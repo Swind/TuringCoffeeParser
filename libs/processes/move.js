@@ -42,7 +42,8 @@ class Move extends Base.Process {
     const points = [];
 
     // Quick move to the start point.
-    points.push(new Point(x, y, QUICK_MOVE_F));
+    let move = new Point(x, y, QUICK_MOVE_F)
+    points.push(move)
 
     return points;
   }

@@ -52,6 +52,7 @@ class Spiral extends Base.Process {
     let totalTheta = 0;
     const points = [];
 
+    const e = this.water / this.length
     while (totalTheta <= maxTheta) {
       // point interval / (2 * pi * r) = theta for one step
       const nowRadius = a * totalTheta + this.params.radius.start;
@@ -62,8 +63,10 @@ class Spiral extends Base.Process {
       const x = nowRadius * Math.cos(totalTheta);
       const y = nowRadius * Math.sin(totalTheta);
 
+      let p = new Point(x, y, this.params.feedrate);
+      p.e = e;
       // Create the point object to save the information
-      points.push(new Point(x, y, this.params.feedrate));
+      points.push(p);
     }
     return points;
   }

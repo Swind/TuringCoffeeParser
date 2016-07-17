@@ -77,9 +77,11 @@ class SpiralTotalWater extends Base.Process {
     // f
     const totalLen = this.params.point_interval * (points.length - 1);
     const f = (totalLen * 60) / this.params.total_time;
+    const e = this.water / points.length
 
     for (const point of points) {
       point.f = f;
+      point.e = e;
     }
 
     return points;

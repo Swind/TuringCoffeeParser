@@ -50,7 +50,15 @@ class FixedPoint extends Base.Process {
     const points = [];
 
     // Quick move to the start point.
-    points.push(new Point(x, y, QUICK_MOVE_F));
+    let move = new Point(x, y, QUICK_MOVE_F)
+    points.push(move)
+
+    for (let i = 0; i < this.length; i++) {
+      let p = new Point(null, null, this.params.extrudate)
+      p.e = this.water / this.length
+      p.f = this.params.feedrate
+      points.push(p)
+    }
 
     return points;
   }

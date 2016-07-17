@@ -54,7 +54,7 @@ class Circle extends Base.Process {
       const f = this.params.feedrate;
 
       const point = new Point(x, y, f);
-
+      point.e = this.water / this.length;
       points.push(point);
     }
 
