@@ -102,4 +102,6 @@ module.exports = {
   Point,
   Process,
   WaitCommand,
+  HomeCommand,
+  MixCommand,
 };
