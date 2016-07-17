@@ -29,7 +29,7 @@ class Home extends Base.Process {
 
   get points() {
     return [
-      HomeCommand()
+      new HomeCommand()
     ];
   }
 }
