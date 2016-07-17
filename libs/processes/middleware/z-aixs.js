@@ -1,4 +1,9 @@
 function zAixs(points, params){
+
+  if (params.high === undefined) {
+    return points;
+  }
+
   const startH = params.high.start;
   const endH = params.high.end;
   const diffH = endH - startH;

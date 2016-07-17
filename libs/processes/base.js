@@ -59,7 +59,7 @@ class WaitCommand extends Command {
 
 class Process {
   constructor(params) {
-    this.middleWares = [zAixs, water];
+    this.middleWares = [zAixs, water, Temperature];
     this.params = params;
   }
 
