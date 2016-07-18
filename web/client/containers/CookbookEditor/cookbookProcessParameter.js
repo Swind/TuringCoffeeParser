@@ -3,39 +3,98 @@ import React, { Component } from 'react'
 import Slider from 'material-ui/Slider'
 import TextField from 'material-ui/TextField'
 
-class RangeParameter extends Component {
+class CoordinatesParameter extends Component {
 
-  onStartChange(_, v) {
-    this.setState({start: v, end: this.state.end})
+  onXChange(_, v) {
+    let value = this.state.value
+    value.x = v
+    this.setState({value})
   }
 
-  onEndChange(_, v) {
-    this.setState({start: this.state.start, end: v})
+  onYChange(_, v) {
+    let value = this.state.value
+    value.y = v
+    this.setState({value})
   }
 
   onDragStop() {
     const {onChange} = this.props
-    onChange(this.state.start, this.state.end)
+    onChange(this.state.value)
   }
 
   componentWillMount() {
-    const {start, end} = this.props
-    this.setState({start: start, end: end})
+    const {value} = this.props
+    this.setState({value})
   }
 
   componentWillReceiveProps(nextProps) {
-    const {start, end} = nextProps
-    this.setState({start: start, end: end})
+    const {value} = nextProps
+    this.setState({value})
   }
 
   render() {
     const {step, min, max, title} = this.props
-    const {start, end} = this.state
+    const {value} = this.state
     return (
       <li>
-        <span>{title(start, end)}</span>
-        <Slider step={step} min={min} max={max} value={start} onChange={this.onStartChange.bind(this)} onDragStop={this.onDragStop.bind(this)}/>
-        <Slider step={step} min={min} max={max} value={end} onChange={this.onEndChange.bind(this)} onDragStop={this.onDragStop.bind(this)}/>
+        <span>{title(value)}</span>
+        <Slider step={step} min={min} max={max} value={value.x} onChange={this.onXChange.bind(this)} onDragStop={this.onDragStop.bind(this)}/>
+        <Slider step={step} min={min} max={max} value={value.y} onChange={this.onYChange.bind(this)} onDragStop={this.onDragStop.bind(this)}/>
+      </li>
+    )
+  }
+}
+
+class RangeParameter extends Component {
+
+  onStartChange(_, v) {
+    let value = this.state.value
+    value.start = v
+    this.setState({value})
+  }
+
+  onEndChange(_, v) {
+    let value = this.state.value
+    value.end = v
+    this.setState({value})
+  }
+
+  onDragStop() {
+    const {onChange} = this.props
+    onChange(this.state.value)
+  }
+
+  componentWillMount() {
+    const {value} = this.props
+    this.setState({value})
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {value} = nextProps
+    this.setState({value})
+  }
+
+  render() {
+    const {step, min, max, prefix, suffix} = this.props
+    const {value} = this.state
+
+    const startSlider = (value.start !== undefined)?
+      <Slider
+        step={step} min={min} max={max} value={value.start}
+        onChange={this.onStartChange.bind(this)}
+        onDragStop={this.onDragStop.bind(this)}/>: null
+
+    const endSlider = (value.end !== undefined)?
+      <Slider
+        step={step} min={min} max={max} value={value.end}
+        onChange={this.onEndChange.bind(this)}
+        onDragStop={this.onDragStop.bind(this)}/>: null
+
+    return (
+      <li>
+        <span>{prefix} from {value.start} to {value.end} {suffix}</span>
+        {startSlider}
+        {endSlider}
       </li>
     )
   }
@@ -78,7 +137,7 @@ class TextParameter extends Component {
 
   onValueChange(_, v) {
     const {onChange} = this.props
-    onChange(v)
+    onChange(parseFloat(v))
   }
 
   render() {
@@ -94,6 +153,89 @@ class TextParameter extends Component {
 }
 
 class CookbookProcessParameter extends Component {
+
+  static get PARAMETERS() {
+    return [
+      {
+        name: 'coordinates',
+        component: {
+          type: 'coordinates',
+          title: (v) => `(x, y) -> (${v.x}, ${v.y})`,
+          min: -100,
+          max: 100,
+          step: 1
+        }
+      },
+      {
+        name: 'high',
+        component: {
+          type: 'range',
+          prefix: 'High: ',
+          suffix: 'mm',
+          min: 0,
+          max: 300,
+          step: 5
+        }
+      },
+      {
+        name: 'radius',
+        component: {
+          type: 'range',
+          prefix: 'Radius: ',
+          suffix: 'mm',
+          min: 0,
+          max: 50,
+          step: 1
+        }
+      },
+      {
+        name: 'total_water',
+        component: {
+          type: 'slider',
+          title: (v) => `Total water: ${v} ml`,
+          min: 0,
+          max: 300,
+          step: 5
+        }
+      },
+      {
+        name: 'temperature',
+        component: {
+          type: 'slider',
+          title: (v) => `Temperature : ${v} °C`,
+          min: 0,
+          max: 100,
+          step: 1,
+        }
+      },
+      {
+        name: 'total_time',
+        component: {
+          type: 'number',
+          prefix: 'Total time: ',
+          suffix: 'seconds'
+        }
+      },
+      {
+        name: 'cylinder',
+        component: {
+          type: 'number',
+          prefix: 'Cylinder: ',
+          suffix: ''
+        }
+      },
+      {
+        name: 'feedrate',
+        component: {
+          type: 'slider',
+          title: (v) => `Feedrate: ${v} ml`,
+          min: 0,
+          max: 300,
+          step: 5
+        }
+      },
+    ]
+  }
 
   componentWillMount() {
     const {params} = this.props
@@ -114,144 +256,45 @@ class CookbookProcessParameter extends Component {
       onModify(this.state.params)
     }
 
-    if (this.props.params.high !== undefined) {
-      if (this.props.params.high.end !== undefined) {
-        let {high} = this.props.params
-        let title = (start, end) => `High: from ${start} to ${end} mm`
-        let onHighChange = (start, end) => {
-          let cloneParams = Object.assign({}, this.props.params)
-          cloneParams.high.start = start
-          cloneParams.high.end = end
-          onModify(cloneParams)
-        }
-        highParameter = <RangeParameter title={title} start={high.start} end={high.end} min={0} max={300} step={5} onChange={onHighChange}/>
-      } else {
-        let {high} = this.props.params
-        let title = (start, end) => `High: ${start} mm`
-        let onHighChange = (v) => {
-          let cloneParams = Object.assign({}, this.props.params)
-          cloneParams.high.start = v
-          onModify(cloneParams)
-        }
-        highParameter = <SlideParameter title={title} value={high.start} min={0} max={300} step={5} onChange={onHighChange}/>
+    const params = CookbookProcessParameter.PARAMETERS
+    let parameters = []
+    for (let i = 0; i < params.length; i++) {
+      const p = params[i]
+      if (!(p.name in this.props.params)) {
+        continue
       }
-    }
 
-    if (this.state.params.radius !== undefined) {
-      if (this.state.params.radius.end !== undefined) {
-        let {radius} = this.props.params
-        let title = (start, end) => `Radius: from ${start} to ${end} mm`
-        let onRadiusChange = (start, end) => {
-          let cloneParams = Object.assign({}, this.props.params)
-          cloneParams.radius.start = start
-          cloneParams.radius.end = end
-          onModify(cloneParams)
-        }
-        radiusParameter = <RangeParameter title={title} start={radius.start} end={radius.end} min={0} max={50} step={1} onChange={onRadiusChange}/>
-      } else {
-        let {radius} = this.props.params
-        let title = (v) => `Radius: ${v} mm`
-        let onRadiusChange = (v) => {
-          let cloneParams = Object.assign({}, this.props.params)
-          cloneParams.radius.start = v
-          onModify(cloneParams)
-        }
-        radiusParameter = <SlideParameter title={title} value={radius.start} min={0} max={50} step={1} onChange={onRadiusChange}/>
-      }
-    }
-
-    if (this.state.params.total_water !== undefined) {
-      let {total_water} = this.props.params
-      let title = (v) => `Total water: ${v} ml`
-      let onTotalWaterChange = (v) => {
+      const c = p.component
+      const onChange = (v) => {
         let cloneParams = Object.assign({}, this.props.params)
-        cloneParams.total_water = v
+        cloneParams[p.name] = v
         onModify(cloneParams)
       }
-      totalWaterParameter = <SlideParameter title={title} value={total_water} min={0} max={300} step={5} onChange={onTotalWaterChange}/>
-    }
 
-    if (this.state.params.temperature !== undefined) {
-      let {temperature} = this.props.params
-      let title = (v) => `Temperature: ${v} °C`
-      let onTemperatureChange = (v) => {
-        let cloneParams = Object.assign({}, this.props.params)
-        cloneParams.temperature = v
-        onModify(cloneParams)
+      const value = this.props.params[p.name]
+      switch(c.type) {
+        case 'slider':
+          parameters.push(<SlideParameter key={p.name} title={c.title} value={value} min={c.min} max={c.max} step={c.step} onChange={onChange}/>)
+          break
+        case 'number':
+          parameters.push(<TextParameter key={p.name} type='number' prefix={c.prefix} suffix={c.suffix} value={value} onChange={onChange}/>)
+          break
+        case 'range':
+          parameters.push(<RangeParameter key={p.name} prefix={c.prefix} suffix={c.suffix} value={value} min={c.min} max={c.max} step={c.step} onChange={onChange}/>)
+          break
+        case 'coordinates':
+          parameters.push(<CoordinatesParameter key={p.name} title={c.title} value={value} min={c.min} max={c.max} step={c.step} onChange={onChange}/>)
+          break
+        default:
+          console.log(`Unknown display type: ${c.type}`)
+          break
       }
-      temperatureParameter = <SlideParameter title={title} value={temperature} min={0} max={100} step={1} onChange={onTemperatureChange}/>
-    }
-
-    if (this.state.params.total_time !== undefined) {
-      let {total_time} = this.props.params
-      let prefix = 'Total time: '
-      let suffix = 'seconds'
-      let onTotalTimeChange = (v) => {
-        let cloneParams = Object.assign({}, this.props.params)
-        const r = parseInt(v)
-        cloneParams.total_time = (r === NaN)? 0: r;
-        onModify(cloneParams)
-      }
-      totalTimeParameter = <TextParameter type={'number'} prefix={prefix} suffix={suffix} value={total_time} onChange={onTotalTimeChange}/>
-    }
-
-    if (this.state.params.cylinder !== undefined) {
-      let {cylinder} = this.props.params
-      let prefix = 'Cylinder: '
-      let suffix = ''
-      let onCylinderChange = (v) => {
-        let cloneParams = Object.assign({}, this.props.params)
-        const r = parseInt(v)
-        cloneParams.cylinder = (r === NaN)? 0: r;
-        onModify(cloneParams)
-      }
-      cylinderParameter = <TextParameter type={'number'} prefix={prefix} suffix={suffix} value={cylinder} onChange={onCylinderChange}/>
-    }
-
-    if (this.state.params.feedrate !== undefined) {
-      let {feedrate} = this.props.params
-      let title = (v) => `Feedrate: ${v} mm`
-      let onFeedrateChange = (v) => {
-        let cloneParams = Object.assign({}, this.props.params)
-        const r = parseInt(v)
-        cloneParams.feedrate = (r === NaN)? 0: r;
-        onModify(cloneParams)
-      }
-      feedrateParameter = <SlideParameter title={title} value={feedrate} min={0} max={2000} step={20} onChange={onFeedrateChange}/>
-    }
-
-    if (this.state.params.coordinates !== undefined) {
-      let {coordinates} = this.props.params
-      let xtitle = (v) => `X: ${v} mm`
-      let onXChange = (v) => {
-        let cloneParams = Object.assign({}, this.props.params)
-        const r = parseInt(v)
-        cloneParams.coordinates.x = (r === NaN)? 0: r;
-        onModify(cloneParams)
-      }
-      let ytitle = (v) => `Y: ${v} mm`
-      let onYChange = (v) => {
-        let cloneParams = Object.assign({}, this.props.params)
-        const r = parseInt(v)
-        cloneParams.coordinates.y = (r === NaN)? 0: r;
-        onModify(cloneParams)
-      }
-      xParameter = <SlideParameter title={xtitle} value={coordinates.x} min={-100} max={100} step={1} onChange={onXChange}/>
-      yParameter = <SlideParameter title={ytitle} value={coordinates.y} min={-100} max={100} step={1} onChange={onYChange}/>
     }
 
     return (
       <div>
         <ul>
-          {radiusParameter}
-          {cylinderParameter}
-          {xParameter}
-          {yParameter}
-          {highParameter}
-          {totalWaterParameter}
-          {temperatureParameter}
-          {totalTimeParameter}
-          {feedrateParameter}
+          {parameters}
         </ul>
       </div>
     )
