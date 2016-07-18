@@ -43,13 +43,13 @@ class SelectProcess extends Component {
 
 class CookbookEditor extends Component {
 
-  calcMenutop() {
+  calcMenuTop() {
     return (window.scrollY) + 'px'
   }
 
   onScroll() {
     if (this.refs.menu) {
-      this.refs.menu.style.top = this.calcMenutop()
+      this.refs.menu.style.top = this.calcMenuTop()
     }
   }
 
@@ -143,7 +143,7 @@ class CookbookEditor extends Component {
               </div>
             </Col>
             <Col style={{'position': 'relative'}} xs={1}>
-              <div key='Menu' style={{'position': 'absolute', 'top': this.calcMenutop()}} ref='menu'>
+              <div key='Menu' style={{'position': 'absolute', 'top': this.calcMenuTop()}} ref='menu'>
                 <CookbookMenu onSaveCookbook={onSaveCookbook}/>
               </div>
             </Col>
