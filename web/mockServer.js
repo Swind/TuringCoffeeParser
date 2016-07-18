@@ -108,9 +108,9 @@ server.route(
         statusCode: 200,
         message: "Save cookbook successfully",
         data: {
-          setPoint: 50,
-          dutyCycle: 90,
-          temperature: (Math.random() * 100)
+          set_point: 50,
+          duty_cycle: 90,
+          temperature: (Math.random() * 100),
           output_temperature: (Math.random() * 100)
         }
       })
