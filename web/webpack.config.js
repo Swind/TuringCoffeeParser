@@ -39,7 +39,7 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: /client/,
-        loader: 'style!css'
+        loader: 'style!css?modules'
       },
       {
         test: /\.(js|jsx)$/,

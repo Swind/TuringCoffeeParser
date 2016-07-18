@@ -13,7 +13,7 @@ class CookbookMenu extends Component {
     const {onSaveCookbook} = this.props
 
     return (
-      <Paper zDepth={1}>
+      <Paper style={{'width': '48px'}} zDepth={1}>
         <IconButton tooltip='Save' onMouseUp={onSaveCookbook}>
           <SaveIcon />
         </IconButton>

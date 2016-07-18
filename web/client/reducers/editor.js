@@ -2,6 +2,7 @@
 import { handleActions } from 'redux-actions'
 
 const initialState = {
+  openSave: false,
   cookbook: undefined,
   message: "Initialing ...",
 }
@@ -19,18 +20,21 @@ export default handleActions({
     }
 
     return {
+      openSave: false,
       cookbook: cookbook,
       message: message,
     }
   },
   'modify cookbook' (state, action) {
     return {
+      openSave: false,
       cookbook: action.payload,
       message: 'Modify cookbook',
     }
   },
   'save cookbook' (state, action) {
     return {
+      openSave: true,
       cookbook: state.cookbook,
       message: 'Save cookbook',
     }

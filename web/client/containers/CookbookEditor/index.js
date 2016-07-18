@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 
 import Divider from 'material-ui/Divider'
 import FontIcon from 'material-ui/FontIcon'
@@ -22,12 +22,6 @@ import style from './style.css'
 import CookbookHeader from './cookbookHeader'
 import CookbookProcessParameter from './cookbookProcessParameter'
 import CookbookMenu from './cookbookMenu'
-
-const WidthReactGridLayout = WidthProvider(ReactGridLayout)
-
-const layout = [
-  {i: "Paper", x: 4, y: 0, w: 16, isDraggable: false, isResizable: false},
-]
 
 class SelectProcess extends Component {
   render() {
@@ -49,17 +43,12 @@ class SelectProcess extends Component {
 
 class CookbookEditor extends Component {
 
-  calcMenuLeft() {
-    return (window.innerWidth/24 * 16) + 'px'
-  }
-
   calcMenutop() {
     return (window.scrollY) + 'px'
   }
 
   onScroll() {
     if (this.refs.menu) {
-      this.refs.menu.style.left = this.calcMenuLeft()
       this.refs.menu.style.top = this.calcMenutop()
     }
   }
@@ -138,26 +127,34 @@ class CookbookEditor extends Component {
     })
 
     return (
-      <WidthReactGridLayout className='layout' layout={layout} cols={24}>
-        <div key='Paper'>
-          <Paper className={style.Paper} zDepth={1}>
-            <CookbookHeader cookbook={cookbook} onChange={onCookbookChange}/>
-            <Divider />
-            {processes}
-            <FloatingActionButton secondary={true} onMouseUp={onAddProcess}>
-              <AddIcon />
-            </FloatingActionButton>
-          </Paper>
-          <div key='Menu' style={{'position': 'fixed', 'left': this.calcMenuLeft(), 'top': this.calcMenutop()}} ref='menu'>
-            <CookbookMenu onSaveCookbook={onSaveCookbook}/>
-          </div>
-          <Snackbar
-            open={editor.openSave}
-            message={editor.message}
-            autoHideDuration={4000}
-          />
-        </div>
-      </WidthReactGridLayout>
+      <div>
+        <Grid>
+          <Row>
+            <Col xs={10} xsOffset={1} >
+              <div key='Paper'>
+                <Paper className={style.Paper} zDepth={1}>
+                  <CookbookHeader cookbook={cookbook} onChange={onCookbookChange}/>
+                  <Divider />
+                  {processes}
+                  <FloatingActionButton secondary={true} onMouseUp={onAddProcess}>
+                    <AddIcon />
+                  </FloatingActionButton>
+                </Paper>
+              </div>
+            </Col>
+            <Col style={{'position': 'relative'}} xs={1}>
+              <div key='Menu' style={{'position': 'absolute', 'top': this.calcMenutop()}} ref='menu'>
+                <CookbookMenu onSaveCookbook={onSaveCookbook}/>
+              </div>
+            </Col>
+          </Row>
+        </Grid>
+        <Snackbar
+          open={editor.openSave}
+          message={editor.message}
+          autoHideDuration={4000}
+        />
+      </div>
     )
   }
 }
