@@ -250,9 +250,6 @@ class CookbookProcessParameter extends Component {
 
   render() {
     const {onModify} = this.props
-    let totalWaterParameter, totalTimeParameter, radiusParameter,
-      temperatureParameter, highParameter, cylinderParameter,
-      feedrateParameter, xParameter, yParameter
 
     const onChange = () => {
       onModify(this.state.params)
