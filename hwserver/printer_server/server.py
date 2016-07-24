@@ -25,7 +25,8 @@ class RealTimeTemperatureMixer(object):
         self._subscriber_looper.sub(self._output_temp_reader)
         self._subscriber_looper.sub(self._heater_temp_reader)
         self._subscriber_looper.sub(self._cold_temp_reader)
-        pass
+
+        self._offset = 0.0
 
     def __del__(self):
         self._subscriber_looper.stop()
@@ -42,8 +43,7 @@ class RealTimeTemperatureMixer(object):
                     water_sum = 0
         yield points[start:index+1]
 
-    @staticmethod
-    def _calculate_ratio(t, hot_t, cold_t, out_t):
+    def _calculate_ratio(self, t, hot_t, cold_t, out_t):
 
         if hot_t == cold_t:
             return 0
@@ -54,6 +54,26 @@ class RealTimeTemperatureMixer(object):
         out_t = float(out_t)
 
         ratio = (t - cold_t)/(hot_t - cold_t)
+
+        p_offset_unit = (1.0 - ratio) / 5
+        n_offset_unit = -(ratio / 5)
+
+        p_ranges = [10, 7, 5, 3, 1]
+        n_ranges = [-1, -3, -5, -7, -10]
+
+        diff_t = out_t - t
+        if diff_t > 0:
+            for (i, v) in enumerate(p_ranges):
+                if diff_t > v:
+                    self._offset += (p_offset_unit * (len(p_ranges) - i))
+                    break
+        else:
+            for (i, v) in enumerate(n_ranges):
+                if diff_t > v:
+                    self._offset += (n_offset_unit * (i))
+                    break
+
+        ratio = ratio + self._offset
 
         if ratio <= 0:
             return 0
@@ -72,7 +92,7 @@ class RealTimeTemperatureMixer(object):
             point_pair = [copy.deepcopy(point), copy.deepcopy(point)]
             if point.is_point():
                 if (point.e is not None) and (point.t is not None):
-                    ratio = RealTimeTemperatureMixer._calculate_ratio(
+                    ratio = self._calculate_ratio(
                             point.t, hot_t, cold_t, out_t)
                     point_pair[0].e = point_pair[0].e * ratio
                     point_pair[1].e = point.e - point_pair[0].e
