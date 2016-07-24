@@ -90,9 +90,11 @@ class RangeParameter extends Component {
         onChange={this.onEndChange.bind(this)}
         onDragStop={this.onDragStop.bind(this)}/>: null
 
+    const title = (value.end === undefined)? `${prefix} ${value.start} ${suffix}`: `${prefix} from ${value.start} to ${value.end} ${suffix}`
+
     return (
       <li>
-        <span>{prefix} from {value.start} to {value.end} {suffix}</span>
+        <span>{title}</span>
         {startSlider}
         {endSlider}
       </li>
