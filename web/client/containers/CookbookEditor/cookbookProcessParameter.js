@@ -232,7 +232,7 @@ class CookbookProcessParameter extends Component {
           type: 'slider',
           title: (v) => `Feedrate: ${v} ml`,
           min: 0,
-          max: 300,
+          max: 1000,
           step: 5
         }
       },
