@@ -3,7 +3,8 @@ import { handleActions } from 'redux-actions'
 const initialState = {
   tankTemperature: 0,
   setPoint: 0,
-  dutyCycle: 0
+  dutyCycle: 0,
+  outputTemperature: 0
 }
 
 export default handleActions({
@@ -28,7 +29,8 @@ export default handleActions({
       return {
         tankTemperature: response.body.data.temperature,
         setPoint: response.body.data.setPoint,
-        dutyCycle: response.body.data.dutyCycle
+        dutyCycle: response.body.data.dutyCycle,
+        outputTemperature: response.body.data.output_temperature
       }
     } else {
       return state
