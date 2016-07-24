@@ -39,6 +39,7 @@ class RealTimeTemperatureMixer(object):
                 if water_sum > CONST_ML:
                     yield points[start:index+1]
                     start = index
+                    water_sum = 0
         yield points[start:index+1]
 
     @staticmethod
