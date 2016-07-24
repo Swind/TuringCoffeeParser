@@ -43,6 +43,14 @@ def __get_sensor_monitor(sensor_config):
         import max31855
         return monitor.TemperatureMonitor(max31855.MAX31855(sensor_config['ce']))
 
+    if sensor_config['type'] == 'MAX31865':
+        import max31865
+        return monitor.TemperatureMonitor(max31865.MAX31865(
+            csPin=sensor_config['cs'],
+            misoPin=sensor_config['miso'],
+            mosiPin=sensor_config['mosi'],
+            clkPin=sensor_config['clk'])
+
     if sensor_config['type'] == 'MAX31856':
         import max31856
         return monitor.TemperatureMonitor(max31856.MAX31856(sensor_config['ce']))

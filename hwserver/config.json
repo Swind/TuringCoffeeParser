@@ -9,15 +9,18 @@
     "Sensors": { 
         "PT100_tank": {
             "name": "PT100_tank",
-            "type": "PT100",
-            "ce": 0
+            "type": "MAX31865",
+            "cs": 29,
+            "miso": 33,
+            "mosi": 31,
+            "clk": 35
         },
 
         "output_temperature_sensor":
         {
             "name": "output_temperature_sensor",
             "type": "MAX31856",
-            "ce": 1
+            "ce": 0
         }
     },
     "PID": {
