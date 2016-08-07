@@ -20,6 +20,8 @@ class RealTimeTemperatureMixer(object):
         self._output_temp_reader = output_temp_reader
         self._heater_temp_reader = heater_temp_reader
         self._cold_temp_reader = cold_temp_reader
+        self._calibration_hot = 0
+        self._calibration_cold = 0
 
         self._subscriber_looper = SubscribeLooper()
         self._subscriber_looper.sub(self._output_temp_reader)
@@ -43,7 +45,11 @@ class RealTimeTemperatureMixer(object):
                     water_sum = 0
         yield points[start:index+1]
 
-    def _calculate_ratio(self, t, hot_t, cold_t, out_t):
+    def capture_calibration_hot(self):
+        self._calibration_hot = self._output_temp_reader.read()
+
+    def capture_calibration_cold(self):
+        self._calibration_cold = self._output_temp_reader.read()
 
         if hot_t == cold_t:
             return 0
@@ -149,12 +155,16 @@ class PrinterServer(object):
     def __del__(self):
         self.stop()
 
-    def _split_points_by_wait(self, points):
+    def _split_points(self, points):
         point_groups = []
         start = 0
         end = 0
         for (end, point) in enumerate(points):
             if point.is_command() and point.name == 'wait':
+                point_groups.append(points[start:end])
+                point_groups.append(point)
+                start = end + 1
+            if point.is_command() and point.name == 'calibration':
                 point_groups.append(points[start:end])
                 point_groups.append(point)
                 start = end + 1
@@ -187,7 +197,7 @@ class PrinterServer(object):
                 continue
 
             points = [Point(p) for p in params]
-            point_groups = self._split_points_by_wait(points)
+            point_groups = self._split_points(points)
 
             for g in point_groups:
                 if type(g) is list:
@@ -199,9 +209,13 @@ class PrinterServer(object):
                                 stepper.next()
                             except StopIteration:
                                 break
-                else:
+                elif g.name == 'wait':
                     logger.info('Wait {} seconds'.format(g.time))
                     if self._wait(g.time) is not True:
+                        break
+                elif g.name == 'calibration':
+                    logger.info('Calibration')
+                    if self._calibration() is not True:
                         break
 
         self._ctrler.disconnect()
@@ -221,3 +235,47 @@ class PrinterServer(object):
 
     def stop(self):
         self._stop_flag = True
+
+    def _calibration(self):
+        stepper = self._runner.step([
+            [
+                Point({'type': 'command', 'name': 'home'}),
+                Point({'type': 'command', 'name': 'home'})
+            ],
+            [
+                Point(
+                    {'type': 'point', 'x': -80, 'y': 50, 'z': 290, 'f': 5000}),
+                Point(
+                    {'type': 'point', 'x': -80, 'y': 50, 'z': 290, 'f': 5000})
+            ]
+        ])
+        stepper.next()
+        stepper.next()
+        stepper = self._runner.step([
+            [
+                Point({'type': 'point', 'f': 250}),
+                Point({'type': 'point', 'e': 0.1, 'f': 250})
+            ]
+        ] * 1000)
+        while self._stop_flag is not True:
+            try:
+                stepper.next()
+            except StopIteration:
+                break
+
+        self._mixer.capture_calibration_cold()
+
+        stepper = self._runner.step([
+            [
+                Point({'type': 'point', 'e': 0.1, 'f': 200}),
+                Point({'type': 'point', 'f': 200})
+            ]
+        ] * 1000)
+        while self._stop_flag is not True:
+            try:
+                stepper.next()
+            except StopIteration:
+                break
+
+        self._mixer.capture_calibration_hot()
+        return True
