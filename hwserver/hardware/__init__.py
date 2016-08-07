@@ -49,7 +49,7 @@ def __get_sensor_monitor(sensor_config):
             csPin=sensor_config['cs'],
             misoPin=sensor_config['miso'],
             mosiPin=sensor_config['mosi'],
-            clkPin=sensor_config['clk'])
+            clkPin=sensor_config['clk']))
 
     if sensor_config['type'] == 'MAX31856':
         import max31856
