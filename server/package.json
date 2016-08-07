@@ -50,6 +50,7 @@
     "history": "1.17.0",
     "vision": "",
     "winston": "",
-    "babel-plugin-transform-async-to-generator": ""
+    "babel-plugin-transform-async-to-generator": "",
+    "libs": "file:../libs"
   }
 }

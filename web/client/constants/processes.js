@@ -1,10 +1,10 @@
-import spiral from '../../libs/processes/spiral'
-import circle from '../../libs/processes/circle'
-import spiralTotalWater from '../../libs/processes/spiral-total-water'
-import fixedPoint from '../../libs/processes/fixed-point'
-import wait from '../../libs/processes/wait'
-import home from '../../libs/processes/home'
-import move from '../../libs/processes/move'
+import spiral from 'libs/processes/spiral'
+import circle from 'libs/processes/circle'
+import spiralTotalWater from 'libs/processes/spiral-total-water'
+import fixedPoint from 'libs/processes/fixed-point'
+import wait from 'libs/processes/wait'
+import home from 'libs/processes/home'
+import move from 'libs/processes/move'
 
 export const PROCESS = {
   'spiral' : {

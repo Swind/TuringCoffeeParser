@@ -1,9 +1,9 @@
 const Refill = require('./refill');
 const Printer = require('./printer');
-const Process = require('../libs/processes/process')
-const Home = require('../libs/processes/home')
-const Wait = require('../libs/processes/wait')
-const Point = require('../libs/processes/base').Point
+const Process = require('libs/processes/process')
+const Home = require('libs/processes/home')
+const Wait = require('libs/processes/wait')
+const Point = require('libs/processes/base').Point
 
 class Barista {
   constructor(printer, cookbookMgr) {
