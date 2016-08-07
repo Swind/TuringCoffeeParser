@@ -110,6 +110,8 @@ class CookbookEditor extends Component {
         let clone = Object.assign({}, cookbook)
         clone.processes.splice(i, 1)
         actions.modify(clone)
+      }
+
       const onInsertBeforeProcess = () => {
         // let clone = Object.assign({}, cookbook)
         cookbook.processes.splice(i, 0, Object.assign({}, PROCESS['spiral'].handle.default))
