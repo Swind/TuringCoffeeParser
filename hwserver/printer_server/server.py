@@ -8,8 +8,7 @@ from pubsub.pubsub import SubscribeLooper
 from point import Point
 
 logger = logging.getLogger(__name__)
-CONST_ML = 30
-
+CONST_ML = 10
 
 class RealTimeTemperatureMixer(object):
 
@@ -36,6 +35,7 @@ class RealTimeTemperatureMixer(object):
     def _group(self, points):
         water_sum = 0
         start = 0
+        index = 0
         for index, point in enumerate(points):
             if point.e is not None:
                 water_sum += point.e
@@ -51,6 +51,9 @@ class RealTimeTemperatureMixer(object):
     def capture_calibration_cold(self):
         self._calibration_cold = self._output_temp_reader.read()
 
+    @staticmethod
+    def _calculate_ratio(t, hot_t, cold_t, out_t):
+
         if hot_t == cold_t:
             return 0
 
@@ -61,50 +64,72 @@ class RealTimeTemperatureMixer(object):
 
         ratio = (t - cold_t)/(hot_t - cold_t)
 
-        p_offset_unit = (1.0 - ratio) / 5
-        n_offset_unit = -(ratio / 5)
+        return ratio
 
-        p_ranges = [10, 7, 5, 3, 1]
-        n_ranges = [-1, -3, -5, -7, -10]
+    def _calculate_offset(self, t, hot_t, cold_t, out_t, offset):
 
-        diff_t = out_t - t
-        if diff_t > 0:
-            for (i, v) in enumerate(p_ranges):
-                if diff_t > v:
-                    self._offset += (p_offset_unit * (len(p_ranges) - i))
-                    break
-        else:
-            for (i, v) in enumerate(n_ranges):
-                if diff_t > v:
-                    self._offset += (n_offset_unit * (i))
-                    break
-
-        ratio = ratio + self._offset
-
-        if ratio <= 0:
+        if hot_t == cold_t:
             return 0
-        elif ratio >= 1:
-            return 1
+
+        t = float(t)
+        hot_t = float(hot_t)
+        cold_t = float(cold_t)
+        out_t = float(out_t)
+        diff_t = out_t - t
+
+        ratio = (t - cold_t)/(hot_t - cold_t)
+        offset_upper_limit = (1.0 - ratio)
+        offset_lower_limit = -(ratio)
+
+        if diff_t > 0:
+            offset += (offset_lower_limit/100)
         else:
-            return ratio
+            offset += (offset_upper_limit/100)
+
+        if offset > offset_upper_limit:
+            offset = offset_upper_limit
+        elif offset < offset_lower_limit:
+            offset = offset_lower_limit
+
+        return offset
 
     def _mix(self, points):
         point_pairs = []
+        out_t = self._output_temp_reader.read()
         cold_t = self._cold_temp_reader.read()
         hot_t = self._heater_temp_reader.read()
-        out_t = self._output_temp_reader.read()
 
+        offset = None
         for point in points:
             point_pair = [copy.deepcopy(point), copy.deepcopy(point)]
             if point.is_point():
                 if (point.e is not None) and (point.t is not None):
-                    ratio = self._calculate_ratio(
-                            point.t, hot_t, cold_t, out_t)
+                    if offset is None:
+                        offset = self._calculate_offset(
+                                point.t,
+                                hot_t,
+                                cold_t,
+                                out_t,
+                                self._offset)
+                        self._offset = offset
+                    ratio = RealTimeTemperatureMixer._calculate_ratio(
+                            point.t,
+                            self._calibration_hot,
+                            self._calibration_cold,
+                            out_t)
+
+                    ratio = ratio + offset
+                    if ratio > 1.0:
+                        ratio = 1.0
+                    elif ratio < -1.0:
+                        ratio = -1.0
+
                     point_pair[0].e = point_pair[0].e * ratio
                     point_pair[1].e = point.e - point_pair[0].e
                 else:
                     point_pair[1].e = None
             point_pairs.append(point_pair)
+
         return point_pairs
 
     def mix(self, points):
