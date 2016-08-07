@@ -52,7 +52,7 @@ class Spiral extends Base.Process {
     let totalTheta = 0;
     const points = [];
 
-    const e = this.water / this.length
+    const e = this.params.extrudate;
     while (totalTheta <= maxTheta) {
       // point interval / (2 * pi * r) = theta for one step
       const nowRadius = a * totalTheta + this.params.radius.start;

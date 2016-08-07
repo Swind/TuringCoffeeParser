@@ -4,6 +4,10 @@ function zAixs(points, params){
     return points;
   }
 
+  if (params.name === 'fixed_point') {
+    return points;
+  }
+
   const startH = params.high.start;
   const endH = (params.high.end !== undefined)? params.high.end: startH;
   const diffH = endH - startH;
