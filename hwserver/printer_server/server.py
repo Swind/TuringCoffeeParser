@@ -160,7 +160,8 @@ class PrinterServer(object):
                  output_temp_reader,
                  heater_temp_reader,
                  cold_temp_reader,
-                 printer_controller):
+                 printer_controller,
+                 refill_commander):
 
         self._puber = publisher
         self._reper = responser
@@ -170,6 +171,7 @@ class PrinterServer(object):
                 heater_temp_reader=heater_temp_reader,
                 cold_temp_reader=cold_temp_reader)
         self._runner = PointStepRunner(self._ctrler)
+        self._refill_commander = refill_commander
 
         self._stop_flag = False
         self._q = Queue()
@@ -221,6 +223,8 @@ class PrinterServer(object):
                 time.sleep(1)
                 continue
 
+            self._refill_toggle(False)
+
             points = [Point(p) for p in params]
             point_groups = self._split_points(points)
 
@@ -242,6 +246,8 @@ class PrinterServer(object):
                     logger.info('Calibration')
                     if self._calibration() is not True:
                         break
+
+            self._refill_toggle(True)
 
         self._ctrler.disconnect()
         self._stop_flag = False
@@ -304,3 +310,9 @@ class PrinterServer(object):
 
         self._mixer.capture_calibration_hot()
         return True
+
+    def _refill_toggle(self, toggle=False):
+        if toggle is True:
+            self._refill_commander.req({'Refill': 'START'})
+        else:
+            self._refill_commander.req({'Refill': 'STOP'})

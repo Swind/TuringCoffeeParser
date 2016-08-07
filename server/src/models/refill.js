@@ -13,8 +13,6 @@ class Refill {
       }
     */
     this.monitor.subscribe(PUB_ADDRESS, NAME, this.update_status);
-
-    this.cmd = new Channel.CmdChannel(CMD_ADDRESS);
   }
 
   isFull() {
@@ -27,14 +25,6 @@ class Refill {
 
   get lastUpdatedTime() {
     return this.monitor.getLastUpdatedTime(NAME);
-  }
-
-  stop() {
-    this.cmd.send('{"Refill": "STOP"}');
-  }
-
-  start() {
-    this.cmd.send('{"Refill": "START"}');
   }
 }
 
