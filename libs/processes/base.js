@@ -44,6 +44,13 @@ class MixCommand extends Command {
   }
 }
 
+class CalibrationCommand extends Command {
+  constructor(temperature) {
+    super('calibration')
+    this.t = temperature
+  }
+}
+
 class HomeCommand extends Command {
   constructor() {
     super('home')
@@ -110,4 +117,5 @@ module.exports = {
   WaitCommand,
   HomeCommand,
   MixCommand,
+  CalibrationCommand,
 };

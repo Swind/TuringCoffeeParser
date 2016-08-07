@@ -5,6 +5,7 @@ const SpiralTotalWater = require('./spiral-total-water');
 const Wait = require('./wait');
 const Home = require('./home');
 const Move = require('./move');
+const Calibration = require('./calibration');
 
 var _processes = {
   "circle": Circle,
@@ -14,6 +15,7 @@ var _processes = {
   "wait": Wait,
   "home": Home,
   "move": Move,
+  "calibration": Calibration,
 }
 
 function createProcess(params){
