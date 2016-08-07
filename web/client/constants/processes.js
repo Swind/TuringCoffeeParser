@@ -5,6 +5,7 @@ import fixedPoint from 'libs/processes/fixed-point'
 import wait from 'libs/processes/wait'
 import home from 'libs/processes/home'
 import move from 'libs/processes/move'
+import calibration from 'libs/processes/calibration'
 
 export const PROCESS = {
   'spiral' : {
@@ -27,5 +28,8 @@ export const PROCESS = {
   },
   'move': {
     handle: move
+  },
+  'calibration': {
+    handle: calibration
   }
 }
