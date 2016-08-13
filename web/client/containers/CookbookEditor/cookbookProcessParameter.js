@@ -3,24 +3,7 @@ import React, { Component } from 'react'
 import Slider from 'material-ui/Slider'
 import TextField from 'material-ui/TextField'
 
-class CoordinatesParameter extends Component {
-
-  onXChange(_, v) {
-    let value = this.state.value
-    value.x = v
-    this.setState({value})
-  }
-
-  onYChange(_, v) {
-    let value = this.state.value
-    value.y = v
-    this.setState({value})
-  }
-
-  onDragStop() {
-    const {onChange} = this.props
-    onChange(this.state.value)
-  }
+class SliderWithText extends Component {
 
   componentWillMount() {
     const {value} = this.props
@@ -32,14 +15,70 @@ class CoordinatesParameter extends Component {
     this.setState({value})
   }
 
+  onChange(_, v) {
+    let value = this.state.value
+    value = parseInt(v)
+    this.setState({value})
+  }
+
+  onBlur() {
+    const {onChange} = this.props
+    onChange(this.state.value)
+  }
+
   render() {
-    const {step, min, max, title} = this.props
+    const {step, min, max, prefix, suffix} = this.props
     const {value} = this.state
+
+    const slider = <Slider
+        step={step} min={min} max={max} value={value}
+        onChange={this.onChange.bind(this)}
+        onDragStop={this.onBlur.bind(this)}
+      />
+    const text = <TextField
+        style={{width: '80px'}}
+        id={'textfield'} type='number' value={value}
+        inputStyle={{'textAlign': 'center'}}
+        onChange={this.onChange.bind(this)}
+        onBlur={this.onBlur.bind(this)}
+      />
+
+    return (
+      <div style={{display: 'flex', alignItem: 'baseline'}}>
+        <div style={{width: '80%'}}>
+          {slider}
+        </div>
+        <div style={{width: '20%', 'paddingLeft': '10px'}}>
+          {text}
+        </div>
+      </div>
+    )
+  }
+}
+
+class CoordinatesParameter extends Component {
+
+  onXChange(_, v) {
+    let {value} = this.props
+    const {onChange} = this.props
+    value.x = v
+    onChange(value)
+  }
+
+  onYChange(_, v) {
+    let {value} = this.props
+    const {onChange} = this.props
+    value.y = v
+    onChange(value)
+  }
+
+  render() {
+    const {step, min, max, title, value} = this.props
     return (
       <li>
-        <span>{title(value)}</span>
-        <Slider step={step} min={min} max={max} value={value.x} onChange={this.onXChange.bind(this)} onDragStop={this.onDragStop.bind(this)}/>
-        <Slider step={step} min={min} max={max} value={value.y} onChange={this.onYChange.bind(this)} onDragStop={this.onDragStop.bind(this)}/>
+        <span>{title}</span>
+        <SliderWithText step={step} min={min} max={max} value={value.x} onChange={this.onXChange.bind(this)}/>
+        <SliderWithText step={step} min={min} max={max} value={value.y} onChange={this.onYChange.bind(this)}/>
       </li>
     )
   }
@@ -47,56 +86,41 @@ class CoordinatesParameter extends Component {
 
 class RangeParameter extends Component {
 
-  onStartChange(_, v) {
-    let value = this.state.value
-    value.start = v
-    this.setState({value})
-  }
-
-  onEndChange(_, v) {
-    let value = this.state.value
-    value.end = v
-    this.setState({value})
-  }
-
-  onDragStop() {
+  onStartChange(v) {
+    let {value} = this.props
     const {onChange} = this.props
-    onChange(this.state.value)
+    value.start = v
+    console.log(value)
+    onChange(value)
   }
 
-  componentWillMount() {
-    const {value} = this.props
-    this.setState({value})
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {value} = nextProps
-    this.setState({value})
+  onEndChange(v) {
+    let {value} = this.props
+    const {onChange} = this.props
+    value.end = v
+    onChange(value)
   }
 
   render() {
-    const {step, min, max, prefix, suffix} = this.props
-    const {value} = this.state
+    const {step, min, max, prefix, suffix, value} = this.props
 
-    const startSlider = (value.start !== undefined)?
-      <Slider
+    const start = (value.start !== undefined)?
+      <SliderWithText
         step={step} min={min} max={max} value={value.start}
-        onChange={this.onStartChange.bind(this)}
-        onDragStop={this.onDragStop.bind(this)}/>: null
+        onChange={this.onStartChange.bind(this)}/>: null
 
-    const endSlider = (value.end !== undefined)?
-      <Slider
+    const end = (value.end !== undefined)?
+      <SliderWithText
         step={step} min={min} max={max} value={value.end}
-        onChange={this.onEndChange.bind(this)}
-        onDragStop={this.onDragStop.bind(this)}/>: null
+        onChange={this.onEndChange.bind(this)}/>: null
 
-    const title = (value.end === undefined)? `${prefix} ${value.start} ${suffix}`: `${prefix} from ${value.start} to ${value.end} ${suffix}`
+    const title = prefix
 
     return (
       <li>
         <span>{title}</span>
-        {startSlider}
-        {endSlider}
+        {start}
+        {end}
       </li>
     )
   }
@@ -104,32 +128,17 @@ class RangeParameter extends Component {
 
 class SlideParameter extends Component {
 
-  onValueChange(_, v) {
-    this.setState({value: v})
-  }
-
-  onDragStop() {
+  onChange(v) {
     const {onChange} = this.props
-    onChange(this.state.value)
-  }
-
-  componentWillMount() {
-    const {value} = this.props
-    this.setState({value: value})
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {value} = nextProps
-    this.setState({value: value})
+    onChange(v)
   }
 
   render() {
-    const {step, min, max, title} = this.props
-    const {value} = this.state
+    const {step, min, max, title, value} = this.props
     return (
       <li>
-        <span>{title(value)}</span>
-        <Slider step={step} min={min} max={max} value={value} onChange={this.onValueChange.bind(this)} onDragStop={this.onDragStop.bind(this)}/>
+        <span>{title}</span>
+        <SliderWithText step={step} min={min} max={max} value={value} onChange={this.onChange.bind(this)}/>
       </li>
     )
   }
@@ -162,7 +171,7 @@ class CookbookProcessParameter extends Component {
         name: 'coordinates',
         component: {
           type: 'coordinates',
-          title: (v) => `(x, y) -> (${v.x}, ${v.y})`,
+          title: '(x, y)',
           min: -100,
           max: 100,
           step: 1
@@ -172,8 +181,8 @@ class CookbookProcessParameter extends Component {
         name: 'high',
         component: {
           type: 'range',
-          prefix: 'High: ',
-          suffix: 'mm',
+          prefix: 'High (mm)',
+          suffix: '',
           min: 0,
           max: 300,
           step: 5
@@ -183,8 +192,8 @@ class CookbookProcessParameter extends Component {
         name: 'radius',
         component: {
           type: 'range',
-          prefix: 'Radius: ',
-          suffix: 'mm',
+          prefix: 'Radius (mm)',
+          suffix: '',
           min: 0,
           max: 50,
           step: 1
@@ -194,7 +203,7 @@ class CookbookProcessParameter extends Component {
         name: 'total_water',
         component: {
           type: 'slider',
-          title: (v) => `Total water: ${v} ml`,
+          title: 'Total water (ml)',
           min: 0,
           max: 300,
           step: 5
@@ -204,7 +213,7 @@ class CookbookProcessParameter extends Component {
         name: 'temperature',
         component: {
           type: 'slider',
-          title: (v) => `Temperature : ${v} °C`,
+          title: 'Temperature (°C)',
           min: 0,
           max: 100,
           step: 1,
@@ -230,7 +239,7 @@ class CookbookProcessParameter extends Component {
         name: 'feedrate',
         component: {
           type: 'slider',
-          title: (v) => `Feedrate: ${v} ml`,
+          title: 'Feedrate (ml)',
           min: 0,
           max: 1000,
           step: 5
