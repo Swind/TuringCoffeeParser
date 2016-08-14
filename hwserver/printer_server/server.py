@@ -10,6 +10,7 @@ from point import Point
 logger = logging.getLogger(__name__)
 CONST_ML = 10
 
+
 class RealTimeTemperatureMixer(object):
 
     def __init__(self,
@@ -163,7 +164,7 @@ class PointStepRunner(object):
             hot_gcode = pair[0].to_gcode()
             cold_gcode = pair[1].to_gcode()
             self._ctrler.send_gcodes(hot_gcode, cold_gcode)
-            yield False
+            yield
 
 
 class PrinterServer(object):
@@ -330,7 +331,6 @@ class PrinterServer(object):
         if self._stop_flag is True:
             return
 
-        time.sleep(1)
         self._mixer.capture_calibration_hot()
         return True
 
