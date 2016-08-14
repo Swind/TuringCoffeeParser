@@ -3,10 +3,11 @@ import AppBar from 'material-ui/AppBar';
 
 class Header extends Component {
   render() {
+    const {onLeftIconButtonTouchTap} = this.props
     return (
         <AppBar
           title='Barista'
-          iconClassNameRight='muidocs-icon-navigation-expand-more'
+          onLeftIconButtonTouchTap={onLeftIconButtonTouchTap}
         />
     )
   }
