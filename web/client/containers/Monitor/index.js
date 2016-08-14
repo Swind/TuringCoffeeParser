@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TimeSeriesChart from '../../components/TimeSeriesChart'
 
+import TextField from 'material-ui/TextField'
+import FlatButton from 'material-ui/FlatButton';
+
 import InfoCard from '../../components/InfoCard'
 import * as HeaterAction from '../../actions/heater'
 
@@ -55,6 +58,10 @@ class Monitor extends Component {
     this.setState(state)
   }
 
+  onUpdate() {
+
+  }
+
   render() {
     const {actions, monitor} = this.props
 
@@ -71,7 +78,7 @@ class Monitor extends Component {
         data: this.state.tankTemperatures
       },
       {
-        label: 'Set Point',
+        label: 'Target Temp.',
         fill: false,
         backgroundColor: setPointColor,
         borderColor: setPointColor,
@@ -99,14 +106,21 @@ class Monitor extends Component {
         <InfoCard title="Tank temp." color={tankTemperatureColor}>
           {monitor.tankTemperature.toFixed(3) + '℃'}
         </InfoCard>
-        <InfoCard title="Set point" color={setPointColor}>
-          {monitor.setPoint.toFixed(3) + '℃'}
-        </InfoCard>
         <InfoCard title="Duty cycle" color={dutyCycleColor}>
           {monitor.dutyCycle.toFixed(3) + '%'}
         </InfoCard>
         <InfoCard title="Output temp." color={outputTemperatureColor}>
           {monitor.outputTemperature.toFixed(3) + '℃'}
+        </InfoCard>
+        <InfoCard title="Target temp." color={setPointColor}>
+          {monitor.setPoint.toFixed(3) + '℃'}
+        </InfoCard>
+        <InfoCard title="Set Target temp.">
+          <TextField style={{'width': '100px'}} value={monitor.setPoint.toFixed(3)}>
+          </TextField>
+          <a onClick={this.onUpdate}>
+            <FlatButton label="Set" />
+          </a>
         </InfoCard>
       </div>
     )
