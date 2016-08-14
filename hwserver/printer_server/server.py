@@ -32,7 +32,8 @@ class RealTimeTemperatureMixer(object):
     def __del__(self):
         self._subscriber_looper.stop()
 
-    def _group(self, points):
+    @staticmethod
+    def _group(points):
         water_sum = 0
         start = 0
         index = 0
@@ -64,9 +65,15 @@ class RealTimeTemperatureMixer(object):
 
         ratio = (t - cold_t)/(hot_t - cold_t)
 
+        if ratio > 1.0:
+            ratio = 1.0
+        elif ratio < 0:
+            ratio = 0
+
         return ratio
 
-    def _calculate_offset(self, t, hot_t, cold_t, out_t, offset):
+    @staticmethod
+    def _calculate_offset(t, hot_t, cold_t, out_t, offset):
 
         if hot_t == cold_t:
             return 0
@@ -77,14 +84,21 @@ class RealTimeTemperatureMixer(object):
         out_t = float(out_t)
         diff_t = out_t - t
 
-        ratio = (t - cold_t)/(hot_t - cold_t)
+        ratio = RealTimeTemperatureMixer._calculate_ratio(t, hot_t, cold_t, out_t)
         offset_upper_limit = (1.0 - ratio)
         offset_lower_limit = -(ratio)
+        offset_upper_unit = (offset_upper_limit/50)
+        offset_lower_unit = (offset_lower_limit/50)
+
+        if offset_upper_unit < 0.01:
+            offset_upper_unit = 0.01
+        if offset_lower_unit > -0.01:
+            offset_lower_unit = -0.01
 
         if diff_t > 0:
-            offset += (offset_lower_limit/100)
+            offset += offset_lower_unit
         else:
-            offset += (offset_upper_limit/100)
+            offset += offset_upper_unit
 
         if offset > offset_upper_limit:
             offset = offset_upper_limit
@@ -105,10 +119,10 @@ class RealTimeTemperatureMixer(object):
             if point.is_point():
                 if (point.e is not None) and (point.t is not None):
                     if offset is None:
-                        offset = self._calculate_offset(
+                        offset = RealTimeTemperatureMixer._calculate_offset(
                                 point.t,
-                                hot_t,
-                                cold_t,
+                                self._calibration_hot,
+                                self._calibration_cold,
                                 out_t,
                                 self._offset)
                         self._offset = offset
@@ -121,8 +135,8 @@ class RealTimeTemperatureMixer(object):
                     ratio = ratio + offset
                     if ratio > 1.0:
                         ratio = 1.0
-                    elif ratio < -1.0:
-                        ratio = -1.0
+                    elif ratio < 0:
+                        ratio = 0
 
                     point_pair[0].e = point_pair[0].e * ratio
                     point_pair[1].e = point.e - point_pair[0].e
@@ -133,7 +147,7 @@ class RealTimeTemperatureMixer(object):
         return point_pairs
 
     def mix(self, points):
-        groups = self._group(points)
+        groups = RealTimeTemperatureMixer._group(points)
         for group in groups:
             tmp = self._mix(group)
             yield tmp
@@ -268,6 +282,7 @@ class PrinterServer(object):
         self._stop_flag = True
 
     def _calibration(self):
+        # HOME
         stepper = self._runner.step([
             [
                 Point({'type': 'command', 'name': 'home'}),
@@ -282,6 +297,8 @@ class PrinterServer(object):
         ])
         stepper.next()
         stepper.next()
+
+        # Output Cold water
         stepper = self._runner.step([
             [
                 Point({'type': 'point', 'f': 250}),
@@ -293,9 +310,12 @@ class PrinterServer(object):
                 stepper.next()
             except StopIteration:
                 break
+        if self._stop_flag is True:
+            return
 
         self._mixer.capture_calibration_cold()
 
+        # Output Hot water
         stepper = self._runner.step([
             [
                 Point({'type': 'point', 'e': 0.1, 'f': 200}),
@@ -307,7 +327,10 @@ class PrinterServer(object):
                 stepper.next()
             except StopIteration:
                 break
+        if self._stop_flag is True:
+            return
 
+        time.sleep(1)
         self._mixer.capture_calibration_hot()
         return True
 
