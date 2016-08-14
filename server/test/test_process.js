@@ -2,7 +2,7 @@ const TestData = require('./testdata');
 const Assert = require('assert');
 const Chai = require('chai');
 
-const logger = require('../libs/utils/logger');
+const logger = require('libs/utils/logger');
 global.Logger = logger;
 
 Chai.should();

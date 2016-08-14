@@ -21,3 +21,4 @@ public
 cookbooks
 npm-debug.log
 *.pyc
+.python-version

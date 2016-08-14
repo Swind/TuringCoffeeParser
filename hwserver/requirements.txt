@@ -1,2 +1,1 @@
 nanomsg-python
-msgpack-python

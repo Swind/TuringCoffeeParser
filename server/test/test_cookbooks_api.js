@@ -5,7 +5,7 @@ const ApiServer = require('../src/api_server');
 const CookbooksAPI = require('../src/api/cookbooks');
 const CookbooksMgr = require('../src/models/cookbooks');
 
-const logger = require('../libs/utils/logger');
+const logger = require('libs/utils/logger');
 
 Chai.should();
 
@@ -58,7 +58,7 @@ describe('GET:/cookbooks', () => {
   before(async() => {
     api_server = new ApiServer('127.0.0.1', 3000);
 
-    var cookbook_mgr = new CookbooksMgr();
+    var cookbook_mgr = new CookbooksMgr("cookbooks.db", inMemoryOnly=true);
     var cookbook_api = new CookbooksAPI(cookbook_mgr);
 
     api_server.route(cookbook_api.apiSpecs());
@@ -83,7 +83,7 @@ describe('GET:/cookbooks', () => {
         const data = {
           name: 'test1',
           description: 'description content',
-          content: TestData.Spiral
+          processes: [TestData.Spiral]
         };
 
         // List all cookbooks, now the cookbooks length should be 1
@@ -100,7 +100,7 @@ describe('GET:/cookbooks', () => {
         createdCookbook.should.be.not.empty;
         createdCookbook.name.should.be.equal(data.name);
         createdCookbook.description.should.be.equal(data.description);
-        createdCookbook.content.should.be.eql(data.content);
+        createdCookbook.processes.length.should.be.equal(data.processes.length);
         createdCookbook._id.should.be.not.empty;
 
         // List all cookbooks, now the cookbooks length should be 1
@@ -119,7 +119,7 @@ describe('GET:/cookbooks', () => {
         const data = {
           name: 'test1',
           description: 'description content',
-          content: TestData.Spiral
+          processes: [TestData.Spiral]
         };
         let resp = await api.post('/api/cookbooks', data);
         resp.result.statusCode.should.be.equal(201);
