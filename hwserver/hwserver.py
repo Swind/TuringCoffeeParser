@@ -6,7 +6,8 @@ from printer_server.printer import PrinterController
 from printer_server.temperature_reader import HeaterTemperatureReader, \
         OutputTemperatureReader, ColdTemperatureReader
 from printer_server.pubsub.nanomsg_pubsub import NanomsgPublisher
-from printer_server.reqrep.nanomsg_reqrep import NanomsgResponser
+from printer_server.reqrep.nanomsg_reqrep import NanomsgRequester, \
+        NanomsgResponser
 from utils.smoothie import Smoothie
 
 from heater_server import HeaterServer
@@ -60,7 +61,9 @@ class HWServer:
                 heater_temp_reader=HeaterTemperatureReader(
                     config['HeaterServer']['Publish_Socket_Address']),
                 cold_temp_reader=ColdTemperatureReader(),
-                printer_controller=printer_controller
+                printer_controller=printer_controller,
+                refill_commander=NanomsgRequester(
+                    config['RefillServer']['Command_Socket_Address'])
                 )
         self.printer_server.start()
 
