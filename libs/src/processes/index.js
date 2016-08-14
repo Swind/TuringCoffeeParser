@@ -34,7 +34,7 @@ function load(processes_json){
 
   processes_json.forEach(function (process){
     process_obj = createProcess(process);
-    process_list = process_list.concat(process_obj.points);
+    process_list = process_list.concat(process_obj);
   });
 
   // Let pipeline to handle all processes
