@@ -47,8 +47,8 @@ class HWServer:
         baudrate = int(config['Printer']['Baudrate'])
 
         printer_controller = PrinterController(
-                cold_driver=Smoothie(port_name, baudrate),
-                hot_driver=Smoothie(port_name2, baudrate))
+                cold_driver=Smoothie(port_name2, baudrate),
+                hot_driver=Smoothie(port_name, baudrate))
 
         # Use the main thread to execute printer server
         self.printer_server = PrinterServer(
