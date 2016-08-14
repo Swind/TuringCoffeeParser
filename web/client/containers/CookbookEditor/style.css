@@ -1,5 +1,13 @@
 .Paper {
-  padding-top: 30px;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+@media only screen and (min-width: 768px) {
+  .Paper {
+    padding-top: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+  }
 }

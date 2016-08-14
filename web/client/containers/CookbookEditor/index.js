@@ -113,9 +113,9 @@ class CookbookEditor extends Component {
       }
 
       const onInsertBeforeProcess = () => {
-        // let clone = Object.assign({}, cookbook)
+        let clone = Object.assign({}, cookbook)
         cookbook.processes.splice(i, 0, Object.assign({}, PROCESS['spiral'].handle.default))
-        actions.modify(cookbook)
+        actions.modify(clone)
       }
 
       const selectProcess = (
@@ -137,11 +137,17 @@ class CookbookEditor extends Component {
       )
     })
 
+    const menu = (
+      <div key='Menu' style={{'position': 'absolute', 'top': this.calcMenuTop()}} ref='menu'>
+        <CookbookMenu onSaveCookbook={onSaveCookbook}/>
+      </div>
+    )
+
     return (
       <div>
         <Grid>
           <Row>
-            <Col xs={10} xsOffset={1} >
+            <Col xs={12} sm={12} md={10} mdOffset={1} >
               <div key='Paper'>
                 <Paper className={style.Paper} zDepth={1}>
                   <CookbookHeader cookbook={cookbook} onChange={onCookbookChange}/>
@@ -153,10 +159,8 @@ class CookbookEditor extends Component {
                 </Paper>
               </div>
             </Col>
-            <Col style={{'position': 'relative'}} xs={1}>
-              <div key='Menu' style={{'position': 'absolute', 'top': this.calcMenuTop()}} ref='menu'>
-                <CookbookMenu onSaveCookbook={onSaveCookbook}/>
-              </div>
+            <Col style={{'position': 'relative'}} md={1}>
+              {menu}
             </Col>
           </Row>
         </Grid>

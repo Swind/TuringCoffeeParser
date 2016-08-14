@@ -300,7 +300,7 @@ class CookbookProcessParameter extends Component {
 
     return (
       <div>
-        <ul>
+        <ul style={{'paddingLeft': '10px'}}>
           {parameters}
         </ul>
       </div>
