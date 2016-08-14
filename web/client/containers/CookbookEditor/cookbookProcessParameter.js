@@ -58,14 +58,14 @@ class SliderWithText extends Component {
 
 class CoordinatesParameter extends Component {
 
-  onXChange(_, v) {
+  onXChange(v) {
     let {value} = this.props
     const {onChange} = this.props
     value.x = v
     onChange(value)
   }
 
-  onYChange(_, v) {
+  onYChange(v) {
     let {value} = this.props
     const {onChange} = this.props
     value.y = v
@@ -90,7 +90,6 @@ class RangeParameter extends Component {
     let {value} = this.props
     const {onChange} = this.props
     value.start = v
-    console.log(value)
     onChange(value)
   }
 
