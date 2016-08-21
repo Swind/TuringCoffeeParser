@@ -45,8 +45,8 @@ class Heater {
         output_temperature: 60 
       }
     */
-    heater_status = this.monitor.getData(NAME);
-    output_status = this.monitor.getData(OUTPUT_NAME);
+    let heater_status = this.monitor.getData(NAME);
+    let output_status = this.monitor.getData(OUTPUT_NAME);
 
     return {
       cycle_time: heater_status.cycle_time,
