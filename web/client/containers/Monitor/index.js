@@ -24,6 +24,7 @@ class Monitor extends Component {
     this.state.setPoints = []
     this.state.outputTemperature = []
     this.state.labels = []
+    this.state.targetSetPoint = 0
   }
 
   componentDidMount() {
@@ -59,7 +60,15 @@ class Monitor extends Component {
   }
 
   onUpdate() {
+    const {actions} = this.props
+    actions.postHeaterStatus({temperature: this.state.targetSetPoint})
+  }
 
+  onTargetSetPointChange(_, v) {
+    let value = this.state.value
+    let newState = Object.assign({}, this.state)
+    newState.targetSetPoint = parseInt(v)
+    this.setState(newState)
   }
 
   render() {
@@ -116,9 +125,9 @@ class Monitor extends Component {
           {monitor.setPoint.toFixed(3) + '℃'}
         </InfoCard>
         <InfoCard title="Set Target temp.">
-          <TextField style={{'width': '100px'}} value={monitor.setPoint.toFixed(3)}>
+          <TextField id="targetSetPoint" style={{'width': '100px'}} type="number" onChange={this.onTargetSetPointChange.bind(this)} value={this.state.targetSetPoint}>
           </TextField>
-          <a onClick={this.onUpdate}>
+          <a onClick={this.onUpdate.bind(this)}>
             <FlatButton label="Set" />
           </a>
         </InfoCard>
