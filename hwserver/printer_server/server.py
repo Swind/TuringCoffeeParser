@@ -8,7 +8,7 @@ from pubsub.pubsub import SubscribeLooper
 from point import Point
 
 logger = logging.getLogger(__name__)
-CONST_ML = 10
+CONST_ML = 30
 
 
 class RealTimeTemperatureMixer(object):
