@@ -23,9 +23,9 @@ class Circle extends Base.Process {
     })
   }
 
-  constructor(params = Circle.default) {
+  constructor(params) {
+    params = params || Circle.default
     super(params);
-
     this.point_number = this.length / this.params.point_interval;
   }
 

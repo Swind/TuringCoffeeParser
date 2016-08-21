@@ -11,7 +11,8 @@ class Home extends Base.Process {
     })
   }
 
-  constructor(params = Home.default) {
+  constructor(params) {
+    params = params || Home.default
     super(params);
   }
 

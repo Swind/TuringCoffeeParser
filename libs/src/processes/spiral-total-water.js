@@ -23,8 +23,8 @@ class SpiralTotalWater extends Base.Process {
   }
 
   constructor(params) {
+    params = params || SpiralTotalWater.default
     super(params);
-
     this.created_points = this.generatePoints();
   }
 

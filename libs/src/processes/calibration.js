@@ -10,7 +10,8 @@ class Calibration extends Base.Process {
     })
   }
 
-  constructor(params = Mix.default) {
+  constructor(params) {
+    params = params || Calibration.default
     super(params);
   }
 

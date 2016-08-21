@@ -25,9 +25,9 @@ class FixedPoint extends Base.Process {
     })
   }
 
-  constructor(params = FixedPoint.default) {
+  constructor(params) {
+    params = params || FixedPoint.default
     super(params);
-
     this.point_number = this.length / this.params.point_interval;
   }
 

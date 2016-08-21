@@ -19,7 +19,8 @@ class Move extends Base.Process {
     })
   }
 
-  constructor(params = Move.default) {
+  constructor(params) {
+    params = params || Move.default
     super(params);
   }
 

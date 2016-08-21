@@ -23,7 +23,8 @@ class Spiral extends Base.Process {
     })
   }
 
-  constructor(params = Spiral.default) {
+  constructor(params) {
+    params = params || Spiral.default
     super(params);
     this.created_points = this.generatePoints();
   }
