@@ -8,8 +8,8 @@ class Monitor {
 
   updateData(name, msg) {
     const sub = this.subscribers[name];
-    logger.info(msg);
     sub.data = JSON.parse(msg);
+    logger.info(`${name}: ${JSON.stringify(sub.data, null, 2)}`)
 
     const d = new Date();
     sub.last_updated_time = d.getTime();
