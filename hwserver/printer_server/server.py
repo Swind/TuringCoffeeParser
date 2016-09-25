@@ -28,6 +28,7 @@ class RealTimeTemperatureMixer(object):
         self._subscriber_looper.sub(self._heater_temp_reader)
         self._subscriber_looper.sub(self._cold_temp_reader)
 
+        self._ratio = 0.0
         self._offset = 0.0
 
     def __del__(self):
@@ -125,6 +126,7 @@ class RealTimeTemperatureMixer(object):
                     elif ratio < 0:
                         ratio = 0
 
+                    self._ratio = ratio
                     point_pair[0].e = point_pair[0].e * ratio
                     point_pair[1].e = point.e - point_pair[0].e
                 else:
@@ -171,11 +173,18 @@ class PrinterServer(object):
         self._runner = PointStepRunner(self._ctrler)
         self._refill_commander = refill_commander
 
+        self._num_handled_points = 0
+        self._num_total_points = 0
+
         self._stop_flag = False
         self._q = Queue()
         self._thread = Thread(target=self._start)
         self._thread.daemon = True
         self._thread.start()
+
+        self._pubthread = Thread(target=self._pub)
+        self._pubthread.daemon = True
+        self._pubthread.start()
 
     def __del__(self):
         self.stop()
@@ -226,6 +235,8 @@ class PrinterServer(object):
                 continue
 
             self._refill_toggle(False)
+            self._num_total_points = 0
+            self._num_handled_points = 0
 
             points = [Point(p) for p in params]
             point_groups = self._split_points(points)
@@ -237,17 +248,22 @@ class PrinterServer(object):
                     while self._stop_flag is not True:
                         try:
                             stepper.next()
+                            self._num_handled_points += 1
                         except StopIteration:
                             break
                 elif g.name == 'wait':
                     logger.info('Wait {} seconds'.format(g.time))
                     if self._wait(g.time) is not True:
                         break
+                    self._num_handled_points += 1
                 elif g.name == 'calibration':
                     logger.info('Calibration')
                     if self._calibration() is not True:
                         break
+                    self._num_handled_points += 1
 
+            self._num_total_points = 0
+            self._num_handled_points = 0
             self._refill_toggle(True)
 
         self._ctrler.disconnect()
@@ -325,3 +341,12 @@ class PrinterServer(object):
             self._refill_commander.req({'Refill': 'START'})
         else:
             self._refill_commander.req({'Refill': 'STOP'})
+
+    def _pub(self):
+        while True:
+            self._puber.pub({
+                "total_points": self._num_total_points,
+                "handled_points": self._num_handled_points,
+                "ratio": self._mixer._ratio
+            })
+            time.sleep(1)
