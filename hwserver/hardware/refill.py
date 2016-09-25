@@ -54,9 +54,9 @@ class Refill(object):
                 # Every 200 steps check water level and stop flag
                 for index in range(0, 200):
                     GPIO.output(self.motor_pin[0], True)
-                    time.sleep(0.0007)
+                    time.sleep(0.0005)
                     GPIO.output(self.motor_pin[0], False)
-                    time.sleep(0.0007)
+                    time.sleep(0.0005)
         finally:
             GPIO.output(self.water_level_pin[0], False)
             GPIO.output(self.motor_pin[1], False)
