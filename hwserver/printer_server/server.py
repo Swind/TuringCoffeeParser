@@ -33,20 +33,6 @@ class RealTimeTemperatureMixer(object):
     def __del__(self):
         self._subscriber_looper.stop()
 
-    @staticmethod
-    def _group(points):
-        water_sum = 0
-        start = 0
-        index = 0
-        for index, point in enumerate(points):
-            if point.e is not None:
-                water_sum += point.e
-                if water_sum > CONST_ML:
-                    yield points[start:index+1]
-                    start = index
-                    water_sum = 0
-        yield points[start:index+1]
-
     def capture_calibration_hot(self):
         self._calibration_hot = self._output_temp_reader.read()
 
@@ -148,10 +134,7 @@ class RealTimeTemperatureMixer(object):
         return point_pairs
 
     def mix(self, points):
-        groups = RealTimeTemperatureMixer._group(points)
-        for group in groups:
-            tmp = self._mix(group)
-            yield tmp
+        return self._mix(points)
 
 
 class PointStepRunner(object):
@@ -201,15 +184,19 @@ class PrinterServer(object):
         point_groups = []
         start = 0
         end = 0
+        water_sum = 0
         for (end, point) in enumerate(points):
-            if point.is_command() and point.name == 'wait':
+            if point.is_command() and (point.name == 'wait' or point.name == 'calibration'):
                 point_groups.append(points[start:end])
                 point_groups.append(point)
                 start = end + 1
-            if point.is_command() and point.name == 'calibration':
-                point_groups.append(points[start:end])
-                point_groups.append(point)
-                start = end + 1
+                water_sum = 0
+            elif point.e is not None:
+                water_sum += point.e
+                if water_sum > CONST_ML:
+                    point_groups.append(points[start:end+1])
+                    start = end + 1
+                    water_sum = 0
         point_groups.append(points[start:end+1])
         return point_groups
 
@@ -246,13 +233,12 @@ class PrinterServer(object):
             for g in point_groups:
                 if type(g) is list:
                     point_pairs = self._mixer.mix(g)
-                    for points in point_pairs:
-                        stepper = self._runner.step(points)
-                        while self._stop_flag is not True:
-                            try:
-                                stepper.next()
-                            except StopIteration:
-                                break
+                    stepper = self._runner.step(point_pairs)
+                    while self._stop_flag is not True:
+                        try:
+                            stepper.next()
+                        except StopIteration:
+                            break
                 elif g.name == 'wait':
                     logger.info('Wait {} seconds'.format(g.time))
                     if self._wait(g.time) is not True:
