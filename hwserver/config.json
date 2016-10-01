@@ -1,12 +1,12 @@
 {
     "GPIO_pin_number_scheme": "BOARD",
-    "Emulator": true,
+    "Emulator": false,
     "Unit": "C",
 
     "Heater": {
-        "pin": 7 
+        "pin": 7
     },
-    "Sensors": { 
+    "Sensors": {
         "PT100_tank": {
             "name": "PT100_tank",
             "type": "MAX31865",
@@ -38,8 +38,8 @@
     },
 
     "Printer":{
-        "PortName": "/dev/ttyACM1",
-        "PortName2": "/dev/ttyACM0",
+        "PortName": "/dev/ttyACM0",
+        "PortName2": "/dev/ttyACM1",
         "Baudrate": 115200
     },
 
@@ -51,25 +51,25 @@
 
     "HeaterServer":
     {
-        "Publish_Socket_Address": "ipc:///tmp/heater_pub_channel",
-        "Command_Socket_Address": "ipc:///tmp/heater_cmd_channel"
+        "Publish_Socket_Address": "tcp://192.168.0.27:5001",
+        "Command_Socket_Address": "tcp://192.168.0.27:5002"
     },
 
     "PrinterServer":
     {
-        "Publish_Socket_Address": "ipc:///tmp/printer_pub_channel",
-        "Command_Socket_Address": "ipc:///tmp/printer_cmd_channel"
+        "Publish_Socket_Address": "tcp://192.168.0.27:5003",
+        "Command_Socket_Address": "tcp://192.168.0.27:5004"
     },
 
     "RefillServer":
     {
-        "Command_Socket_Address": "ipc:///tmp/refill_cmd_channel",
-        "Publish_Socket_Address": "ipc:///tmp/refill_pub_channel"
+        "Publish_Socket_Address": "tcp://192.168.0.27:5005",
+        "Command_Socket_Address": "tcp://192.168.0.27:5006"
     },
 
     "OutputServer":
     {
-        "Command_Socket_Address": "ipc:///tmp/output_cmd_channel",
-        "Publish_Socket_Address": "ipc:///tmp/output_pub_channel"
+        "Publish_Socket_Address": "tcp://192.168.0.27:5007",
+        "Command_Socket_Address": "tcp://192.168.0.27:5008"
     }
 }

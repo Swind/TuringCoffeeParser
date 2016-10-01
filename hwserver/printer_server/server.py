@@ -293,9 +293,9 @@ class PrinterServer(object):
             ],
             [
                 Point(
-                    {'type': 'point', 'x': -80, 'y': 50, 'z': 290, 'f': 5000}),
+                    {'type': 'point', 'x': -80, 'y': 50, 'z': 170, 'f': 5000}),
                 Point(
-                    {'type': 'point', 'x': -80, 'y': 50, 'z': 290, 'f': 5000})
+                    {'type': 'point', 'x': -80, 'y': 50, 'z': 170, 'f': 5000})
             ]
         ])
         stepper.next()
