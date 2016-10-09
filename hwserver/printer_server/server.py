@@ -98,8 +98,6 @@ class RealTimeTemperatureMixer(object):
     def _mix(self, points):
         point_pairs = []
         out_t = self._output_temp_reader.read()
-        cold_t = self._cold_temp_reader.read()
-        hot_t = self._heater_temp_reader.read()
 
         offset = None
         for point in points:
@@ -195,7 +193,8 @@ class PrinterServer(object):
         end = 0
         water_sum = 0
         for (end, point) in enumerate(points):
-            if point.is_command() and (point.name == 'wait' or point.name == 'calibration'):
+            if point.is_command() and \
+               (point.name == 'wait' or point.name == 'calibration'):
                 point_groups.append(points[start:end])
                 point_groups.append(point)
                 start = end + 1
