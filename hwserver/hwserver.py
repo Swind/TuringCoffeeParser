@@ -8,6 +8,8 @@ from printer_server.temperature_reader import HeaterTemperatureReader, \
 from printer_server.pubsub.nanomsg_pubsub import NanomsgPublisher
 from printer_server.reqrep.nanomsg_reqrep import NanomsgRequester, \
         NanomsgResponser
+from printer_server.point import Point
+
 from utils.smoothie import Smoothie
 
 from heater_server import HeaterServer
@@ -63,7 +65,11 @@ class HWServer:
                 cold_temp_reader=ColdTemperatureReader(),
                 printer_controller=printer_controller,
                 refill_commander=NanomsgRequester(
-                    config['RefillServer']['Command_Socket_Address'])
+                    config['RefillServer']['Command_Socket_Address']),
+                waste_water_point=Point.create_point(
+                    x=config['WasteWaterPosition']['x'],
+                    y=config['WasteWaterPosition']['y'],
+                    z=config['WasteWaterPosition']['z'])
                 )
         self.printer_server.start()
 

@@ -71,5 +71,12 @@
     {
         "Publish_Socket_Address": "tcp://192.168.0.27:5007",
         "Command_Socket_Address": "tcp://192.168.0.27:5008"
+    },
+
+    "WasteWaterPosition":
+    {
+        "x": -80,
+        "y": 50,
+        "z": 170
     }
 }
