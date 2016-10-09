@@ -68,3 +68,13 @@ def test_point_time_function():
     p = Point({'type': 'command', 'name': 'wait', 'time': 10})
     assert p.is_command() is True
     assert p.time == 10
+
+
+def test_create_point():
+    p = Point.create_point()
+    assert p.is_point() is True
+
+
+def test_creat_command():
+    p = Point.create_command('wait')
+    assert p.is_command() is True

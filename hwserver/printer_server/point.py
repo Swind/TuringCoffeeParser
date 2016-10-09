@@ -4,6 +4,28 @@
 
 class Point(object):
 
+    @staticmethod
+    def create_point(x=None, y=None, z=None, e=None, f=None, t=None):
+        params = {'type': 'point'}
+        if x is not None:
+            params['x'] = x
+        if y is not None:
+            params['y'] = y
+        if z is not None:
+            params['z'] = z
+        if e is not None:
+            params['e'] = e
+        if f is not None:
+            params['f'] = f
+        if t is not None:
+            params['t'] = t
+        return Point(params)
+
+    @staticmethod
+    def create_command(name):
+        params = {'type': 'command', 'name': name}
+        return Point(params)
+
     def __init__(self, params):
         self._params = params
 

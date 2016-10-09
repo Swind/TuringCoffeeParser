@@ -279,6 +279,8 @@ class PrinterServer(object):
                 pass
             elif 'points' in msg:
                 self._q.put(msg['points'])
+            elif 'calibration' in msg:
+                self._q.put([Point.create_command('calibration')])
 
     def stop(self):
         self._stop_flag = True
@@ -287,14 +289,12 @@ class PrinterServer(object):
         # HOME
         stepper = self._runner.step([
             [
-                Point({'type': 'command', 'name': 'home'}),
-                Point({'type': 'command', 'name': 'home'})
+                Point.create_command('home'),
+                Point.create_command('home')
             ],
             [
-                Point(
-                    {'type': 'point', 'x': -80, 'y': 50, 'z': 290, 'f': 5000}),
-                Point(
-                    {'type': 'point', 'x': -80, 'y': 50, 'z': 290, 'f': 5000})
+                Point.create_point(x=-80, y=50, z=170, f=5000),
+                Point.create_point(x=-80, y=50, z=170, f=5000)
             ]
         ])
         stepper.next()
@@ -303,8 +303,8 @@ class PrinterServer(object):
         # Output Cold water
         stepper = self._runner.step([
             [
-                Point({'type': 'point', 'f': 250}),
-                Point({'type': 'point', 'e': 0.1, 'f': 250})
+                Point.create_point(f=250),
+                Point.create_point(e=0.1, f=250)
             ]
         ] * 1000)
         while self._stop_flag is not True:
@@ -320,8 +320,8 @@ class PrinterServer(object):
         # Output Hot water
         stepper = self._runner.step([
             [
-                Point({'type': 'point', 'e': 0.1, 'f': 200}),
-                Point({'type': 'point', 'f': 200})
+                Point.create_point(e=0.1, f=200),
+                Point.create_point(f=200)
             ]
         ] * 1000)
         while self._stop_flag is not True:
