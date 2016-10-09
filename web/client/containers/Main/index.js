@@ -60,12 +60,16 @@ class Main extends Component {
             open={this.state.open}
             onRequestChange={(open) => this.setState({open})}
           >
-            <MenuItem onTouchTap={this.handleClose.bind(this)}>
-              <Link to="/">Barista</Link>
-            </MenuItem>
-            <MenuItem onTouchTap={this.handleClose.bind(this)}>
-              <Link to="/monitor">Monitor</Link>
-            </MenuItem>
+            <Link to="/">
+              <MenuItem onTouchTap={this.handleClose.bind(this)}>
+                Barista
+              </MenuItem>
+            </Link>
+            <Link to="/monitor">
+              <MenuItem onTouchTap={this.handleClose.bind(this)}>
+                Monitor
+              </MenuItem>
+            </Link>
           </Drawer>
           {children}
         </div>
