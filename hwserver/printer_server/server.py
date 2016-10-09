@@ -20,8 +20,8 @@ class RealTimeTemperatureMixer(object):
         self._output_temp_reader = output_temp_reader
         self._heater_temp_reader = heater_temp_reader
         self._cold_temp_reader = cold_temp_reader
-        self._calibration_hot = 0
-        self._calibration_cold = 0
+        self._calibration_hot = 90
+        self._calibration_cold = 20
 
         self._subscriber_looper = SubscribeLooper()
         self._subscriber_looper.sub(self._output_temp_reader)
