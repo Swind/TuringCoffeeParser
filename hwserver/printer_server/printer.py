@@ -17,9 +17,25 @@ class PrinterController(object):
         if self._hot_printer.open() is not True:
             logger.error('Cannot open printer for hot water')
             return False
+
         if self._cold_printer.open() is not True:
             logger.error('Cannot open printer for cold water')
             return False
+
+	# read until ok 
+	hot_resp = None
+	while(True):
+	    hot_resp = self._hot_printer.readline() 	
+	    if "ok" in hot_resp:
+		break
+
+	self._hot_printer.write("ls sd/type")
+	hot_resp = self._hot_printer.readline()	
+	print hot_resp
+
+	if "cold" in hot_resp:
+	   logger.warning("Find type/cold in hot printer, so switch the hot printer and cold printer port")
+	   self._hot_printer, self._cold_printer = self._cold_printer, self._hot_printer
 
         # HOME, Set Unit to Millimeters,
         # Set to Absolute Positioning, Set extruder to relative mode
