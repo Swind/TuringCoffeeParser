@@ -71,5 +71,12 @@
     {
         "Command_Socket_Address": "ipc:///tmp/output_cmd_channel",
         "Publish_Socket_Address": "ipc:///tmp/output_pub_channel"
+    },
+
+    "WasteWaterPosition":
+    {
+        "x": -80,
+        "y": 50,
+        "z": 170
     }
 }

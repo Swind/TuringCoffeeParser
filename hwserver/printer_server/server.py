@@ -159,7 +159,8 @@ class PrinterServer(object):
                  heater_temp_reader,
                  cold_temp_reader,
                  printer_controller,
-                 refill_commander):
+                 refill_commander,
+                 waste_water_point):
 
         self._puber = publisher
         self._reper = responser
@@ -170,6 +171,7 @@ class PrinterServer(object):
                 cold_temp_reader=cold_temp_reader)
         self._runner = PointStepRunner(self._ctrler)
         self._refill_commander = refill_commander
+        self._waste_water_point = waste_water_point
 
         self._num_handled_points = 0
         self._num_total_points = 0
@@ -286,6 +288,10 @@ class PrinterServer(object):
         self._stop_flag = True
 
     def _calibration(self):
+
+        waste_water_point = copy.deepcopy(self._waste_water_point)
+        waste_water_point.f = 5000
+
         # HOME
         stepper = self._runner.step([
             [
@@ -293,8 +299,8 @@ class PrinterServer(object):
                 Point.create_command('home')
             ],
             [
-                Point.create_point(x=-80, y=50, z=170, f=5000),
-                Point.create_point(x=-80, y=50, z=170, f=5000)
+                waste_water_point,
+                waste_water_point
             ]
         ])
         stepper.next()
