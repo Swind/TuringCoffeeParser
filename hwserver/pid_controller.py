@@ -17,11 +17,13 @@ class PIDController(object):
         self.__heater = hardware.get_heater(config)
         self.__sensors = [hardware.get_sensor(config, "PT100_tank")]
 
+	# Default Tank Temperature
+        self.set_point = config.get('DefaultTankTemperature', 0)
+
         # PID configuration
         pid_config = config['PID']
 
         self.cycle_time = pid_config['cycle_time']
-        self.set_point = 0
 
         # Init PID module
         self.pid = pid(
@@ -77,7 +79,7 @@ class PIDController(object):
             logger.debug(
                 'calcPID_reg4 -> temperature: {}, set_point: {}'.format(temperature, self.set_point))
 
-            if (self.set_point - 2) < temperature < self.set_point:
+            if (self.set_point - 5) < temperature < self.set_point:
                 duty_cycle = self.pid.calcPID_reg4(
                     temperature, self.set_point, True)
             elif temperature >= self.set_point:

@@ -1,12 +1,12 @@
 {
     "GPIO_pin_number_scheme": "BOARD",
-    "Emulator": false,
+    "Emulator": true,
     "Unit": "C",
 
     "Heater": {
-        "pin": 7
+        "pin": 7 
     },
-    "Sensors": {
+    "Sensors": { 
         "PT100_tank": {
             "name": "PT100_tank",
             "type": "MAX31865",
@@ -38,8 +38,8 @@
     },
 
     "Printer":{
-        "PortName": "/dev/ttyACM0",
-        "PortName2": "/dev/ttyACM1",
+        "PortName": "/dev/ttyACM1",
+        "PortName2": "/dev/ttyACM0",
         "Baudrate": 115200
     },
 
@@ -71,14 +71,5 @@
     {
         "Command_Socket_Address": "ipc:///tmp/output_cmd_channel",
         "Publish_Socket_Address": "ipc:///tmp/output_pub_channel"
-    },
-
-    "WasteWaterPosition":
-    {
-        "x": 100,
-        "y": 50,
-        "z": 185
-    },
-
-    "DefaultTankTemperature": 90
+    }
 }
