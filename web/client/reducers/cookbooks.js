@@ -55,6 +55,10 @@ export default handleActions({
       message: message
     }
   },
+  'copy cookbook' (state, action) {
+    const response = action.payload
+    return state 
+  },
   'brew' (state, action) {
 
     const response = action.payload

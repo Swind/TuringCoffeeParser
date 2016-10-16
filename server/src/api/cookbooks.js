@@ -175,6 +175,44 @@ class CookbooksAPI extends API {
     });
   }
 
+  copySpec() {
+    return {
+      method: 'POST',
+      path: '/api/cookbooks/{id}/copy',
+      config: {
+        tags: ['api'],
+        description: 'Copy the cookbook',
+        notes: 'Copy the cookbook',
+        validate: {
+          params: {
+            id: Joi.string().required(),
+          },
+        },
+      },
+      handler: this.copy.bind(this),
+    };
+  }
+
+  copy(request, reply) {
+    const id = request.params.id;
+    this.manager.read(request.params.id, (err, cookbook) => {
+      if (err) {
+        this.failed(reply, 503, err);
+      } else if (!cookbook) {
+        this.failed(reply, 404, `Can't find cookbook with id ${id}`);
+      } else {
+        delete cookbook['_id'];
+        this.manager.create(cookbook, (err, doc) => {
+          if (err) {
+            this.failed(reply, 503, err);
+          } else {
+            this.successed(reply, 201, 'Copy the cookbook successfully', doc);
+          }
+        });
+      }
+    });
+  }
+
   apiSpecs() {
     return [
       this.listSpec(),
@@ -182,6 +220,7 @@ class CookbooksAPI extends API {
       this.readSpec(),
       this.updateSpec(),
       this.deleteSpec(),
+      this.copySpec()
     ];
   }
 }
