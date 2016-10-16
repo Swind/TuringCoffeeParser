@@ -11,7 +11,7 @@ import CardText from 'material-ui/Card/CardText'
 class CookbookCard extends Component {
   render() {
 
-    const {title, subtitle, href, onDelete, onBrew} = this.props
+    const {title, subtitle, href, onDelete, onBrew, onCopy} = this.props
 
     return (
       <Card>
@@ -22,6 +22,7 @@ class CookbookCard extends Component {
           </Link>
           <FlatButton label='Brew' onMouseUp={onBrew}/>
           <FlatButton label='Delete' secondary={true} onMouseUp={onDelete}/>
+          <FlatButton label='Copy' secondary={true} onMouseUp={onCopy}/>
         </CardActions>
       </Card>
     )

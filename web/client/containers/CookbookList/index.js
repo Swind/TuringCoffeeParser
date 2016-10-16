@@ -91,6 +91,11 @@ class CookbookList extends Component {
       actions.brew(id)
     }
 
+    const onCopy = (id) => {
+      actions.copy(id)
+      actions.list()
+    }
+
     let display
     if (Array.isArray(cookbooks)) {
       display = 
@@ -106,6 +111,7 @@ class CookbookList extends Component {
                     href={`/editor/${cookbook._id}`}
                     onBrew={() => onBrew(cookbook._id)}
                     onDelete={() => onDeleteCookbook(cookbook._id)}
+                    onCopy={() => onCopy(cookbook._id)}
                   />)}
             )
           }
