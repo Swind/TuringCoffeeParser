@@ -1,6 +1,6 @@
 const Channel = require('../channel');
 
-const NAME = 'printer';
+const NAME = 'heater';
 const PUB_ADDRESS = `ipc:///tmp/${NAME}_pub_channel`;
 const CMD_ADDRESS = `ipc:///tmp/${NAME}_cmd_channel`;
 

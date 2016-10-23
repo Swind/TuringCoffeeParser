@@ -57,8 +57,20 @@ export default handleActions({
   },
   'copy cookbook' (state, action) {
     const response = action.payload
-    return state 
+
+    if (response.status === 200) {
+      cookbook = response.body.data
+      message = response.body.message
+    } else {
+      message = `Error ${response.status}: Failed to copy cookbook`
+    }
+
+    return {
+      cookbooks: state.cookbooks.push(cookbook),
+      message: message
+    }
   },
+
   'brew' (state, action) {
 
     const response = action.payload

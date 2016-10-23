@@ -33,7 +33,7 @@ function load(processes_json){
   let all_points = []
 
   processes_json.forEach(function (process){
-    process_obj = createProcess(process);
+    var process_obj = createProcess(process);
     process_list = process_list.concat(process_obj);
   });
 
