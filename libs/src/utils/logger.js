@@ -5,7 +5,7 @@ var winston = require('winston')
 var path = require('path')
 var PROJECT_ROOT = path.join(__dirname, '..')
 
-timestamp = () => {
+var timestamp = () => {
   return new Date().toLocaleString();
 }
 
