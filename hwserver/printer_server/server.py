@@ -299,10 +299,15 @@ class PrinterServer(object):
                 Point.create_command('home')
             ],
             [
+                Point.create_point(z=waste_water_point.z, f=waste_water_point.f),
+                Point.create_point(z=waste_water_point.z, f=waste_water_point.f)
+            ],
+            [
                 waste_water_point,
                 waste_water_point
             ]
         ])
+        stepper.next()
         stepper.next()
         stepper.next()
 

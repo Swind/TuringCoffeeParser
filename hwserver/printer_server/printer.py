@@ -3,6 +3,7 @@
 
 from threading import Lock
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -22,13 +23,17 @@ class PrinterController(object):
             logger.error('Cannot open printer for cold water')
             return False
 
+	time.sleep(1)
+
 	# read until ok 
 	hot_resp = None
 	while(True):
 	    hot_resp = self._hot_printer.readline() 	
+	    print("Read until ok:" + hot_resp)
 	    if "ok" in hot_resp:
 		break
-
+	
+	logger.info("Check the hot file is in hot smoothie board.")
 	self._hot_printer.write("ls sd/type")
 	hot_resp = self._hot_printer.readline()	
 	print hot_resp

@@ -75,10 +75,10 @@
 
     "WasteWaterPosition":
     {
-        "x": 100,
-        "y": 50,
-        "z": 185
+        "x": 75,
+        "y": 35,
+        "z": 180
     },
 
-    "DefaultTankTemperature": 90
+    "DefaultTankTemperature": -1200
 }

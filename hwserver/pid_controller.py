@@ -55,7 +55,6 @@ class PIDController(object):
     def get_temperature(self):
         def get_sensor_records_avg(sensor):
             records = sensor.get_records()
-
             total = 0
             if records:
                 for record in records:
