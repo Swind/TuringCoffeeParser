@@ -165,6 +165,7 @@ class PrinterServer(object):
         self._puber = publisher
         self._reper = responser
         self._ctrler = printer_controller
+	self._output_temp_reader = output_temp_reader
         self._mixer = RealTimeTemperatureMixer(
                 output_temp_reader=output_temp_reader,
                 heater_temp_reader=heater_temp_reader,
@@ -264,6 +265,7 @@ class PrinterServer(object):
                     self._num_handled_points += 1
                 elif g.name == 'mix':
                     logger.info('Mix water to target temperature')
+		    self._mix_water_to_temperature(g.t)
                     self._num_handled_points += 1
 
             self._num_total_points = 0
@@ -292,25 +294,51 @@ class PrinterServer(object):
 
     def _mix_water_to_temperature(self, target_temperature):
         sample = copy.deepcopy(self._waste_water_point)
-        const_time = 3
+	sample.f = 5000
+        const_time = 1 
         const_water = CONST_ML * const_time
 
+        # HOME
+        stepper = self._runner.step([
+            [
+                Point.create_command('home'),
+                Point.create_command('home')
+            ],
+            [
+                Point.create_point(z=sample.z, f=sample.f),
+                Point.create_point(z=sample.z, f=sample.f)
+            ],
+            [
+                sample,
+               	sample 
+            ]
+        ])
+        stepper.next()
+        stepper.next()
+        stepper.next()
+
+	count = 0
         while(target_temperature + 2 < self._output_temp_reader.read() or 
               target_temperature - 2 > self._output_temp_reader.read()):
+		
+	    if count > 7:
+		break
 
             points = []
-            for index in range(0, const_water, 0.2):
-                points.append(Point.create_point(sample.x, sample.y, sample.z, 0.2))
+            for index in range(0, const_water * 10, 2):
+                points.append(Point.create_point(t=target_temperature, e=0.2, f=200))
 
             # Let _mix to create the hot/cold points accroding to the temperature.
-            pair_points = self._mix(points)        
+            pair_points = self._mixer._mix(points)        
             stepper = self._runner.step(pair_points)
 
             while self._stop_flag is not True:
                 try:
                     stepper.next()
                 except StopIteration:
-                    break
+                    break 
+
+	    count += 1
 
         return True
 
