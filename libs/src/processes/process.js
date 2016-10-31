@@ -9,6 +9,8 @@ const Calibration = require('./calibration');
 const Mix = require('./mix');
 
 var _processes = {
+  "mix": Mix,
+  "calibration": Calibration,
   "circle": Circle,
   "fixed_point": FixedPoint,
   "spiral": Spiral,
@@ -16,8 +18,6 @@ var _processes = {
   "wait": Wait,
   "home": Home,
   "move": Move,
-  "calibration": Calibration,
-  "mix": Mix,
 }
 
 function createProcess(params){

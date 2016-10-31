@@ -1,6 +1,5 @@
 const Base = require('./base');
-const Move = require('./move');
-const FixedPoint = require('./fixed-point');
+const MixCommand = Base.MixCommand;
 
 class Mix extends Base.Process {
 
@@ -31,7 +30,7 @@ class Mix extends Base.Process {
 
   get points() {
     return [
-      new MixCommand(self.params.temperature)
+      new MixCommand(this.params.temperature)
     ];
   }
 }

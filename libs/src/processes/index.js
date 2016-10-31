@@ -6,8 +6,10 @@ const Wait = require('./wait');
 const Home = require('./home');
 const Move = require('./move');
 const Calibration = require('./calibration');
+const Mix = require('./mix');
 
 var _processes = {
+  "mix": Mix,
   "circle": Circle,
   "fixed_point": FixedPoint,
   "spiral": Spiral,
