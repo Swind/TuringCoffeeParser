@@ -196,7 +196,7 @@ class PrinterServer(object):
         water_sum = 0
         for (end, point) in enumerate(points):
             if point.is_command() and \
-               (point.name == 'wait' or point.name == 'calibration'):
+               (point.name == 'wait' or point.name == 'calibration' or point.name == 'mix'):
                 point_groups.append(points[start:end])
                 point_groups.append(point)
                 start = end + 1
@@ -262,6 +262,9 @@ class PrinterServer(object):
                     if self._calibration() is not True:
                         break
                     self._num_handled_points += 1
+                elif g.name == 'mix':
+                    logger.info('Mix water to target temperature')
+                    self._num_handled_points += 1
 
             self._num_total_points = 0
             self._num_handled_points = 0
@@ -286,6 +289,30 @@ class PrinterServer(object):
 
     def stop(self):
         self._stop_flag = True
+
+    def _mix_water_to_temperature(self, target_temperature):
+        sample = copy.deepcopy(self._waste_water_point)
+        const_time = 3
+        const_water = CONST_ML * const_time
+
+        while(target_temperature + 2 < self._output_temp_reader.read() or 
+              target_temperature - 2 > self._output_temp_reader.read()):
+
+            points = []
+            for index in range(0, const_water, 0.2):
+                points.append(Point.create_point(sample.x, sample.y, sample.z, 0.2))
+
+            # Let _mix to create the hot/cold points accroding to the temperature.
+            pair_points = self._mix(points)        
+            stepper = self._runner.step(pair_points)
+
+            while self._stop_flag is not True:
+                try:
+                    stepper.next()
+                except StopIteration:
+                    break
+
+        return True
 
     def _calibration(self):
 

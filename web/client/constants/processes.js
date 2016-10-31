@@ -6,6 +6,7 @@ import wait from 'libs/processes/wait'
 import home from 'libs/processes/home'
 import move from 'libs/processes/move'
 import calibration from 'libs/processes/calibration'
+import mix from 'libs/processes/mix'
 
 export const PROCESS = {
   'spiral' : {
@@ -31,5 +32,8 @@ export const PROCESS = {
   },
   'calibration': {
     handle: calibration
+  },
+  'mix': {
+    handle: mix
   }
 }
