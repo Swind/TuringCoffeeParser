@@ -40,14 +40,13 @@ class Command {
 class MixCommand extends Command {
   constructor(temperature) {
     super('mix')
-    this.t = temperature
+    this.temperature = temperature
   }
 }
 
 class CalibrationCommand extends Command {
-  constructor(temperature) {
+  constructor() {
     super('calibration')
-    this.t = temperature
   }
 }
 

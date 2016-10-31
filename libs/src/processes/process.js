@@ -6,6 +6,7 @@ const Wait = require('./wait');
 const Home = require('./home');
 const Move = require('./move');
 const Calibration = require('./calibration');
+const Mix = require('./mix');
 
 var _processes = {
   "circle": Circle,
@@ -16,6 +17,7 @@ var _processes = {
   "home": Home,
   "move": Move,
   "calibration": Calibration,
+  "mix": Mix,
 }
 
 function createProcess(params){
