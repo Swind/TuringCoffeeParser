@@ -22,3 +22,6 @@ cookbooks
 npm-debug.log
 *.pyc
 .python-version
+.idea
+*.tar.gz
+

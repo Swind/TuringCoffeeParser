@@ -13,14 +13,9 @@ addons:
       - gcc-4.8
       - g++-4.8
 
-before_script:
-  - cd server
-  - npm install
-
 before_install:
   - if [[ $TRAVIS_OS_NAME == "linux" ]]; then export CC=gcc-4.8 && export CXX=g++-4.8; fi
 
 script:
-  - npm build 
-  - npm test 
-
+  - npm install -g babel-cli
+  - ./build.sh
