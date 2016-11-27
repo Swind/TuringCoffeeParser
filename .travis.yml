@@ -1,21 +1,29 @@
 sudo: false
-
 language: node_js
-
 node_js:
-  - "6"
-
+- '6'
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - gcc-4.8
-      - g++-4.8
-
+    - gcc-4.8
+    - g++-4.8
 before_install:
-  - if [[ $TRAVIS_OS_NAME == "linux" ]]; then export CC=gcc-4.8 && export CXX=g++-4.8; fi
-
+- if [[ $TRAVIS_OS_NAME == "linux" ]]; then export CC=gcc-4.8 && export CXX=g++-4.8;
+  fi
 script:
-  - npm install -g babel-cli
-  - ./build.sh
+- npm install -g babel-cli
+- "./build.sh"
+- pwd
+- ls
+
+deploy:
+  provider: releases
+  api_key:
+    secure: FWe2lCUj0qHDAxZ0cIcgmOPPbNy6y+kGuk1qWJpK4Y2NK2bzD7mRmMrgy1KgTPT8CRMqzpzxd56WsIK89ljgtJmc8KGwfa/gEBgo7FSNZe+0rX2yNjpxut34HiL8ygGbms5V3HZKCvZTpSuFmDkZNZKb0HICTuwx0SpInEj7qJIrN0zC9v0WBydkTD7ogQ4ziOOjRC46KZ2PrkHOQypecWGUKPuEolgFF08n08re2klL/fb66diTujuSg+ct6MykJ/vx72FeEJV46IR+uFRjiu88xRPpdrOJocTSynNEKkyflV8G6NAfBX4ddV89r6dLeOK1hun0pnO4c9ke6GjE0/BvCwPXa6lFszVRtYlNqSu62AyDaMBgZ5P1iII14g7+chrS7ltpQTF8rYat6c5V1v+g6yY/TrLwlngPV4BpbGDZsHTatBbbAYwHxZI4JS4J96nD8/qkTJe102x96z0ChR+iO4xdvzGiImaHFd7QlYY0F96J8WYTYbGkZOI+ysYhB1iEYmWUHYvYlYSLnU1GTwiWnZEJNFcG/hwfyNkTKlwInYCkj3dXVcXUsHsQqx8V1c1rsDK0si6ATkSTdeqWIRtEsQyp4e/Bg1dKi5Q0Uk5FLOKVIAxmOkcGNe1VOZOBGGgSvvHcF52xPhLtip1GD4IfsjPV9UVG+vsmOCgrfN4=
+  file: turing_coffee.tar.gz 
+  skip_cleanup: true
+  on:
+    repo: Swind/TuringCoffeeParser
+    branch: babel
