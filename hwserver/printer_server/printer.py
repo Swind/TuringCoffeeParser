@@ -15,32 +15,32 @@ class PrinterController(object):
         self._cold_printer = cold_driver
 
     def connect(self):
-        if self._hot_printer.open() is not True:
-            logger.error('Cannot open printer for hot water')
-            return False
+
+        hot_resp = None
+        while (True):
+            if self._hot_printer.open() is not True:
+                logger.error('Cannot open printer for hot water')
+                return False
+            hot_resp = self._hot_printer.readline()
+            hot_resp = self._hot_printer.readline()
+            if "ok" in hot_resp:
+                break
+            self._hot_printer.close()
 
         if self._cold_printer.open() is not True:
             logger.error('Cannot open printer for cold water')
             return False
 
-	time.sleep(1)
+        time.sleep(1)
 
-	# read until ok 
-	hot_resp = None
-	while(True):
-	    hot_resp = self._hot_printer.readline() 	
-	    print("Read until ok:" + hot_resp)
-	    if "ok" in hot_resp:
-		break
-	
-	logger.info("Check the hot file is in hot smoothie board.")
-	self._hot_printer.write("ls sd/type")
-	hot_resp = self._hot_printer.readline()	
-	print hot_resp
+        logger.info("Check the hot file is in hot smoothie board.")
+        self._hot_printer.write("ls sd/type")
+        hot_resp = self._hot_printer.readline()
+        print hot_resp
 
-	if "cold" in hot_resp:
-	   logger.warning("Find type/cold in hot printer, so switch the hot printer and cold printer port")
-	   self._hot_printer, self._cold_printer = self._cold_printer, self._hot_printer
+        if "cold" in hot_resp:
+            logger.warning("Find type/cold in hot printer, so switch the hot printer and cold printer port")
+            self._hot_printer, self._cold_printer = self._cold_printer, self._hot_printer
 
         # HOME, Set Unit to Millimeters,
         # Set to Absolute Positioning, Set extruder to relative mode
