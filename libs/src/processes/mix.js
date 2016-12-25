@@ -1,6 +1,8 @@
 const Base = require('./base');
 const MixCommand = Base.MixCommand;
 
+const QUICK_MOVE_F = 5000;
+
 class Mix extends Base.Process {
 
   static get default() {
@@ -30,7 +32,8 @@ class Mix extends Base.Process {
 
   get points() {
     return [
-      new MixCommand(this.params.temperature)
+      new MixCommand(this.params.temperature),
+      new Base.Point(0, 0, QUICK_MOVE_F)
     ];
   }
 }
