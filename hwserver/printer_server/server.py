@@ -321,7 +321,7 @@ class PrinterServer(object):
 
             points = []
             for index in range(0, const_water * 10, 2):
-                points.append(Point.create_point(t=target_temperature, e=0.2, f=200))
+                points.append(Point.create_point(t=target_temperature, e=0.2, f=180))
 
             # Let _mix to create the hot/cold points accroding to the temperature.
             pair_points = self._mixer._mix(points)        
@@ -364,8 +364,8 @@ class PrinterServer(object):
         # Output Cold water
         stepper = self._runner.step([
             [
-                Point.create_point(f=250),
-                Point.create_point(e=0.1, f=250)
+                Point.create_point(f=180),
+                Point.create_point(e=0.1, f=180)
             ]
         ] * 1000)
         while self._stop_flag is not True:
@@ -381,10 +381,10 @@ class PrinterServer(object):
         # Output Hot water
         stepper = self._runner.step([
             [
-                Point.create_point(e=0.1, f=200),
-                Point.create_point(f=200)
-            ]
-        ] * 1000)
+                Point.create_point(e=0.1, f=180),
+                Point.create_point(f=180)
+                ]
+            ] * 1000)
         while self._stop_flag is not True:
             try:
                 stepper.next()
