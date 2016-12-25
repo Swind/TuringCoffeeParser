@@ -298,22 +298,17 @@ class PrinterServer(object):
         const_time = 1 
         const_water = CONST_ML * const_time
 
-        # HOME
+        # z first than x, y
         stepper = self._runner.step([
-            [
-                Point.create_command('home'),
-                Point.create_command('home')
-            ],
             [
                 Point.create_point(z=sample.z, f=sample.f),
                 Point.create_point(z=sample.z, f=sample.f)
             ],
             [
-                sample,
-               	sample 
+                Point.create_point(x=sample.x, y=sample.y, f=sample.f),
+                Point.create_point(x=sample.x, y=sample.y, f=sample.f)
             ]
         ])
-        stepper.next()
         stepper.next()
         stepper.next()
 
