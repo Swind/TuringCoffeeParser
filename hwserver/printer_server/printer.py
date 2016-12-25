@@ -17,15 +17,9 @@ class PrinterController(object):
     def connect(self):
 
         hot_resp = None
-        while (True):
-            if self._hot_printer.open() is not True:
-                logger.error('Cannot open printer for hot water')
-                return False
-            hot_resp = self._hot_printer.readline()
-            hot_resp = self._hot_printer.readline()
-            if "ok" in hot_resp:
-                break
-            self._hot_printer.close()
+        if self._hot_printer.open() is not True:
+            logger.error('Cannot open printer for hot water')
+            return False
 
         if self._cold_printer.open() is not True:
             logger.error('Cannot open printer for cold water')
