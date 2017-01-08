@@ -1,7 +1,8 @@
 #!/bin/sh
 echo "Rebuild 'libs' in the node_modules"
 rm -rf node_modules/libs
-npm install
+rm yarn.lock
+yarn install
 
 echo "Clean folder"
 rm -rf static 

@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "Install libraries for libs"
 cd libs
-npm install
+yarn install
 cd ..
 
 echo "Build server..."

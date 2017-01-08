@@ -6,8 +6,8 @@ import { push } from 'react-router-redux'
 import { getCookbook, saveCookbook } from '../actions/cookbook'
 import { openEditor, closeEditor, closeSaveEditor, removeProcess, saveProcess, appendProcess, closeSnackbar, editNewProcess, changeCookbookName, changeCookbookDescription, moveProcess } from '../actions/editor'
 
-import Process from 'processes/process'
-import SpiralTotalWater from 'processes/spiral-total-water'
+import Process from 'libs/processes/process'
+import SpiralTotalWater from 'libs/processes/spiral-total-water'
 
 import ProcessTable from '../components/ProcessTable'
 import CookbookInformation from '../components/CookbookInformation'

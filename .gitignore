@@ -15,6 +15,7 @@ test_cookbooks.json
 src/static/css
 src/static/js
 src/static/fonts
+newweb/static
 cookbooks.json
 build
 public
