@@ -15,6 +15,7 @@ import TextField from 'material-ui/TextField'
 import Calibration from 'libs/processes/calibration'
 import Circle from 'libs/processes/circle'
 import FixedPoint from 'libs/processes/fixed-point'
+import FixedPointByTime from 'libs/processes/fixed-point-by-time'
 import Home from 'libs/processes/home'
 import Move from 'libs/processes/move'
 import Spiral from 'libs/processes/spiral'
@@ -26,6 +27,7 @@ const processes = {
   'calibration': Calibration,
   'circle': Circle,
   'fixed_point': FixedPoint,
+  'fixed_point_by_time': FixedPointByTime,
   'home': Home,
   'move': Move,
   'spiral': Spiral,
@@ -251,6 +253,7 @@ export default class ProcessEditor extends Component {
         <DropDownMenu value={process.name} onChange={this.onProcessTypeChange.bind(this)}>
           <MenuItem primaryText="Circle" value="circle"/>
           <MenuItem primaryText="Fixed Point" value="fixed_point"/>
+          <MenuItem primaryText="Fixed Point By Time" value="fixed_point_by_time"/>
           <MenuItem primaryText="Spiral" value="spiral"/>
           <MenuItem primaryText="Spiral Total Water" value="spiral total water"/>
           <MenuItem primaryText="Wait" value="wait"/>

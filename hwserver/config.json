@@ -1,6 +1,6 @@
 {
     "GPIO_pin_number_scheme": "BOARD",
-    "Emulator": false,
+    "Emulator": true,
     "Unit": "C",
 
     "Heater": {

@@ -1,5 +1,6 @@
 const Circle = require('./circle');
 const FixedPoint = require('./fixed-point');
+const FixedPointByTime = require('./fixed-point-by-time');
 const Spiral = require('./spiral');
 const SpiralTotalWater = require('./spiral-total-water');
 const Wait = require('./wait');
@@ -13,6 +14,7 @@ var _processes = {
   "calibration": Calibration,
   "circle": Circle,
   "fixed_point": FixedPoint,
+  "fixed_point_by_time": FixedPointByTime,
   "spiral": Spiral,
   "spiral total water": SpiralTotalWater,
   "wait": Wait,
