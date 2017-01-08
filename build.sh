@@ -14,6 +14,11 @@ cd web
 ./clean_build.sh
 cd ..
 
+echo "Build new web..."
+cd newweb
+./clean_build.sh
+cd ..
+
 echo "Copy all files to dist..."
 rm -rf dist
 mkdir -p dist/public
