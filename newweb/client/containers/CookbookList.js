@@ -104,7 +104,7 @@ class CookbookList extends Component {
         <FloatingActionButton
           onTouchTap={this.openNewCookbookDialog.bind(this)}
           style={{
-            position: 'absolute',
+            position: 'fixed',
             right: '50px',
             bottom: '50px'
           }}
