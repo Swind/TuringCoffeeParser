@@ -328,12 +328,12 @@ class PrinterServer(object):
         while(target_temperature + 2 < self._output_temp_reader.read() or
                 target_temperature - 2 > self._output_temp_reader.read()):
 
-            if count > 7:
+            if count > 14:
                 break
 
             points = []
-            for index in range(0, const_water * 10, 2):
-                points.append(Point.create_point(t=target_temperature, e=0.2, f=180))
+            for index in range(0, const_water * 5, 2):
+                points.append(Point.create_point(t=target_temperature, e=0.2, f=100))
 
             # Let _mix to create the hot/cold points accroding to the temperature.
             pair_points = self._mixer._mix(points)
