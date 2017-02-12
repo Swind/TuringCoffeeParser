@@ -29,15 +29,33 @@ class Smoothie(object):
         if self._serial is not None:
             self._serial.close()
 
-    def open(self):
+    def open(self, retry_times=3):
         try:
             if self._port == 'VIRTUAL':
                 self._serial = VirtualPrinter()
             else:
-                logger.info('Open serial \'{}\' with baudrate \'{}\''.format(self._port, self._baudrate))
-                self._serial = serial.Serial(
-                    str(self._port), self._baudrate, timeout=5, writeTimeout=10000)
-            return True
+		for count in range(0, retry_times):
+		    try:
+			logger.info('Open serial \'{}\' with baudrate \'{}\''.format(self._port, self._baudrate))
+			self._serial = serial.Serial(str(self._port), self._baudrate, timeout=5, writeTimeout=10000)
+		    
+			# The first message should be 'Smoothie', if not open the serial again
+			if self.readline().strip() != 'Smoothie':
+			    self._serial.close()
+			    continue
+
+			# The second message should be 'ok', if not open the serial again
+			if self.readline().strip() != "ok":
+			    self._serial.close()
+			    continue
+
+			return True
+		    except serial.SerialException:
+			logger.exception('Unexpected error while connecting to serial')
+			return False
+
+		logger.error("Can't receives the message 'Smoothie' and 'ok' from Smoothie board after retry {} times".format(retry_times))
+		return False
         except serial.SerialException:
             logger.exception('Unexpected error while connecting to serial')
             return False
