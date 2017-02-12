@@ -160,7 +160,9 @@ class PrinterServer(object):
                  cold_temp_reader,
                  printer_controller,
                  refill_commander,
-                 waste_water_point):
+                 waste_water_point,
+                 multiple_cold,
+                 multiple_hot):
 
         self._puber = publisher
         self._reper = responser
@@ -173,6 +175,9 @@ class PrinterServer(object):
         self._runner = PointStepRunner(self._ctrler)
         self._refill_commander = refill_commander
         self._waste_water_point = waste_water_point
+
+        self._multiple_cold = multiple_cold
+        self._multiple_hot = multiple_hot
 
         self._num_handled_points = 0
         self._num_total_points = 0
@@ -246,6 +251,13 @@ class PrinterServer(object):
             for g in point_groups:
                 if type(g) is list:
                     point_pairs = self._mixer.mix(g)
+
+                    for [hot, cold] in point_pairs:
+                        if hasattr(hot, 'e') and hot.e is not None:
+                            hot.e = hot.e * self._multiple_hot
+                        if hasattr(cold, 'e') and cold.e is not None:
+                            cold.e = cold.e * self._multiple_cold
+
                     stepper = self._runner.step(point_pairs)
                     while self._stop_flag is not True:
                         try:

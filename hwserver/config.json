@@ -40,7 +40,9 @@
     "Printer":{
         "PortName": "/dev/ttyACM0",
         "PortName2": "/dev/ttyACM1",
-        "Baudrate": 115200
+        "Baudrate": 115200,
+        "MultipleCold": 1.666,
+        "MultipleHot": 1.176
     },
 
     "Refill":{

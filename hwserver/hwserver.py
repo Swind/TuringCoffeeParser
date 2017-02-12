@@ -69,7 +69,9 @@ class HWServer:
                 waste_water_point=Point.create_point(
                     x=config['WasteWaterPosition']['x'],
                     y=config['WasteWaterPosition']['y'],
-                    z=config['WasteWaterPosition']['z'])
+                    z=config['WasteWaterPosition']['z']),
+                multiple_cold=config['Printer']['MultipleCold'],
+                multiple_hot=config['Printer']['MultipleHot']
                 )
         self.printer_server.start()
 
