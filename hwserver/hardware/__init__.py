@@ -1,5 +1,4 @@
 import mock
-import monitor
 
 mock_heater = None
 
@@ -21,42 +20,31 @@ def get_refill(config):
 
 def get_sensor(config, t):
     if config['Emulator']:
-        return __get_mock_sensor_monitor(config)
+        return __get_mock_sensor(config)
 
     if t in config['Sensors']:
-        return __get_sensor_monitor(config['Sensors'][t])
+        return __get_sensor(config['Sensors'][t])
     else:
         return None
 
-def __get_mock_sensor_monitor(config):
+def __get_mock_sensor(config):
     global mock_heater
     if(mock_heater is None):
         mock_heater = mock.MockHeater(config['HeaterEmulator'])
-    return monitor.TemperatureMonitor(mock.MockSensor(mock_heater))
+    return mock.MockSensor(mock_heater)
 
-def __get_sensor_monitor(sensor_config):
-    if sensor_config['type'] == 'PT100':
-        import pt100
-        return monitor.TemperatureMonitor(pt100.PT100(sensor_config['ce']))
-
-    if sensor_config['type'] == 'MAX31855':
-        import max31855
-        return monitor.TemperatureMonitor(max31855.MAX31855(sensor_config['ce']))
-
+def __get_sensor(sensor_config):
     if sensor_config['type'] == 'MAX31865':
         import max31865
-        return monitor.TemperatureMonitor(max31865.MAX31865(
+        return max31865.MAX31865(
             csPin=sensor_config['cs'],
             misoPin=sensor_config['miso'],
             mosiPin=sensor_config['mosi'],
-            clkPin=sensor_config['clk']))
+            clkPin=sensor_config['clk']
+            )
 
     if sensor_config['type'] == 'MAX31856':
         import max31856
-        return monitor.TemperatureMonitor(max31856.MAX31856(sensor_config['ce']))
-
-    if sensor_config['type'] == 'MLX90615':
-        import mlx90615
-        return monitor.TemperatureMonitor(mlx90615.MLX90615())
+        return max31856.MAX31856(sensor_config['ce'])
 
     return None

@@ -5,10 +5,12 @@ import math
 import logging
 import RPi.GPIO as GPIO
 
+from temperature_sensor import TemperatureSensor, SensorBorkenError
+
 logger = logging.getLogger(__name__)
 
 
-class MAX31865(object):
+class MAX31865(TemperatureSensor):
 
     """Reading Temperature from the MAX31865 with GPIO using
        the Raspberry Pi.  Any pins can be used.
@@ -26,7 +28,6 @@ class MAX31865(object):
         self.misoPin = misoPin
         self.mosiPin = mosiPin
         self.clkPin = clkPin
-        self.setupGPIO()
 
     def setupGPIO(self):
         GPIO.setwarnings(False)
@@ -39,6 +40,9 @@ class MAX31865(object):
         GPIO.output(self.csPin, GPIO.HIGH)
         GPIO.output(self.clkPin, GPIO.LOW)
         GPIO.output(self.mosiPin, GPIO.LOW)
+
+    def open(self):
+        self.setupGPIO()
 
     def read(self):
         #
@@ -100,11 +104,14 @@ class MAX31865(object):
         logger.debug("Status byte: %x" % status)
 
         if ((status & 0x80) == 1):
-            raise FaultError("High threshold liait (Cable fault/open)")
+            logger.error("High threshold liait (Cable fault/open)")
+            raise SensorBorkenError("High threshold liait (Cable fault/open)")
         if ((status & 0x40) == 1):
-            raise FaultError("Low threshold limit (Cable fault/short)")
+            logger.error("Low threshold limit (Cable fault/short)")
+            raise SensorBorkenError("Low threshold limit (Cable fault/short)")
         if ((status & 0x04) == 1):
-            raise FaultError("Overvoltage or Undervoltage Error")
+            logger.error("Overvoltage or Undervoltage Error")
+            raise SensorBorkenError("Overvoltage or Undervoltage Error")
 
         return temp_C
 
@@ -191,9 +198,6 @@ class MAX31865(object):
             temp_C = (RTD_ADC_Code/32) - 256
         # print "temp {}".format(temp_C)
         return temp_C
-
-class FaultError(Exception):
-    pass
 
 if __name__ == "__main__":
 

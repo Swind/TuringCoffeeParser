@@ -91,6 +91,9 @@ class MockSensor(object):
     def __init__(self, heater):
         self.__heater = heater
 
+    def open(self):
+        pass
+
     def read(self):
         return self.__heater.get_temperature()
 

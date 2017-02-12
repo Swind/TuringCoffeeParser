@@ -32,28 +32,22 @@ class OutputServer(object):
         self.pause = False
 
     def start(self):
-        logger.info("Output server starting ...")
-        self.sensor.start()
         logger.info("Output server start successfully...")
-
         self.publish_output_temperature();
 
     def publish_output_temperature(self):
+        self.sensor.open()
         while True:
-            records = self.sensor.get_records(1)
-
-            total = 0
-            if records:
-                for record in records:
-                    total = total + record[0]
-
-                temperature = total / len(records)
-            else:
-                temperature = 0
-
-            logger.debug({'temperature': temperature})
-            self.pub_channel.send({'temperature': temperature})
-            time.sleep(1)
+            try:
+                temperature = self.sensor.read()
+                logger.debug({'temperature': temperature})
+                self.pub_channel.send({'temperature': temperature})
+                time.sleep(1)
+            except:
+                logger.warning("Output Sensor seems broke, restart ti")
+                self.sensor.close()
+                time.sleep(0.5)
+                self.sensor.open()
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

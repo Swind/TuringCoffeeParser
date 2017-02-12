@@ -15,7 +15,7 @@ class PIDController(object):
     def __init__(self, config):
         # Heat
         self.__heater = hardware.get_heater(config)
-        self.__sensors = [hardware.get_sensor(config, "PT100_tank")]
+        self.__sensor = hardware.get_sensor(config, "PT100_tank")
 
 	# Default Tank Temperature
         self.set_point = config.get('DefaultTankTemperature', 0)
@@ -38,11 +38,6 @@ class PIDController(object):
     def start(self):
         logger.info("[Hardware] Heater start...")
         self.__heater.start()
-
-        logger.info("[Hardware] Sensor start...")
-        for sensor in self.__sensors:
-            sensor.start()
-
         logger.info("PID controller start...")
         self.worker.start()
 
@@ -52,46 +47,42 @@ class PIDController(object):
 
         self.pid.set_params(self.cycle_time, k_param, i_param, d_param)
 
-    def get_temperature(self):
-        def get_sensor_records_avg(sensor):
-            records = sensor.get_records()
-            total = 0
-            if records:
-                for record in records:
-                    total = total + record[0]
-
-                return total / len(records)
-            else:
-                return 0
-
-        return reduce(lambda total, sensor: total + get_sensor_records_avg(sensor), self.__sensors, 0) / len(self.__sensors)
-
     def add_observer(self, callback_func):
         self.__observers.append(callback_func)
 
     def __control_temperature(self):
 
+        self.__sensor.open()
+
         while (True):
             # Get the average of all sensors
-            temperature = self.get_temperature()
+            try:
+                temperature = self.__sensor.read()
+                logger.debug(
+                    'calcPID_reg4 -> temperature: {}, set_point: {}'.format(temperature, self.set_point))
 
-            logger.debug(
-                'calcPID_reg4 -> temperature: {}, set_point: {}'.format(temperature, self.set_point))
+                if (self.set_point - 5) < temperature < self.set_point:
+                    duty_cycle = self.pid.calcPID_reg4(
+                        temperature, self.set_point, True)
+                elif temperature >= self.set_point:
+                    duty_cycle = 0
+                else:
+                    duty_cycle = 100
 
-            if (self.set_point - 5) < temperature < self.set_point:
-                duty_cycle = self.pid.calcPID_reg4(
-                    temperature, self.set_point, True)
-            elif temperature >= self.set_point:
-                duty_cycle = 0
-            else:
-                duty_cycle = 100
+                self.__heater.add_job(self.cycle_time, duty_cycle)
 
-            self.__heater.add_job(self.cycle_time, duty_cycle)
+                # notify to all observers
+                for observer in self.__observers:
+                    observer(
+                        self.cycle_time, duty_cycle, self.set_point, temperature)
 
-            # notify to all observers
-            for observer in self.__observers:
-                observer(
-                    self.cycle_time, duty_cycle, self.set_point, temperature)
+                    # Wait heat job done
+                time.sleep(self.cycle_time)
+            except:
+                logger.warning("Tank Sensor seems broken, restart it")
+                self.__sensor.close()
+                time.sleep(0.2)
+                self.__sensor.open()
+                continue
 
-            # Wait heat job done
-            time.sleep(self.cycle_time)
+        self.__sensor.close()
