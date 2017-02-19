@@ -95,7 +95,7 @@ class Smoothie(object):
             self._serial.write(cmd + '\n')
         except serial.SerialTimeoutException:
             logger.warning(
-                'Serial timeout while writing to serial port, trying again.')
+                    'Serial timeout while writing to serial port, trying again.')
             try:
                 time.sleep(0.5)
                 self._serial_write(cmd + '\n')
