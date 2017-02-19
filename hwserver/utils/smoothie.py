@@ -34,28 +34,35 @@ class Smoothie(object):
             if self._port == 'VIRTUAL':
                 self._serial = VirtualPrinter()
             else:
-		for count in range(0, retry_times):
-		    try:
-			logger.info('Open serial \'{}\' with baudrate \'{}\''.format(self._port, self._baudrate))
-			self._serial = serial.Serial(str(self._port), self._baudrate, timeout=5, writeTimeout=10000)
-		    
-			# The first message should be 'Smoothie', if not open the serial again
-			if self.readline().strip() != 'Smoothie':
-			    self._serial.close()
-			    continue
+                for count in range(0, retry_times):
+                    try:
+                        logger.info('Open serial \'{}\' with baudrate \'{}\''.format(self._port, self._baudrate))
+                        self._serial = serial.Serial(str(self._port), self._baudrate, timeout=5, writeTimeout=10000)
 
-			# The second message should be 'ok', if not open the serial again
-			if self.readline().strip() != "ok":
-			    self._serial.close()
-			    continue
+                        # Handle sometimes smoothie board doesn't output anything, use G command to check it is alive or note
+                        line = self.readline().strip()
+                        if line == '':
+                            self.write('G')
+                            if self.readline().strip() == 'ok':
+                                return True
 
-			return True
-		    except serial.SerialException:
-			logger.exception('Unexpected error while connecting to serial')
-			return False
+                        # The first message should be 'Smoothie', if not open the serial again
+                        if line != 'Smoothie':
+                            self._serial.close()
+                            continue
 
-		logger.error("Can't receives the message 'Smoothie' and 'ok' from Smoothie board after retry {} times".format(retry_times))
-		return False
+                        # The second message should be 'ok', if not open the serial again
+                        if self.readline().strip() != "ok":
+                            self._serial.close()
+                            continue
+
+                        return True
+                    except serial.SerialException:
+                        logger.exception('Unexpected error while connecting to serial')
+                        return False
+
+            logger.error("Can't receives the message 'Smoothie' and 'ok' from Smoothie board after retry {} times".format(retry_times))
+            return False
         except serial.SerialException:
             logger.exception('Unexpected error while connecting to serial')
             return False
@@ -102,21 +109,21 @@ class Smoothie(object):
         return True
 
 if __name__ == "__main__":
-     smooth = Smoothie("/dev/ttyACM1", 115200)
-     print smooth.open()
-     try:
-	     while(True):
-		cmd = raw_input(">")
-                if(cmd=="exit"):
-		    break;
-		smooth.write(cmd)
-		print(smooth.readline())
-	     """
-	     import time
-	     for index in range(0, 1000):
-		for count in range(0, 10):
-			smooth.write("G0 E0.001 F1")
-		time.sleep(0.1)
-	     """
-     finally:
-	     smooth.close()
+    smooth = Smoothie("/dev/ttyACM1", 115200)
+    print smooth.open()
+    try:
+        while(True):
+            cmd = raw_input(">")
+            if(cmd=="exit"):
+                break;
+        smooth.write(cmd)
+        print(smooth.readline())
+        """
+        import time
+        for index in range(0, 1000):
+       for count in range(0, 10):
+           smooth.write("G0 E0.001 F1")
+       time.sleep(0.1)
+        """
+    finally:
+        smooth.close()
