@@ -2,7 +2,7 @@ import time
 import logging
 import spidev
 
-from temperature_sensor import TemperatureSensor, SensorBorkenError
+from temperature_sensor import TemperatureSensor, SensorBrokenError
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class MAX31856(TemperatureSensor):
 
     def __init__(self, number):
-        self._cs = cs   # spi chip select number
+        self._cs = number   # spi chip select number
 
     def readRegister(self, reg_num, byte):
         self.spi.xfer([reg_num])
@@ -54,27 +54,27 @@ class MAX31856(TemperatureSensor):
 
         if ((fault & 0x80)):
             logger.error("Cold Junction Out-of-Range")
-            raise SensorBorkenError("Cold Junction Out-of-Range")
+            raise SensorBrokenError("Cold Junction Out-of-Range")
         if ((fault & 0x40)):
             logger.error("Thermocouple Out-of-Range")
-            raise SensorBorkenError("Thermocouple Out-of-Range")
+            raise SensorBrokenError("Thermocouple Out-of-Range")
         if ((fault & 0x20)):
             logger.error("Cold-Junction High Fault")
-            raise SensorBorkenError("Cold-Junction High Fault")
+            raise SensorBrokenError("Cold-Junction High Fault")
         if ((fault & 0x10)):
             logger.error("Cold-Junction Low Fault")
-            raise SensorBorkenError("Cold-Junction Low Fault")
+            raise SensorBrokenError("Cold-Junction Low Fault")
         if ((fault & 0x08)):
             logger.error("Thermocouple Temperature High Fault")
-            raise SensorBorkenError("Thermocouple Temperature High Fault")
+            raise SensorBrokenError("Thermocouple Temperature High Fault")
         if ((fault & 0x04)):
             logger.error("Thermocouple Temperature Low Fault")
-            raise SensorBorkenError("Thermocouple Temperature Low Fault")
+            raise SensorBrokenError("Thermocouple Temperature Low Fault")
         if ((fault & 0x02)):
             logger.error("Overvoltage or Undervoltage Input Fault")
-            raise SensorBorkenError("Overvoltage or Undervoltage Input Fault")
+            raise SensorBrokenError("Overvoltage or Undervoltage Input Fault")
         if ((fault & 0x01)):
             logger.error("Thermocouple Open-Circuit Fault")
-            raise SensorBorkenError("Thermocouple Open-Circuit Fault")
+            raise SensorBrokenError("Thermocouple Open-Circuit Fault")
 
         return temp_C

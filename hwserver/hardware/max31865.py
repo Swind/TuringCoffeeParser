@@ -5,7 +5,7 @@ import math
 import logging
 import RPi.GPIO as GPIO
 
-from temperature_sensor import TemperatureSensor, SensorBorkenError
+from temperature_sensor import TemperatureSensor, SensorBrokenError
 
 logger = logging.getLogger(__name__)
 
@@ -105,13 +105,13 @@ class MAX31865(TemperatureSensor):
 
         if ((status & 0x80) == 1):
             logger.error("High threshold liait (Cable fault/open)")
-            raise SensorBorkenError("High threshold liait (Cable fault/open)")
+            raise SensorBrokenError("High threshold liait (Cable fault/open)")
         if ((status & 0x40) == 1):
             logger.error("Low threshold limit (Cable fault/short)")
-            raise SensorBorkenError("Low threshold limit (Cable fault/short)")
+            raise SensorBrokenError("Low threshold limit (Cable fault/short)")
         if ((status & 0x04) == 1):
             logger.error("Overvoltage or Undervoltage Error")
-            raise SensorBorkenError("Overvoltage or Undervoltage Error")
+            raise SensorBrokenError("Overvoltage or Undervoltage Error")
 
         return temp_C
 
