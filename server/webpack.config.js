@@ -34,20 +34,22 @@ module.exports =
   },
   plugins: [
     new webpack.IgnorePlugin(/\.(css|less|sass)$/),
-    new webpack.BannerPlugin('require("source-map-support").install();', { raw : true, entryOnly : false})
+    new webpack.BannerPlugin({ banner: 'require("source-map-support").install();', raw : true, entryOnly : false})
   ],
-  loaders: [ 
-    {
-      test: /\.js?$/,
-      exclude: /(node_modules|bower_components)/,
-      loader: 'babel',
-      query: {
-        presets: ['es2015']
+  module: {
+    rules: [
+      {
+        test: /\.js?$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015']
+        }
       }
-    }
-  ],
+    ]
+  },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   externals: nodeModules,
   devtool: 'sourcemap'

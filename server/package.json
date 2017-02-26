@@ -37,21 +37,22 @@
     "webpack": ""
   },
   "dependencies": {
+    "babel-loader": "^6.3.2",
+    "babel-plugin-transform-async-to-generator": "",
     "classnames": "",
     "good": "",
     "good-console": "",
     "hapi": "",
     "hapi-swagger": "",
+    "help": "^3.0.2",
+    "history": "1.17.0",
     "http-proxy": "",
     "immutable": "",
     "inert": "",
     "joi": "",
-    "nanomsg": "",
+    "libs": "file:../libs",
     "nedb": "",
-    "history": "1.17.0",
     "vision": "",
-    "winston": "",
-    "babel-plugin-transform-async-to-generator": "",
-    "libs": "file:../libs"
+    "winston": ""
   }
 }
