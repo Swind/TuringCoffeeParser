@@ -42,6 +42,42 @@ class PrinterAPI extends API {
     this.successed(reply, 200, 'Move the head to the home position successfully');
   }
 
+  startSpec() {
+    return {
+      method: 'POST',
+      path: '/api/printer/start',
+      config: {
+        tags: ['api'],
+        description: 'Move the head to the home position',
+        notes: 'Move the head to the home position',
+      },
+      handler: this.start.bind(this),
+    };
+  }
+
+  start(request, reply) {
+    this.printer.start();
+    this.successed(reply, 200, 'Printer start successfully');
+  }
+
+  stopSpec() {
+    return {
+      method: 'POST',
+      path: '/api/printer/stop',
+      config: {
+        tags: ['api'],
+        description: 'Move the head to the home position',
+        notes: 'Move the head to the home position',
+      },
+      handler: this.stop.bind(this),
+    };
+  }
+
+  stop(request, reply) {
+    this.printer.stop();
+    this.successed(reply, 200, 'Printer stop successfully');
+  }
+
   jogSpec() {
     return {
       method: 'POST',
@@ -74,6 +110,8 @@ class PrinterAPI extends API {
       this.statusSpec(),
       this.homeSpec(),
       this.jogSpec(),
+      this.startSpec(),
+      this.stopSpec()
     ];
   }
 }

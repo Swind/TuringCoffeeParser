@@ -1,4 +1,5 @@
 const Channel = require('../channel');
+const spawn = require('child_process').spawn;
 
 const PRINTER_PUB_ADDRESS = 'ipc:///tmp/printer_pub_channel';
 const PRINTER_CMD_ADDRESS = 'ipc:///tmp/printer_cmd_channel';
@@ -46,6 +47,23 @@ class Printer {
     this.cmd.send({
       "cancle": True,
     });
+  }
+
+  home() {
+    this.cmd.send({
+      "points": [{
+        "type": "command",
+        "name": "home"
+      }]
+    });
+  }
+
+  start() {
+    spawn('systemctl', ['start', 'hwserver'])
+  }
+
+  stop() {
+    spawn('systemctl', ['stop', 'hwserver'])
   }
 }
 
