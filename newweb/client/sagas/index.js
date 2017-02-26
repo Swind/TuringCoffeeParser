@@ -2,7 +2,8 @@ import { put, call, fork } from 'redux-saga/effects'
 import { takeEvery } from 'redux-saga'
 import { listCookbook, getCookbook, saveCookbook, brewCookbook, saveNewCookbook, deleteCookbook, copyCookbook } from '../actions/cookbook'
 import { getHeater, setTargetPoint } from '../actions/heater'
-import { LIST_COOKBOOK, GET_COOKBOOK, SAVE_COOKBOOK, DELETE_COOKBOOK, BREW_COOKBOOK, GET_HEATER, SAVE_NEW_COOKBOOK, COPY_COOKBOOK, SET_TARGET_POINT } from '../constants'
+import { restartPrinter } from '../actions/printer'
+import { LIST_COOKBOOK, GET_COOKBOOK, SAVE_COOKBOOK, DELETE_COOKBOOK, BREW_COOKBOOK, GET_HEATER, SAVE_NEW_COOKBOOK, COPY_COOKBOOK, SET_TARGET_POINT, RESTART_PRINTER } from '../constants'
 import Api from '../api'
 
 export function* fetchCookbooks(action) {
@@ -126,6 +127,20 @@ export function* trySetTargetPoint(action) {
   }
 }
 
+export function* tryRestartPrinter(action) {
+  try {
+    const res = yield call(Api.stopPrinter)
+    if (res.status === 200) {
+      yield put(restartPrinter.success(res.body.data))
+      yield call(Api.startPrinter)
+    } else {
+      yield put(restartPrinter.failure(res.status))
+    }
+  } catch (err) {
+    yield put(restartPrinter.failure(err))
+  }
+}
+
 
 export function* watchListCookbooks() {
   yield takeEvery(LIST_COOKBOOK.REQUEST, fetchCookbooks)
@@ -163,6 +178,10 @@ export function* watchSetTargetPoint() {
   yield takeEvery(SET_TARGET_POINT.REQUEST, trySetTargetPoint)
 }
 
+export function* watchRestartPrinter() {
+  yield takeEvery(RESTART_PRINTER.REQUEST, tryRestartPrinter)
+}
+
 export default function* root() {
   yield [
     fork(watchListCookbooks),
@@ -173,7 +192,8 @@ export default function* root() {
     fork(watchSaveNewCookbook),
     fork(watchDeleteCookbook),
     fork(watchCopyCookbook),
-    fork(watchSetTargetPoint)
+    fork(watchSetTargetPoint),
+    fork(watchRestartPrinter)
   ]
 }
 

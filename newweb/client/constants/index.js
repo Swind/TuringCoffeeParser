@@ -19,6 +19,8 @@ export const GET_HEATER = createRequestType('GET_HEATER')
 export const SET_TARGET_POINT = createRequestType('SET_TARGET_POINT')
 export const SAVE_NEW_COOKBOOK = createRequestType('SAVE_NEW_COOKBOOK')
 
+export const RESTART_PRINTER = createRequestType('RESTART_PRINTER')
+
 export const OPEN_EDITOR = 'OPEN_EDITOR'
 export const CLOSE_EDITOR = 'CLOSE_EDITOR'
 export const OPEN_DELETE_COOKBOOK_DIALOG = 'OPEN_DELETE_COOKBOOK_DIALOG'

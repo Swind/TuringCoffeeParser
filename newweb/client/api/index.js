@@ -36,6 +36,14 @@ const Api = {
     return request.post('/api/cookbooks')
       .send(cookbook)
       .set('Accept', 'application/json')
+  },
+  startPrinter: () => {
+    return request.post('/api/printer/start')
+      .set('Accept', 'application/json')
+  },
+  stopPrinter: () => {
+    return request.post('/api/printer/stop')
+      .set('Accept', 'application/json')
   }
 }
 

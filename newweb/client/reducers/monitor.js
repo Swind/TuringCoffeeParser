@@ -1,4 +1,4 @@
-import { GET_HEATER, SET_TARGET_POINT } from '../constants'
+import { GET_HEATER, SET_TARGET_POINT, RESTART_PRINTER } from '../constants'
 
 const MAX_NUM_OF_DATASET = 300
 
@@ -33,6 +33,10 @@ export function monitor(state=initialState, action) {
         targetSetPoint: (state.targetSetPoint == null)? action.set_point: state.targetSetPoint
       }
     case SET_TARGET_POINT.SUCCESS:
+      return {
+        ...state
+      }
+    case RESTART_PRINTER.SUCCESS:
       return {
         ...state
       }

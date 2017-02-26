@@ -6,6 +6,7 @@ import TextField from 'material-ui/TextField'
 import FlatButton from 'material-ui/FlatButton'
 
 import { getHeater, setTargetPoint } from '../actions/heater'
+import { restartPrinter } from '../actions/printer'
 import { LineChart } from '../components/Chart'
 import { PairTable } from '../components/PairTable'
 
@@ -64,6 +65,10 @@ class BaristaMonitor extends Component {
     this.props.dispatch(setTargetPoint.request(parseInt(temp)))
   }
 
+  restartPrinter() {
+    this.props.dispatch(restartPrinter.request())
+  }
+
   getLastValue = (array) => array[array.length - 1]
 
   render() {
@@ -87,6 +92,9 @@ class BaristaMonitor extends Component {
               <PairTable pairs={pairs}/>
               <TextField hintText="Set point" type="number" ref="setpoint" />
               <FlatButton label="Apply" primary={true} onTouchTap={this.setTargetPoint.bind(this)}/>
+            </Col>
+            <Col xs={12} sm={4} md={6} lg={6}>
+              <FlatButton label="Restart Printer" primary={true} onTouchTap={this.restartPrinter.bind(this)}/>
             </Col>
           </Row>
         </Grid>
