@@ -1,0 +1,76 @@
+{
+  "statusCode": 200,
+  "message": "List all cookbooks successfully",
+  "data":
+    {
+      "name": "[NO MIX] Two cups 65 degree c",
+      "description": "testing",
+      "processes": [
+        {
+          "type": "command",
+          "name": "calibration"
+        },
+        {
+          "type": "process",
+          "name": "spiral total water",
+          "radius": {
+            "start": 5,
+            "end": 25
+          },
+          "high": {
+            "start": 105,
+            "end": 115
+          },
+          "cylinder": 4,
+          "point_interval": 2,
+          "total_water": 30,
+          "total_time": 15,
+          "temperature": 60
+        },
+        {
+          "type": "command",
+          "name": "wait",
+          "total_time": 30
+        },
+        {
+          "type": "process",
+          "name": "spiral total water",
+          "radius": {
+            "start": 5,
+            "end": 30
+          },
+          "high": {
+            "start": 115,
+            "end": 115
+          },
+          "cylinder": 8,
+          "point_interval": 2,
+          "total_water": 190,
+          "total_time": 30,
+          "temperature": 85
+        },
+        {
+          "type": "process",
+          "name": "spiral total water",
+          "radius": {
+            "start": 30,
+            "end": 5
+          },
+          "high": {
+            "start": 115,
+            "end": 115
+          },
+          "cylinder": 8,
+          "point_interval": 2,
+          "total_water": 160,
+          "total_time": 30,
+          "temperature": 85
+        },
+        {
+          "type": "command",
+          "name": "home"
+        }
+      ],
+      "_id": "3BconNo0SrSYUhcA"
+    }
+}
