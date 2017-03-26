@@ -1,14 +1,14 @@
 from threading import Thread
 from utils import json_config
 
-from printer_server.server import PrinterServer
-from printer_server.printer import PrinterController
-from printer_server.temperature_reader import HeaterTemperatureReader, \
+from printer.server import PrinterServer
+from printer.controller import PrinterController
+from printer.temperature_reader import HeaterTemperatureReader, \
         OutputTemperatureReader, ColdTemperatureReader
-from printer_server.pubsub.nanomsg_pubsub import NanomsgPublisher
-from printer_server.reqrep.nanomsg_reqrep import NanomsgRequester, \
+from printer.pubsub.nanomsg_pubsub import NanomsgPublisher
+from printer.reqrep.nanomsg_reqrep import NanomsgRequester, \
         NanomsgResponser
-from printer_server.point import Point
+from printer.point import Point
 
 from utils.smoothie import Smoothie
 
@@ -23,6 +23,13 @@ path.append(dir(path[0]))
 
 
 class HWServer:
+    PRINTER = 'PRINTER'
+    REFILL = 'REFILL'
+
+    OUTPUT_TEMP = 'OUTPUT_TEMPERATURE'
+    HEATER_TEMP = 'HEATER_TEMPERATURE'
+    COLD_TEMP = 'COLD_TEMPERATURE'
+
     def __init__(self):
         self.workers = {}
 
@@ -52,6 +59,27 @@ class HWServer:
                 cold_driver=Smoothie(port_name2, baudrate),
                 hot_driver=Smoothie(port_name, baudrate))
 
+        self.pub_ch = {
+            self.PRINTER: NanomsgPublisher(
+                config['PrinterServer']['Publish_Socket_Address']
+            ),
+            self.OUTPUT_TEMP: NanomsgPublisher(
+                config['OutputServer']['Publish_Socket_Address']
+            ),
+            self.HEATER_TEMP: NanomsgPublisher(
+                config['HeaterServer']['Publish_Socket_Address']
+            ),
+        }
+
+        self.cmd_ch = {
+            self.PRINTER: NanomsgResponser(
+                config['PrinterServer']['Command_Socket_Address']
+            ),
+            self.REFILL: NanomsgResponser(
+                config['RefillServer']['Command_Socket_Address']
+            ),
+        }
+
         # Use the main thread to execute printer server
         self.printer_server = PrinterServer(
                 publisher=NanomsgPublisher(
@@ -73,7 +101,14 @@ class HWServer:
                 multiple_cold=config['Printer']['MultipleCold'],
                 multiple_hot=config['Printer']['MultipleHot']
                 )
+
         self.printer_server.start()
+
+    def publish(self, name, msg):
+        pass
+
+    def receive(self, name):
+        pass
 
 if __name__ == "__main__":
     hwserver = HWServer()

@@ -44,6 +44,9 @@ class MAX31865(TemperatureSensor):
     def open(self):
         self.setupGPIO()
 
+    def close(self):
+        pass
+
     def read(self):
         #
         # b10000000 = 0x80
