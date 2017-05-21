@@ -4,14 +4,15 @@ import json
 
 import spidev
 
-
 class PT100(object):
 
-    def __init__(self, number, average_number=5):
+    def __init__(self, number, average_number=1):
+        self.__number = number
         self.__average_number = average_number
 
+    def open(self):
         self.spi = spidev.SpiDev()
-        self.spi.open(0, number)
+        self.spi.open(0, self.__number)
         self.spi.max_speed_hz = 100000
         self.spi.mode = 1
         """
@@ -77,3 +78,10 @@ class PT100(object):
             temp = temp + self._RawToTemp(MSB, LSB)
 
         return (temp / self.__average_number)
+
+if __name__ == '__main__':
+    pt100 = PT100(0)
+    pt100.open()
+    while True:
+        v = pt100.read()
+        print(v)
