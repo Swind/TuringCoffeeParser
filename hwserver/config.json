@@ -42,7 +42,7 @@
         "MultipleHot": 1.11111111111
     },
     "RemotePrinter": {
-        "host": "192.168.1.26",
+        "host": "192.168.0.32",
         "port": 16000
     },
     "Refill":{

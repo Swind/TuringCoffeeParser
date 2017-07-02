@@ -36,6 +36,7 @@ class RefillServer(object):
         self.pause = False
 
     def start(self):
+	self.refill.open()
         self.publish_worker.start()
         self.refill_worker.start()
 
@@ -60,6 +61,7 @@ class RefillServer(object):
                         self.pause = True
         finally:
             self.refill.cleanup()
+        self.refill.close()
 
     def refill_water(self):
         try:

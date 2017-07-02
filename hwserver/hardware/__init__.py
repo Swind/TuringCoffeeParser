@@ -16,7 +16,7 @@ def get_refill(config):
         return mock.MockRefill()
     else:
         import refill
-        return refill.Refill()
+        return refill.Refill(config)
 
 def get_sensor(config, t):
     if config['Emulator']:

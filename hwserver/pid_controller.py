@@ -36,8 +36,6 @@ class PIDController(object):
         self.__observers = []
 
     def start(self):
-        logger.info("[Hardware] Heater start...")
-        self.__heater.start()
         logger.info("PID controller start...")
         self.worker.start()
 

@@ -25,9 +25,9 @@ class Pin(object):
         self.status = GPIO.IN
 
         if pull_up_down:
-            GPIO.setup(self.number, GPIO.PUD_DOWN)
+            GPIO.setup(self.number, GPIO.IN, GPIO.PUD_DOWN)
         else:
-            GPIO.setup(self.number, GPIO.IN)
+            GPIO.setup(self.number, GPIO.IN, GPIO.PUD_UP)
 
         return self
 
@@ -43,7 +43,7 @@ class Refill(object):
 
     def __init__(self, config):
         # Read Config
-        self._config = config
+        self._config = config['Refill']
 
         self.water_level_pin_out = None
         self.water_level_pin_in = None
@@ -99,3 +99,6 @@ class Refill(object):
                 self._rotate_motor(200)
         finally:
             self.close()
+
+    def cleanup(self):
+        GPIO.cleanup()
