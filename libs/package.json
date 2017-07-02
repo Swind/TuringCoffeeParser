@@ -1,6 +1,6 @@
 {
   "name": "libs",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Turing Coffe Process",
   "scripts": {
     "compile": "babel src -d .",

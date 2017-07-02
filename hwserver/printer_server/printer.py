@@ -30,11 +30,14 @@ class PrinterController(object):
         logger.info("Check the hot file is in hot smoothie board.")
         self._hot_printer.write("ls sd/type")
         hot_resp = self._hot_printer.readline()
-        print hot_resp
+        logger.info("ls sd/type: " + hot_resp)
 
         if "cold" in hot_resp:
             logger.warning("Find type/cold in hot printer, so switch the hot printer and cold printer port")
             self._hot_printer, self._cold_printer = self._cold_printer, self._hot_printer
+
+        logger.info("Hot is {}".format(self._hot_printer._port))
+        logger.info("Cold is {}".format(self._cold_printer._port))
 
         # HOME, Set Unit to Millimeters,
         # Set to Absolute Positioning, Set extruder to relative mode

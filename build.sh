@@ -21,9 +21,10 @@ cd ..
 
 echo "Copy all files to dist..."
 rm -rf dist
-mkdir -p dist/public
+mkdir -p dist/public/new/
 cp server/build/* dist
 cp web/static/* dist/public
+cp newweb/static/* dist/public/new/
 
 echo "Tar the dist folder"
 tar -zcvf turing_coffee.tar.gz dist
