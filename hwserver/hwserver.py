@@ -11,6 +11,7 @@ from printer.reqrep.nanomsg_reqrep import NanomsgRequester, \
 from printer.point import Point
 
 from utils.smoothie import Smoothie
+from utils.remote_smoothie import RemoteSmoothie
 
 from heater_server import HeaterServer
 from refill_server import RefillServer
@@ -52,12 +53,14 @@ class HWServer:
         else:
             port_name = config['Printer']['PortName']
             port_name2 = config['Printer']['PortName2']
+            remote_port = config['RemotePrinter']
 
         baudrate = int(config['Printer']['Baudrate'])
 
         printer_controller = PrinterController(
                 cold_driver=Smoothie(port_name2, baudrate),
-                hot_driver=Smoothie(port_name, baudrate))
+                hot_driver=Smoothie(port_name, baudrate),
+                remote_driver=RemoteSmoothie(**remote_port))
 
         self.pub_ch = {
             self.PRINTER: NanomsgPublisher(

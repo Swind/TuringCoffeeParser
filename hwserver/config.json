@@ -44,7 +44,10 @@
         "MultipleCold": 1.666,
         "MultipleHot": 1.176
     },
-
+    "RemotePrinter": {
+        "host": "192.168.1.26",
+        "port": 16000
+    },
     "Refill":{
         "water_level_pin": [11, 12],
         "motor_pin": [13, 15],
