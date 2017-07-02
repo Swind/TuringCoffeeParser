@@ -118,12 +118,5 @@ if __name__ == "__main__":
                 break;
         smooth.write(cmd)
         print(smooth.readline())
-        """
-        import time
-        for index in range(0, 1000):
-       for count in range(0, 10):
-           smooth.write("G0 E0.001 F1")
-       time.sleep(0.1)
-        """
     finally:
         smooth.close()

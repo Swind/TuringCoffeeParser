@@ -1,6 +1,6 @@
 {
     "GPIO_pin_number_scheme": "BOARD",
-    "Emulator": true,
+    "Emulator": false,
     "Unit": "C",
 
     "Heater": {
@@ -9,11 +9,8 @@
     "Sensors": {
         "PT100_tank": {
             "name": "PT100_tank",
-            "type": "MAX31865",
-            "cs": 29,
-            "miso": 33,
-            "mosi": 31,
-            "clk": 35
+            "type": "PT100",
+            "ce": 0
         },
 
         "output_temperature_sensor":
@@ -41,8 +38,8 @@
         "PortName": "/dev/ttyACM0",
         "PortName2": "/dev/ttyACM1",
         "Baudrate": 115200,
-        "MultipleCold": 1.666,
-        "MultipleHot": 1.176
+        "MultipleCold": 1.44,
+        "MultipleHot": 1.11111111111
     },
     "RemotePrinter": {
         "host": "192.168.1.26",
