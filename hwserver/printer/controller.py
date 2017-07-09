@@ -26,7 +26,7 @@ class PrinterController(object):
             logger.error('Cannot open printer for cold water')
             return False
 
-	if self._remote_printer.open() is not True:
+        if self._remote_printer.open() is not True:
             logger.error('Cannot open printer for remote printer')
             return False
 
