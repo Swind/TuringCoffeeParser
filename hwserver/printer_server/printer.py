@@ -10,9 +10,10 @@ logger = logging.getLogger(__name__)
 
 class PrinterController(object):
 
-    def __init__(self, hot_driver, cold_driver):
+    def __init__(self, hot_driver, cold_driver, remote_driver):
         self._hot_printer = hot_driver
         self._cold_printer = cold_driver
+        self._remote_printer = remote_driver
 
     def connect(self):
 
@@ -25,12 +26,16 @@ class PrinterController(object):
             logger.error('Cannot open printer for cold water')
             return False
 
+        if self._remote_printer.open() is not True:
+            logger.error('Cannot open printer for cold water')
+            return False
+
         time.sleep(1)
 
         logger.info("Check the hot file is in hot smoothie board.")
         self._hot_printer.write("ls sd/type")
         hot_resp = self._hot_printer.readline()
-        print hot_resp
+        print(hot_resp)
 
         if "cold" in hot_resp:
             logger.warning("Find type/cold in hot printer, so switch the hot printer and cold printer port")
@@ -46,6 +51,7 @@ class PrinterController(object):
     def disconnect(self):
         self._hot_printer.close()
         self._cold_printer.close()
+        self._remote_printer.close()
 
     def send_gcodes(self, hot_command=None, cold_command=None):
 
@@ -57,6 +63,9 @@ class PrinterController(object):
         if hot_command is not None:
             while 'ok' not in self._hot_printer.readline():
                 continue
+            while 'ok' not in self._remote_printer.readline():
+                continue
+
         if cold_command is not None:
             while 'ok' not in self._cold_printer.readline():
                 continue
