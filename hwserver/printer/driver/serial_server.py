@@ -22,17 +22,18 @@ def init_serial(port, baudrate, socket):
             logger.debug("SerialReader: Waiting serial readable")
             gevent.socket.wait_read(serial.fd, timeout=5)
             line = serial.readline()
-            logger.debug("SerialReader: Receive {} from serial and send to net socket...".format(line))
-            socket.write(line)
+            logger.debug("Flush all message in the serial")
+            logger.info("Receive message from serial when opening the serial port")
         except Exception as e:
             logger.error(e)
             break
 
+    logger.info("Init serial port successed.")
     return serial
 
 def redirect(serial, socket):
     while True:
-        logger.debug("SerialWriter: readline from fileobj")
+        logger.debug("SerialWriter: Readline from socket")
         line = socket.recv(1024)
         logger.debug("SerialWriter: Receive {} from net socket and send to serial...".format(line))
 
@@ -42,6 +43,7 @@ def redirect(serial, socket):
 
         serial.write(line)
 
+        gevent.socket.wait_read(serial.fd, timeout=10)
         result = serial.read_all()
         logger.debug("SerialWriter: receive {} from Smoothie".format(result))
 
@@ -61,6 +63,6 @@ def serial_to_net(socket, address):
 
 if __name__ == '__main__':
     server = StreamServer(('0.0.0.0', net_port), serial_to_net)
-    logger.info('Starting serial server on port 16000')
+    logger.info('Starting serial server on port {}'.format(net_port))
     server.serve_forever()
 
