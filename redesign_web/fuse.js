@@ -4,15 +4,16 @@ const path = require("path");
 const TypeCheckPlugin = require("fuse-box-typechecker").TypeCheckPlugin;
 const proxy = require("express-http-proxy");
 
+const production = process.env.NODE_ENV === "production";
+
 // Create FuseBox Instance
 const config = {
   homeDir: "src/",
   sourceMaps: { project: true, vendor: false },
-  output: "./build/$name.js",
   tsConfig: "tsconfig.json",
-  cache: true,
+  hash: production,
+  cache: !production,
   plugins: [
-    TypeCheckPlugin(),
     fsbx.TypeScriptHelpers(),
     fsbx.JSONPlugin(),
     fsbx.SVGPlugin(),
@@ -28,13 +29,18 @@ const config = {
   ]
 };
 
-if (process.env.NODE_ENV === "production") {
+if (production) {
   const prodPlugins = [
     fsbx.EnvPlugin({
       NODE_ENV: "production"
     })
   ];
   config.plugins = config.plugins.concat(prodPlugins);
+  (config.sourceMaps = false), (config.output = "./production/$name.js");
+} else {
+  config.plugins = config.plugins.concat([TypeCheckPlugin()]);
+  config.sourceMaps = { project: true, vendor: false };
+  config.output = "./build/$name.js";
 }
 
 const app = `> index.tsx `;
@@ -47,7 +53,7 @@ const vendorBundle = fuse
   .target("browser")
   .instructions(vendor);
 
-if (process.env.NODE_ENV !== "production") {
+if (!production) {
   appBundle.watch().hmr();
   vendorBundle.watch().hmr();
   fuse.dev(
