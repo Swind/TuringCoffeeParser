@@ -1,0 +1,83 @@
+{
+  "name": "TuringCoffeeWeb",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "start": "node fuse.js",
+    "webpack-dev": "webpack-dev-server -d --history-api-fallback --hot --inline --progress --colors --host 0.0.0.0 --port 3001",
+    "build": "NODE_ENV=\"production\" node fuse.js"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
+  },
+  "dependencies": {
+    "@types/react-router-dom": "^4.0.4",
+    "@types/redux-actions": "^1.2.4",
+    "babel-polyfill": "^6.23.0",
+    "babel-runtime": "^6.23.0",
+    "character-entities": "^1.2.0",
+    "grommet": "^1.3.4",
+    "history": "^4.6.1",
+    "immutable": "^3.8.1",
+    "react": "^15.4.2",
+    "react-dnd-touch-backend": "^0.3.11",
+    "react-dom": "^15.4.2",
+    "react-redux": "^5.0.3",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
+    "react-router-redux": "next",
+    "recharts": "^1.0.0-alpha.1",
+    "redux": "^3.6.0",
+    "redux-actions": "^2.0.1",
+    "redux-logger": "^3.0.0",
+    "redux-saga": "0.14.4",
+    "remove": "^0.1.5",
+    "superagent": "^3.5.1",
+    "turing-coffee-process": "file:./../libs"
+  },
+  "devDependencies": {
+    "@types/enzyme": "^2.8.0",
+    "@types/history": "^4.5.0",
+    "@types/jest": "^19.2.2",
+    "@types/react-dom": "^15.5.0",
+    "@types/react-redux": "^4.4.39",
+    "@types/react-router": "^4.0.4",
+    "@types/react-router-redux": "^5.0.0",
+    "@types/redux-mock-store": "^0.0.7",
+    "@types/superagent": "^2.0.36",
+    "babel-core": "^6.23.1",
+    "babel-plugin-transform-react-jsx": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-latest": "^6.22.0",
+    "css-loader": "^0.28.4",
+    "enzyme": "^2.8.2",
+    "express-http-proxy": "^1.0.3",
+    "file-loader": "^0.11.2",
+    "fuse-box": "2.2.0-beta.7",
+    "fuse-box-typechecker": "git://github.com/fuse-box/fuse-box-typechecker",
+    "hapi": "^16.1.1",
+    "html-webpack-plugin": "^2.29.0",
+    "jest": "^19.0.2",
+    "redux-mock-store": "^1.2.3",
+    "rucksack-css": "^0.9.1",
+    "source-map": "^0.5.6",
+    "style-loader": "^0.18.2",
+    "ts-jest": "^19.0.10",
+    "ts-loader": "^2.1.0",
+    "typescript": "^2.2.1",
+    "webpack": "3.0.0",
+    "webpack-dev-server": "^2.4.5",
+    "webpack-fail-plugin": "^1.0.6"
+  }
+}

@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "Rebuild 'libs' in the node_modules"
-rm -rf node_modules/libs
+rm -rf node_modules/turing-coffee-process
 rm -rf yarn.lock
 yarn install
 

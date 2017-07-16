@@ -1,0 +1,11 @@
+{
+  "statusCode": 200,
+  "message": "Get heater status successfully",
+  "data":
+    {
+        temperature: 90,
+        duty_cycle: 100,
+        output_temperature: 40,
+        set_point: 70
+    }
+}
