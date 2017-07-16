@@ -1,7 +1,6 @@
 const fsbx = require("fuse-box");
 const FuseBox = fsbx.FuseBox;
 const path = require("path");
-const TypeCheckPlugin = require("fuse-box-typechecker").TypeCheckPlugin;
 const proxy = require("express-http-proxy");
 
 const production = process.env.NODE_ENV === "production";
@@ -43,6 +42,7 @@ if (production) {
   config.plugins = config.plugins.concat(prodPlugins);
   (config.sourceMaps = false), (config.output = "./production/$name.js");
 } else {
+  const TypeCheckPlugin = require("fuse-box-typechecker").TypeCheckPlugin;
   config.plugins = config.plugins.concat([TypeCheckPlugin()]);
   config.sourceMaps = { project: true, vendor: false };
   config.output = "./build/$name.js";
