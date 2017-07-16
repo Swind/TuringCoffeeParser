@@ -26,6 +26,11 @@ function createProcess(params){
     return new _processes[params.name](params);
 }
 
+function getProcessDefaultParams(processName) {
+    return _processes[processName].default;
+}
+
 module.exports = {
-  createProcess
+    createProcess,
+    getProcessDefaultParams
 }
