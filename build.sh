@@ -11,8 +11,7 @@ cd ..
 
 echo "Build web..."
 cd redesign_web
-yarn install
-yarn build
+./clean_build.sh
 cd ..
 
 echo "Copy all files to dist..."
