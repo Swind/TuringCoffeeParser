@@ -23,7 +23,7 @@ cache:
   directories:
   - $HOME/.yarn-cache
 script:
-- npm install -g babel-cli
+- yarn global add babel-cli tslint
 - "./build.sh"
 - pwd
 - ls
