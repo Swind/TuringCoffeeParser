@@ -10,20 +10,16 @@ cd server
 cd ..
 
 echo "Build web..."
-cd web
-./clean_build.sh
-cd ..
-
-echo "Build new web..."
-cd newweb
-./clean_build.sh
+cd redesign_web
+yarn install
+yarn build
 cd ..
 
 echo "Copy all files to dist..."
 rm -rf dist
 mkdir -p dist/public
 cp server/build/* dist
-cp web/static/* dist/public
+cp redesign_web/production/* dist/public
 
 echo "Tar the dist folder"
 tar -zcvf turing_coffee.tar.gz dist
