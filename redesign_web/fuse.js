@@ -11,13 +11,18 @@ const config = {
   homeDir: "src/",
   sourceMaps: { project: true, vendor: false },
   tsConfig: "tsconfig.json",
-  hash: production,
+  hash: false,
   cache: !production,
   plugins: [
     fsbx.TypeScriptHelpers(),
     fsbx.JSONPlugin(),
     fsbx.SVGPlugin(),
     fsbx.BabelPlugin(),
+    fsbx.WebIndexPlugin({
+      title: "Coffee",
+      template: "src/index.html",
+      path: "./"
+    }),
     [
       /node_modules\/.*\.css$/,
       fsbx.CSSResourcePlugin({
