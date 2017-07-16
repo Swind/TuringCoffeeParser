@@ -55,7 +55,8 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 class CookbookList extends React.Component<CookbookListProps, any> {
-  componentDidMount?() {
+
+  componentDidMount() {
     this.props.listCookbooks();
   }
 

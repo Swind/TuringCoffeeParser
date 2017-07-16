@@ -78,14 +78,14 @@ class CookbookEditor extends React.Component<
     this.cloneCookbook = this.cloneCookbook.bind(this);
   }
 
-  componentDidMount?() {
+  componentDidMount() {
     if (this.props.match) {
       const { id } = this.props.match.params;
       this.props.getCookbook(id);
     }
   }
 
-  componentWillUnmount?() {
+  componentWillUnmount() {
     this.props.closeNotification();
   }
 
