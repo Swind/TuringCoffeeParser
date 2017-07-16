@@ -50,7 +50,7 @@
     "immutable": "",
     "inert": "",
     "joi": "",
-    "libs": "file:../libs",
+    "turing-coffee-process": "file:../libs",
     "nedb": "",
     "vision": "",
     "winston": ""
