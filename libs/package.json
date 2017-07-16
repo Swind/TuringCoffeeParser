@@ -1,7 +1,7 @@
 {
-  "name": "turing-coffee-process",
+  "name": "turing-coffee-libs",
   "version": "0.0.3",
-  "description": "Turing Coffee Process",
+  "description": "Turing Coffee Library",
   "scripts": {
     "compile": "babel src -d .",
     "prepublish": "npm run compile",
