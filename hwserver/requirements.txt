@@ -1,1 +1,4 @@
-nanomsg-python
+spidev==3.2
+nanomsg==1.0
+pyserial==3.3
+gevent=1.2.2
