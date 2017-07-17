@@ -53,7 +53,7 @@ class HWServer:
         printer_controller = PrinterController(
                 cold_driver=Smoothie(port_name2, baudrate),
                 hot_driver=Smoothie(port_name, baudrate),
-                remote_driver=RemoteSmoothie(remote_port['host'], remote_port['port'])
+                remote_driver=RemoteSmoothie(remote_port['host'], remote_port['port']))
 
         # Use the main thread to execute printer server
         self.printer_server = PrinterServer(
