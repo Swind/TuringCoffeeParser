@@ -1,4 +1,4 @@
-const process = require("turing-coffee-process/processes/process");
+const process = require("turing-coffee-libs/processes/process");
 
 export type Temperature = number;
 export type Cylinder = number;

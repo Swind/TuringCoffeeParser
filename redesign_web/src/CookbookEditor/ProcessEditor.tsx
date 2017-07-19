@@ -15,7 +15,7 @@ import {
 
 const {
   getProcessDefaultParams
-} = require("turing-coffee-process/processes/process");
+} = require("turing-coffee-libs/processes/process");
 
 const Form = require("grommet/components/Form");
 const FormField = require("grommet/components/FormField");
