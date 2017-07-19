@@ -8,4 +8,4 @@ echo "Clean folder"
 rm -rf build
 
 echo "Build backend.js"
-webpack
+yarn build
