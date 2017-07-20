@@ -18,6 +18,7 @@ echo "Copy all files to dist..."
 rm -rf dist
 mkdir -p dist/public
 cp server/build/* dist
+cp server/node_modules dist/
 cp redesign_web/production/* dist/public
 
 echo "Tar the dist folder"
