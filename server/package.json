@@ -50,8 +50,9 @@
     "immutable": "",
     "inert": "",
     "joi": "",
-    "turing-coffee-libs": "file:../libs",
+    "nanomsg": "^3.3.0",
     "nedb": "",
+    "turing-coffee-libs": "file:../libs",
     "vision": "",
     "winston": ""
   }
