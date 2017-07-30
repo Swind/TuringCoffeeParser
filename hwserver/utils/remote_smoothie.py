@@ -5,7 +5,7 @@ import serial
 import gevent
 from gevent import socket
 
-import retrying
+from retrying import retry
 
 logger = logging.getLogger(__name__)
 
