@@ -42,8 +42,8 @@
             "port": 16000
         },
         "Baudrate": 115200,
-        "MultipleCold": 1.666,
-        "MultipleHot": 1.176
+        "MultipleCold": 1.232,
+        "MultipleHot": 1.172
     },
 
     "Refill":{
