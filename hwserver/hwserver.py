@@ -36,7 +36,7 @@ class HWServer:
     def start(self):
         self.__create_worker(HeaterServer()).start()
         self.__create_worker(RefillServer()).start()
-        self.__create_worker(OutputServer()).start()
+        #self.__create_worker(OutputServer()).start()
 
         config = json_config.parse_json('config.json')
 
