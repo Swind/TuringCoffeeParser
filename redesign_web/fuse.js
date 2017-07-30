@@ -48,7 +48,7 @@ if (production) {
   config.output = "./build/$name.js";
 }
 
-const app = `> index.tsx `;
+const app = `!> [index.tsx] `;
 const vendor = `~ index.tsx`;
 
 const fuse = FuseBox.init(config);
