@@ -47,4 +47,8 @@ def __get_sensor(sensor_config):
         import max31856
         return max31856.MAX31856(sensor_config['ce'])
 
+    if sensor_config['type'] == 'PT100':
+        import pt100
+        return pt100.PT100(sensor_config['ce'])
+
     return None

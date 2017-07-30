@@ -7,11 +7,13 @@ import spidev
 
 class PT100(object):
 
-    def __init__(self, number, average_number=5):
+    def __init__(self, ce, average_number=5):
         self.__average_number = average_number
+        self.__ce = ce
 
+    def open(self):
         self.spi = spidev.SpiDev()
-        self.spi.open(0, number)
+        self.spi.open(0, self.__ce)
         self.spi.max_speed_hz = 100000
         self.spi.mode = 1
         """
