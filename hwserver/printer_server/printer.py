@@ -57,6 +57,7 @@ class PrinterController(object):
 
         if hot_command is not None:
             self._hot_printer.write(hot_command)
+            self._remote_printer.write(hot_command)
         if cold_command is not None:
             self._cold_printer.write(cold_command)
 
