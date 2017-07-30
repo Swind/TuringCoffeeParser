@@ -5,6 +5,8 @@ import serial
 import gevent
 from gevent import socket
 
+import retrying
+
 logger = logging.getLogger(__name__)
 
 def execute_with_retry(fn, retry_times=3, *args, **kwargs):
@@ -22,6 +24,7 @@ class RemoteSmoothie(object):
         self._port = port
         self._name = "{}:{}".format(self._host, self._port)
 
+    @retry(wait_fixed=2000)
     def open(self):
         steps = ['Smoothie', 'ok']
 
@@ -35,7 +38,8 @@ class RemoteSmoothie(object):
         if self.readline().strip() == 'ok':
             return True
         else:
-            return False
+            msg = "Can't connect to the serial server - {}:{}".format(self._host, self._port)
+            raise RuntimeError(msg)
 
     def close(self):
         self._socket.close()
