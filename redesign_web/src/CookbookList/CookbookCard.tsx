@@ -39,8 +39,8 @@ function CookbookDescription(props: CookbookDescriptionProps) {
   const { cookbook } = props;
   return (
     <Box pad="small">
-      <Label size="small">Water {cookbook.totalTime} ml</Label>
-      <Label size="small">Time {cookbook.totalWater} s</Label>
+      <Label size="small">Water {cookbook.totalWater } ml</Label>
+      <Label size="small">Time {cookbook.totalTime } s</Label>
     </Box>
   );
 }
