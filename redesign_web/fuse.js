@@ -8,7 +8,6 @@ const production = process.env.NODE_ENV === "production";
 // Create FuseBox Instance
 const config = {
   homeDir: "src/",
-  sourceMaps: { project: true, vendor: false },
   tsConfig: "tsconfig.json",
   hash: false,
   cache: !production,
@@ -40,12 +39,15 @@ if (production) {
     })
   ];
   config.plugins = config.plugins.concat(prodPlugins);
-  (config.sourceMaps = false), (config.output = "./production/$name.js");
+  config.sourceMaps = false;
+  config.output = "./production/$name.js";
+  config.cache = false;
 } else {
   const TypeCheckPlugin = require("fuse-box-typechecker").TypeCheckPlugin;
-  config.plugins = config.plugins.concat([TypeCheckPlugin()]);
+  config.plugins = config.plugins.concat([TypeCheckPlugin]);
   config.sourceMaps = { project: true, vendor: false };
   config.output = "./build/$name.js";
+  config.cache = true;
 }
 
 const app = `!> [index.tsx] `;
