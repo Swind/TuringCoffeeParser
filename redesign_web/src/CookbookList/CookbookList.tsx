@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import { listCookbooks } from "../Api/apiDuck";
+import { listCookbooks, brewCookbook } from "../Api/apiDuck";
 import { Cookbook } from "../Api/cookbook";
 import { history } from "../history";
 import {
@@ -29,6 +29,7 @@ interface StateProps {
 
 interface DispatchProps {
   listCookbooks(): void;
+  brewCookbook(): void;
   changeSearchCookbookKeyword(keyword: string): void;
 }
 
@@ -48,6 +49,7 @@ function mapDispatchToProps(dispatch: any) {
   return bindActionCreators(
     {
       listCookbooks: listCookbooks.request,
+      brewCookbook: brewCookbook.request,
       changeSearchCookbookKeyword: changeSearchCookbookKeyword
     },
     dispatch
@@ -71,7 +73,9 @@ class CookbookList extends React.Component<CookbookListProps, any> {
         return v.name.toLowerCase().match(searchKey.toLowerCase()) != null;
       })
       .map((v: Cookbook) => {
-        const doBrew = () => {};
+        const doBrew = () => {
+          this.props.brewCookbook();
+        };
         const gotoEdit = () => {
           history.push(`/edit/${v.id}`);
         };
