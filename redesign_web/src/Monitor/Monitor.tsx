@@ -112,7 +112,6 @@ class Monitor extends React.Component<MonitorProps, any> {
       ? this.state.setPoint
       : this.props.setPoint;
     const lastStatus = status.length > 0 ? status[status.length - 1] : null;
-    console.log(this.props.status);
     return (
       <div>
         {lastStatus &&
