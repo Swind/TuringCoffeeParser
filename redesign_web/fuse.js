@@ -133,10 +133,6 @@ if (!production) {
       });
     }
   );
-  // fuse.dev({
-  // root: 'build',
-  // port: 4444
-  // });
 }
 
 fuse.run();
