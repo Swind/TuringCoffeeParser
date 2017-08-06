@@ -9,6 +9,7 @@ import { history } from "../history";
 import {
   openNewCookbookDialog,
   closeNewCookbookDialog,
+  closeBrewNotify,
   changeSearchCookbookKeyword
 } from "./CookbookListDuck";
 
@@ -18,8 +19,14 @@ const Box = require("grommet/components/Box");
 const Columns = require("grommet/components/Columns");
 const SearchInput = require("grommet/components/SearchInput");
 const Search = require("grommet/components/Search");
+const Toast = require("grommet/components/Toast");
 
 interface StateProps {
+  notify: {
+    open: boolean;
+    status: string;
+    message: string;
+  };
   loading: boolean;
   result: boolean;
   newCookbookDialogOpen: boolean;
@@ -31,6 +38,7 @@ interface DispatchProps {
   listCookbooks(): void;
   brewCookbook(): void;
   changeSearchCookbookKeyword(keyword: string): void;
+  closeBrewNotify(): void;
 }
 
 type CookbookListProps = StateProps & DispatchProps;
@@ -41,7 +49,8 @@ function mapStateToProps(state: any): StateProps {
     result: state.cookbookList.result,
     newCookbookDialogOpen: state.cookbookList.newCookbookDialogOpen,
     cookbooks: state.cookbookList.cookbooks,
-    searchKey: state.cookbookList.searchKey
+    searchKey: state.cookbookList.searchKey,
+    notify: state.cookbookList.notify
   };
 }
 
@@ -50,14 +59,14 @@ function mapDispatchToProps(dispatch: any) {
     {
       listCookbooks: listCookbooks.request,
       brewCookbook: brewCookbook.request,
-      changeSearchCookbookKeyword: changeSearchCookbookKeyword
+      changeSearchCookbookKeyword: changeSearchCookbookKeyword,
+      closeBrewNotify: closeBrewNotify
     },
     dispatch
   );
 }
 
 class CookbookList extends React.Component<CookbookListProps, any> {
-
   componentDidMount() {
     this.props.listCookbooks();
   }
@@ -92,6 +101,14 @@ class CookbookList extends React.Component<CookbookListProps, any> {
 
     return (
       <Box colorIndex="light-1">
+        {this.props.notify.open &&
+          <Toast
+            status={this.props.notify.status}
+            onClose={this.props.closeBrewNotify}
+          >
+            {this.props.notify.message}
+          </Toast>
+        }
         <Search
           placeHolder="Search cookbooks ... "
           inline={true}
