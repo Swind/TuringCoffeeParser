@@ -69,16 +69,23 @@ function MonitorMeter(props: {
   unit: string;
   label: string;
 }) {
-  const label = <Label size="small">{props.label}</Label>;
-  return (
-    <Box align="center">
+  const label = (
+    <Label size="small">
+      {props.label}
+    </Label>
+  );
+
+  if (isFinite(props.value)) {
+    return <Box align="center">
       <Meter type="bar" value={props.value} threshold={props.threshold} />
       {label}
       <Box direction="row" justify="between" align="center">
         <Value value={props.value.toFixed(2)} size="small" units={props.unit} />
       </Box>
-    </Box>
-  );
+    </Box>;
+  }
+
+  return null;
 }
 
 class Monitor extends React.Component<MonitorProps, any> {
@@ -108,9 +115,10 @@ class Monitor extends React.Component<MonitorProps, any> {
 
   render() {
     const { status } = this.props;
-    const setPoint = this.state && this.state.setPoint
-      ? this.state.setPoint
-      : this.props.setPoint;
+    const setPoint =
+      this.state && this.state.setPoint
+        ? this.state.setPoint
+        : this.props.setPoint;
     const lastStatus = status.length > 0 ? status[status.length - 1] : null;
     return (
       <div>
